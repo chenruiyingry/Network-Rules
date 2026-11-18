@@ -1,0 +1,23 @@
+[
+  {
+    "tag": "network-rules-openai",
+    "format": "source",
+    "url": "https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/openai.json",
+    "update_interval": "1d",
+    "outbound": "OpenAI"
+  },
+  {
+    "tag": "network-rules-github",
+    "format": "source",
+    "url": "https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/github.json",
+    "update_interval": "1d",
+    "outbound": "GitHub"
+  },
+  {
+    "tag": "network-rules-youtube",
+    "format": "source",
+    "url": "https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/youtube.json",
+    "update_interval": "1d",
+    "outbound": "YouTube"
+  }
+]

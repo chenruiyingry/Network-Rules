@@ -1,0 +1,14 @@
+{
+  "openai": {
+    "policy": "OpenAI",
+    "img-url": "https://raw.githubusercontent.com/Orz-3/mini/0e2bab71d8dbe512db9b5e7a9000a5661dd0e327/Color/OpenAI.png"
+  },
+  "github": {
+    "policy": "GitHub",
+    "img-url": "https://raw.githubusercontent.com/Orz-3/mini/0e2bab71d8dbe512db9b5e7a9000a5661dd0e327/Color/github.png"
+  },
+  "youtube": {
+    "policy": "YouTube",
+    "img-url": "https://raw.githubusercontent.com/Orz-3/mini/0e2bab71d8dbe512db9b5e7a9000a5661dd0e327/Color/YouTube.png"
+  }
+}

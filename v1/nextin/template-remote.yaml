@@ -1,0 +1,35 @@
+x-nextin:
+  version: 1
+  mode: subscription-template
+proxies: []
+proxy-groups:
+- name: 节点选择
+  type: select
+  include-all-proxies: true
+rule-providers:
+  network-rules-nextin-openai:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-openai.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/openai.yaml
+  network-rules-nextin-github:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-github.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/github.yaml
+  network-rules-nextin-youtube:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-youtube.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/youtube.yaml
+rules:
+- RULE-SET,network-rules-nextin-openai,节点选择
+- RULE-SET,network-rules-nextin-github,节点选择
+- RULE-SET,network-rules-nextin-youtube,节点选择
+- MATCH,节点选择

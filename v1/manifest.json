@@ -1,0 +1,98 @@
+{
+  "release": "20261118003829",
+  "source_sha256": "e72c4a8bf60dbc0e37ab5f31d53f8c5aeddcb913fb54783d6fde1947b85edb2a",
+  "categories": {
+    "openai": {
+      "source": "openai",
+      "selected": 25,
+      "targets": {
+        "openclash": {
+          "count": 25,
+          "omitted": []
+        },
+        "quanx": {
+          "count": 24,
+          "omitted": [
+            "regexp:^chatgpt-async-webps-prod-\\S+-\\d+\\.webpubsub\\.azure\\.com$"
+          ]
+        },
+        "homeproxy": {
+          "count": 25,
+          "omitted": []
+        },
+        "nextin": {
+          "count": 24,
+          "omitted": [
+            "regexp:^chatgpt-async-webps-prod-\\S+-\\d+\\.webpubsub\\.azure\\.com$"
+          ]
+        }
+      }
+    },
+    "github": {
+      "source": "github",
+      "selected": 64,
+      "targets": {
+        "openclash": {
+          "count": 64,
+          "omitted": []
+        },
+        "quanx": {
+          "count": 64,
+          "omitted": []
+        },
+        "homeproxy": {
+          "count": 64,
+          "omitted": []
+        },
+        "nextin": {
+          "count": 64,
+          "omitted": []
+        }
+      }
+    },
+    "youtube": {
+      "source": "youtube",
+      "selected": 178,
+      "targets": {
+        "openclash": {
+          "count": 178,
+          "omitted": []
+        },
+        "quanx": {
+          "count": 178,
+          "omitted": []
+        },
+        "homeproxy": {
+          "count": 178,
+          "omitted": []
+        },
+        "nextin": {
+          "count": 178,
+          "omitted": []
+        }
+      }
+    }
+  },
+  "files": {
+    "v1/LICENSE-DLC.txt": "b9d84a22870d3f21c91a4c6e410c9cc51d00902f5233ad0c84011479244bf7d2",
+    "v1/README.md": "fde292512c116dcef8384f4d6464478827fa247e57ea55bebe9eb36430f4c3b1",
+    "v1/homeproxy/github.json": "e0a6740bc87125c541521242110d38316c071a17177f73dc52752430778df39d",
+    "v1/homeproxy/openai.json": "ce3adea32eeb3a8c7f52bcd46b90237f8610c96b0071d8080e8b529ca55d833e",
+    "v1/homeproxy/setup.json": "25bef44079331c49f727fe710e55728d98ecdf82f33a507068081b8903728fe4",
+    "v1/homeproxy/youtube.json": "e3b8efef5307a4552acc501f62c2673bff52dd14074436d70869f0d67d487f38",
+    "v1/nextin/github.yaml": "fb99d9e48dc5b87ed8082e30f349190a3045e74177a10596521d054c2d1bbb5d",
+    "v1/nextin/openai.yaml": "69f46706c4abb2691a55cc243ff1f5337fbac77b930c6e45cdc5ea6ca840ccb2",
+    "v1/nextin/template-remote.yaml": "6992aa5051787197a5a31aa1bee97b8e7da168b29a8a68a0ce05dde7b9b1c311",
+    "v1/nextin/template.yaml": "ec3e1c6ec06b11536869096a76c78bc7987e42501bd68f86228281149cb74bf1",
+    "v1/nextin/youtube.yaml": "e3f065253a0cab8ff79c7acf09bfdf44fcdbe79eed731bc01339103a556fa161",
+    "v1/openclash/github.yaml": "fb99d9e48dc5b87ed8082e30f349190a3045e74177a10596521d054c2d1bbb5d",
+    "v1/openclash/openai.yaml": "d81130324fc590b31f7d8d49b1caab05cdf79353be40ec3d5828525ed4035e26",
+    "v1/openclash/overwrite.conf": "8799aeee28ef3c7f09ac289e4e199ef047a21c66782f3b5d656337f2f2779b64",
+    "v1/openclash/youtube.yaml": "e3f065253a0cab8ff79c7acf09bfdf44fcdbe79eed731bc01339103a556fa161",
+    "v1/quanx/filter-remote.conf": "98d1a604714af3b635de4b10c02eecb323b7394ac5cb5d99338d03ece28fb35c",
+    "v1/quanx/github.list": "47d5c4381da04a7d7dd4a931df0d6c641bb6ce564a8b8ef2e50ed4a0056f6921",
+    "v1/quanx/icons.json": "943c36bcd8ed9f8a581edcf5c634404fbe5f260eefd51cf8edd80f09028d955e",
+    "v1/quanx/openai.list": "f17f04052ad0ae27a36b880540715d104abb55bd3157c8f8c9bfb06f9f189f3f",
+    "v1/quanx/youtube.list": "9ba366669cb68c1e58f2c0d19dfac346214d803f93c77d2eccc25b378cc2900c"
+  }
+}

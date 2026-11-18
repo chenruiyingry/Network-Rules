@@ -1,7 +1,24 @@
-# Trial settings. Replace the policy names after reviewing your active profiles.
+# Order keeps explicit service and DIRECT policies above broad fallbacks.
 homeproxy_rule_set_version: 2
 nextin_fallback: 节点选择
 categories:
+  - id: application-cleanup
+    dlc: []
+    quanx_legacy: Rules/Advertising/Hijacking.list
+    policies: {quanx: REJECT}
+  - id: pt
+    dlc: category-pt
+    quanx_legacy: Rules/PT.list
+    quanx_compat: rule/QuantumultX/PrivateTracker/PrivateTracker.list
+    policies: {openclash: DIRECT, quanx: DIRECT, homeproxy: direct, nextin: DIRECT}
+  - id: tiktok
+    dlc: tiktok
+    quanx_compat: rule/QuantumultX/TikTok/TikTok.list
+    policies: {openclash: TikTok, quanx: TikTok, homeproxy: TikTok, nextin: 节点选择}
+  - id: binance
+    dlc: binance
+    quanx_legacy: Rules/Binance.list
+    policies: {openclash: 自动选择, quanx: 自动选择, homeproxy: 自动选择, nextin: 节点选择}
   - id: openai
     dlc: openai
     policies: {openclash: OpenAI, quanx: OpenAI, homeproxy: OpenAI, nextin: 节点选择}
@@ -10,4 +27,31 @@ categories:
     policies: {openclash: GitHub, quanx: GitHub, homeproxy: GitHub, nextin: 节点选择}
   - id: youtube
     dlc: youtube
-    policies: {openclash: YouTube, quanx: YouTube, homeproxy: YouTube, nextin: 节点选择}
+    policies: {openclash: YouTube, quanx: Youtube, homeproxy: YouTube, nextin: 节点选择}
+  - id: disney-plus
+    dlc: disney
+    quanx_legacy: Rules/Media/Foreign/DisneyPlus.list
+    enabled: false
+    policies: {openclash: DisneyPlus, quanx: DisneyPlus, homeproxy: DisneyPlus, nextin: 节点选择}
+  - id: telegram
+    dlc: telegram
+    quanx_legacy: Rules/Services/SNS/Telegram.list
+    policies: {openclash: Telegram, quanx: Telegram, homeproxy: Telegram, nextin: 节点选择}
+  - id: foreign-media
+    # Services common to the ProxyMedia and ForeignMedia profiles.
+    dlc: [abema, apple-tvplus, bahamut, bbc, dazn, disney, hbo, hulu, netflix, primevideo, spotify, twitch]
+    quanx_legacy: Rules/Media/ForeignMedia.list
+    policies: {openclash: 国外媒体, quanx: 国外媒体, homeproxy: 国外媒体, nextin: 节点选择}
+  - id: google
+    dlc: google
+    quanx_legacy: Rules/Services/Google.list
+    policies: {openclash: 自动选择, quanx: 自动选择, homeproxy: 自动选择, nextin: 节点选择}
+  - id: apple
+    dlc: apple
+    quanx_legacy: Rules/Services/Apple.list
+    policies: {openclash: Apple, quanx: Apple, homeproxy: Apple, nextin: 节点选择}
+  - id: overseas
+    dlc: geolocation-!cn
+    quanx_legacy: Rules/Region/Global.list
+    nextin_default: false
+    policies: {openclash: 自动选择, quanx: 自动选择, homeproxy: 自动选择, nextin: 节点选择}

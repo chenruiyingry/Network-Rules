@@ -29,6 +29,7 @@ jobs:
       - name: Build and validate the candidate
         env:
           REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           python tools/network_rules.py build --repository "$REPOSITORY"
           python tools/network_rules.py check dist | tee -a "$GITHUB_STEP_SUMMARY"

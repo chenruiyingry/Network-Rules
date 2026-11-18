@@ -1,6 +1,12 @@
 # Network-Rules
 
-从同一份 v2fly/domain-list-community 官方发布生成 OpenClash、Quantumult X、HomeProxy 和 Nextin 的静态规则。首版试点为 OpenAI、GitHub 和 YouTube。长期设计见 [DESIGN.md](DESIGN.md)。
+从同一份 v2fly/domain-list-community 官方发布生成 OpenClash、Quantumult X、HomeProxy 和 Nextin 的静态规则。[发布目录](https://github.com/chenruiyingry/Network-Rules/tree/publish/v1) 包含应用净化、TikTok、Binance、OpenAI、GitHub、YouTube、Disney+、国外媒体、Telegram、Google、国外网站、Apple 和 PT。长期设计见 [DESIGN.md](DESIGN.md)。
+
+## QuanX 迁移
+
+从发布目录的 `quanx/filter-remote.conf` 复制需要的条目。国外媒体的 DLC 集合参考两个 fork 的平台覆盖。QuanX 产物从原 QuanX fork 补入了 IP、ASN、通配等旧规则，应用净化按原规则发布。TikTok 和 PT 的兼容列表单独订阅，分别保留旧版匹配范围及私有 Tracker 规则。[MyRules 国外媒体](https://github.com/chenruiyingry/MyRules/blob/021bff632a62a7b7b3511011ade3ab00370107bd/Clash/ProxyMedia.list) · [QuanX 国外媒体](https://github.com/chenruiyingry/Rules-For-Quantumult-X/blob/9458655333183e915f74c4d2e655e77ebede0164/Rules/Media/ForeignMedia.list)
+
+Disney+ 文件已提供，独立策略的订阅条目默认关闭。应用净化和 PT 直连在通用规则之前，YouTube 在 Google 和国外媒体之前，国外网站排在最后。Nextin 提供国外网站规则集文件，默认模板暂缓加载这个大型集合。
 
 ## 本地预览
 
@@ -17,7 +23,7 @@ python3 -m venv .venv
 
 ## 更改规则
 
-- 在 `policy.yml` 映射 DLC 分类、顺序和客户端策略组。可为分类设置 `attributes: {require: [], exclude: [ads]}`。
+- 在 `policy.yml` 映射 DLC 分类、顺序和客户端策略组。`dlc` 支持单个分类或分类数组，数组内按匹配类型和条件去重。可为分类设置 `attributes: {require: [], exclude: [ads]}`。
 - 如需增加或排除具体规则，新建 `overrides/<分类>.yml`，填入 `add` 或 `remove` 数组，使用 `full:example.com`、`domain:example.org` 等 DLC 格式。会发布到 Raw 的文件请只使用可公开的数据。
 - 各端自动跳过无法准确表达的条目，并在发布清单 `omitted` 和 Actions 摘要中报告。未命中的请求由客户端后续规则或兜底接管。
 

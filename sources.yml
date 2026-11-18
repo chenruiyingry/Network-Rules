@@ -1,1 +1,7 @@
 dlc: v2fly/domain-list-community
+quanx_legacy:
+  repository: chenruiyingry/Rules-For-Quantumult-X
+  commit: 9458655333183e915f74c4d2e655e77ebede0164
+quanx_compat:
+  repository: blackmatrix7/ios_rule_script
+  commit: 0b6897dc17e0c513d25449c935a9694818e32f0c

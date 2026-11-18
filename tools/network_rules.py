@@ -4,6 +4,7 @@ import argparse
 from dataclasses import dataclass
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import sys
@@ -27,8 +28,10 @@ TARGETS = {
     "nextin": {"full": "DOMAIN", "domain": "DOMAIN-SUFFIX", "keyword": "DOMAIN-KEYWORD"},
 }
 SLUG = re.compile(r"[a-z0-9][a-z0-9_-]*")
-ATTRIBUTE_TAIL = re.compile(r":((?:@[\w-]+,)*@[\w-]+)$")
+ATTRIBUTE_TAIL = re.compile(r":((?:@!?[\w-]+,)*@!?[\w-]+)$")
 DOMAIN = re.compile(r"(?=.{1,253}$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*")
+QUANX_TYPES = {"host", "host-suffix", "host-keyword", "host-wildcard", "user-agent",
+               "ip-cidr", "ip6-cidr", "ip-asn"}
 
 
 @dataclass(frozen=True)
@@ -62,10 +65,13 @@ def parse_rule(entry):
     return Rule(kind, value, attributes)
 
 
-def fetch(url, max_bytes):
+def fetch(url, max_bytes, token=None):
+    headers = {"User-Agent": "Network-Rules"}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
     for attempt in range(3):
         try:
-            request = Request(url, headers={"User-Agent": "Network-Rules"})
+            request = Request(url, headers=headers)
             with urlopen(request, timeout=30) as response:
                 payload = response.read(max_bytes + 1)
             if not payload or len(payload) > max_bytes:
@@ -81,7 +87,7 @@ def load_release(repo, tag):
     base = f"https://github.com/{repo}/releases/download"
     if tag is None:
         endpoint = f"https://api.github.com/repos/{repo}/releases/latest"
-        tag = json.loads(fetch(endpoint, 1024 * 1024))["tag_name"]
+        tag = json.loads(fetch(endpoint, 1024 * 1024, os.getenv("GITHUB_TOKEN")))["tag_name"]
     if not re.fullmatch(r"\d{14}", tag):
         raise ValueError(f"Unexpected DLC release tag: {tag}")
     url = f"{base}/{tag}/{ASSET}"
@@ -102,10 +108,13 @@ def load_release(repo, tag):
 
 
 def target_rules(category, source):
-    name = category["dlc"]
-    raw = source[name]["rules"]
-    if not isinstance(raw, list) or not raw or source[name]["length"] != len(raw):
-        raise ValueError(f"Invalid DLC rule count for {name}")
+    names = category["dlc"] if isinstance(category["dlc"], list) else [category["dlc"]]
+    raw = []
+    for name in names:
+        rules = source[name]["rules"]
+        if not isinstance(rules, list) or not rules or source[name]["length"] != len(rules):
+            raise ValueError(f"Invalid DLC rule count for {name}")
+        raw.extend(rules)
     attrs = category.get("attributes", {})
     include = set(attrs.get("require", []))
     exclude = set(attrs.get("exclude", []))
@@ -119,9 +128,20 @@ def target_rules(category, source):
     merged = {match(rule): rule for rule in selected if match(rule) not in removed}
     for rule in map(parse_rule, local.get("add", [])):
         merged[match(rule)] = rule
-    if not merged:
-        raise ValueError(f"Selected category is empty: {name}")
+    if names and not merged:
+        raise ValueError(f"Selected category is empty: {category['id']}")
     return list(merged.values())
+
+
+def quanx_legacy_rules(content, url, policy):
+    for line in content.splitlines():
+        line = line.strip()
+        if not line or line.startswith(("#", ";", "//")):
+            continue
+        fields = [part.strip() for part in line.split(",")]
+        if len(fields) < 3 or fields[0].lower() not in QUANX_TYPES or not fields[1]:
+            raise ValueError(f"Malformed QuanX filter at {url}: {line}")
+        yield (fields[0].lower(), fields[1], policy, *fields[3:])
 
 
 def write(path, contents):
@@ -157,6 +177,12 @@ def build(output, repo_slug, tag):
     config = read_yaml(ROOT / "sources.yml")
     policy = read_yaml(ROOT / "policy.yml")
     icons = read_yaml(ROOT / "resources.yml")["quanx_icons"]
+    legacy = config.get("quanx_legacy", {})
+    legacy_base = (f"https://raw.githubusercontent.com/{legacy['repository']}/{legacy['commit']}"
+                   if legacy else "")
+    compat = config.get("quanx_compat", {})
+    compat_base = (f"https://raw.githubusercontent.com/{compat['repository']}/{compat['commit']}"
+                   if compat else "")
     release, checksum, source = load_release(config["dlc"], tag)
     if output.exists():
         raise ValueError(f"Choose a new output directory: {output}")
@@ -175,20 +201,38 @@ def build(output, repo_slug, tag):
             if not SLUG.fullmatch(slug) or slug in results:
                 raise ValueError(f"Invalid or duplicate category ID: {slug}")
             selected = target_rules(category, source)
-            policies = {target: policy_name(category["policies"][target]) for target in TARGETS}
+            policies = {target: policy_name(value) for target, value in category["policies"].items()}
+            if not policies or not policies.keys() <= TARGETS.keys():
+                raise ValueError(f"Invalid target selection: {slug}")
+            active = category.get("enabled", True)
             exports = {}
             for target, types in TARGETS.items():
+                if target not in policies:
+                    continue
                 supported = [rule for rule in selected if can_export(rule, target, types)]
                 omitted = sorted(f"{rule.kind}:{rule.value}" for rule in selected
                                  if not can_export(rule, target, types))
-                if not supported:
+                legacy_path = category.get("quanx_legacy") if target == "quanx" else None
+                if not supported and not legacy_path:
                     raise ValueError(f"No convertible rules in {slug}/{target}")
                 exports[target] = {"count": len(supported), "omitted": omitted}
                 if target == "openclash":
                     write_yaml(version / target / f"{slug}.yaml",
                                {"payload": [f"{types[r.kind]},{r.value}" for r in supported]})
                 elif target == "quanx":
-                    lines = [f"{types[r.kind]}, {r.value}, {policies[target]}" for r in supported]
+                    rows = [(types[r.kind], r.value, policies[target]) for r in supported]
+                    if legacy_path:
+                        legacy_url = f"{legacy_base}/{legacy_path}"
+                        content = fetch(legacy_url, 1024 * 1024).decode("utf-8-sig")
+                        rows.extend(quanx_legacy_rules(content, legacy_url, policies[target]))
+                        exports[target]["legacy_source"] = legacy_url
+                    rows = dict.fromkeys(rows)
+                    if not rows:
+                        raise ValueError(f"No QuanX rules in {slug}")
+                    exports[target]["count"] = len(rows)
+                    lines = [", ".join(row) for row in rows]
+                    if legacy_path:
+                        lines = [f"# Legacy source: {legacy_url}", "# See ../LICENSE-QuanX-fork.txt", *lines]
                     write(version / target / f"{slug}.list", "\n".join(lines) + "\n")
                 elif target == "homeproxy":
                     fields = {}
@@ -200,23 +244,50 @@ def build(output, repo_slug, tag):
                 else:
                     payload = [f"{types[r.kind]},{r.value}" for r in supported]
                     write_yaml(version / target / f"{slug}.yaml", {"payload": payload})
-                    nextin_inline_rules.extend(f"{line},{policies[target]}" for line in payload)
+                    if active and category.get("nextin_default", True):
+                        nextin_inline_rules.extend(f"{line},{policies[target]}" for line in payload)
             results[slug] = {"source": category["dlc"], "selected": len(selected), "targets": exports}
             provider = f"network-rules-{slug}"
             clash_url = f"{base}/openclash/{slug}.yaml"
             quanx_url = f"{base}/quanx/{slug}.list"
             homeproxy_url = f"{base}/homeproxy/{slug}.json"
-            providers[provider] = provider_config(clash_url, provider)
-            nextin_provider = f"network-rules-nextin-{slug}"
-            nextin_providers[nextin_provider] = provider_config(f"{base}/nextin/{slug}.yaml",
-                                                               nextin_provider)
-            nextin_remote_rules.append(f"RULE-SET,{nextin_provider},{policies['nextin']}")
-            clash_rules.append(f"RULE-SET,{provider},{policies['openclash']}")
-            quanx_lines.append(f"{quanx_url}, tag={slug}, force-policy={policies['quanx']}, "
-                               "update-interval=86400, enabled=true")
-            homeproxy_routes.append({"tag": provider, "format": "source", "url": homeproxy_url,
-                                     "update_interval": "1d", "outbound": policies["homeproxy"]})
-            index.append(f"| {slug} | [YAML]({clash_url}) | [规则列表]({quanx_url}) | [JSON]({homeproxy_url}) |")
+            if active and "openclash" in policies:
+                providers[provider] = provider_config(clash_url, provider)
+                clash_rules.append(f"RULE-SET,{provider},{policies['openclash']}")
+            if active and "nextin" in policies and category.get("nextin_default", True):
+                nextin_provider = f"network-rules-nextin-{slug}"
+                nextin_providers[nextin_provider] = provider_config(f"{base}/nextin/{slug}.yaml",
+                                                                   nextin_provider)
+                nextin_remote_rules.append(f"RULE-SET,{nextin_provider},{policies['nextin']}")
+            if "quanx" in policies:
+                quanx_lines.append(f"{quanx_url}, tag={slug}, force-policy={policies['quanx']}, "
+                                   f"update-interval=86400, enabled={str(active).lower()}")
+            compat_path = category.get("quanx_compat")
+            if compat_path:
+                compat_source = f"{compat_base}/{compat_path}"
+                content = fetch(compat_source, 1024 * 1024)
+                rule_count = sum(1 for _ in quanx_legacy_rules(
+                    content.decode("utf-8-sig"), compat_source, policies["quanx"]))
+                if not rule_count:
+                    raise ValueError(f"No rules in QuanX companion file: {compat_source}")
+                compat_name = f"{slug}-compat.list"
+                (version / "quanx" / compat_name).write_bytes(content)
+                compat_url = f"{base}/quanx/{compat_name}"
+                quanx_lines.append(f"{compat_url}, tag={slug}-compat, force-policy={policies['quanx']}, "
+                                   f"update-interval=86400, enabled={str(active).lower()}")
+                exports["quanx"]["companion"] = {"source": compat_source, "count": rule_count}
+            if active and "homeproxy" in policies:
+                homeproxy_routes.append({"tag": provider, "format": "source", "url": homeproxy_url,
+                                         "update_interval": "1d", "outbound": policies["homeproxy"]})
+            links = [
+                f"[YAML]({clash_url})" if "openclash" in policies else "—",
+                f"[规则列表]({quanx_url})" if "quanx" in policies else "—",
+                f"[JSON]({homeproxy_url})" if "homeproxy" in policies else "—",
+                f"[YAML]({base}/nextin/{slug}.yaml)" if "nextin" in policies else "—",
+            ]
+            if compat_path:
+                links[1] += f" · [兼容补充]({compat_url})"
+            index.append(f"| {slug} | " + " | ".join(links) + " |")
             if slug in icons["files"]:
                 if not re.fullmatch(r"[a-f0-9]{40}", icons["commit"]):
                     raise ValueError("QuanX icon source must use a pinned commit")
@@ -231,11 +302,15 @@ def build(output, repo_slug, tag):
         write_json(version / "quanx" / "icons.json", icon_index)
         write_json(version / "homeproxy" / "setup.json", homeproxy_routes)
         fallback = policy_name(policy["nextin_fallback"])
-        groups = dict.fromkeys([fallback] + [c["policies"]["nextin"] for c in policy["categories"]])
+        groups = dict.fromkeys([fallback] + [
+            c["policies"]["nextin"] for c in policy["categories"]
+            if "nextin" in c["policies"] and c.get("enabled", True) and c.get("nextin_default", True)
+        ])
         nextin_template = {
             "x-nextin": {"version": 1, "mode": "subscription-template"},
             "proxies": [],
-            "proxy-groups": [{"name": name, "type": "select", "include-all-proxies": True} for name in groups],
+            "proxy-groups": [{"name": name, "type": "select", "include-all-proxies": True}
+                             for name in groups if name not in {"DIRECT", "REJECT"}],
         }
         write_yaml(version / "nextin" / "template.yaml",
                    {**nextin_template, "rules": nextin_inline_rules + [f"MATCH,{fallback}"]})
@@ -248,7 +323,7 @@ def build(output, repo_slug, tag):
         deep_link = "nextin://install?" + urlencode({"module": "subscription-template",
                                                    "url": nextin_remote_url})
         write(version / "README.md", "# Network-Rules 订阅目录\n\n"
-              "| 分类 | OpenClash | QuanX | HomeProxy |\n| --- | --- | --- | --- |\n"
+              "| 分类 | OpenClash | QuanX | HomeProxy | Nextin |\n| --- | --- | --- | --- | --- |\n"
               + "\n".join(index) + f"\n\n[Nextin 自动拉取模板]({nextin_remote_url})"
               f" · [Nextin 内嵌模板]({nextin_url})\n\n"
               f"Nextin 自动拉取模板导入链接\n\n`{deep_link}`\n\n"
@@ -256,6 +331,12 @@ def build(output, repo_slug, tag):
               "各端省略的规则见 [manifest.json](manifest.json) 中的 `omitted`。\n")
         license_text = fetch(f"https://raw.githubusercontent.com/{config['dlc']}/{release}/LICENSE", 64 * 1024)
         write(version / "LICENSE-DLC.txt", license_text.decode("utf-8"))
+        if legacy_base:
+            license_text = fetch(f"{legacy_base}/LICENSE", 64 * 1024)
+            write(version / "LICENSE-QuanX-fork.txt", license_text.decode("utf-8"))
+        if compat_base:
+            license_text = fetch(f"{compat_base}/LICENSE", 64 * 1024)
+            write(version / "LICENSE-QuanX-compat.txt", license_text.decode("utf-8"))
         artifacts = {path.relative_to(stage).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
                      for path in sorted(version.rglob("*")) if path.is_file()}
         write_json(version / "manifest.json", {"release": release, "source_sha256": checksum,

@@ -1,5 +1,26 @@
 [
   {
+    "tag": "network-rules-pt",
+    "format": "source",
+    "url": "https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/pt.json",
+    "update_interval": "1d",
+    "outbound": "direct"
+  },
+  {
+    "tag": "network-rules-tiktok",
+    "format": "source",
+    "url": "https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/tiktok.json",
+    "update_interval": "1d",
+    "outbound": "TikTok"
+  },
+  {
+    "tag": "network-rules-binance",
+    "format": "source",
+    "url": "https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/binance.json",
+    "update_interval": "1d",
+    "outbound": "自动选择"
+  },
+  {
     "tag": "network-rules-openai",
     "format": "source",
     "url": "https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/openai.json",
@@ -19,5 +40,40 @@
     "url": "https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/youtube.json",
     "update_interval": "1d",
     "outbound": "YouTube"
+  },
+  {
+    "tag": "network-rules-telegram",
+    "format": "source",
+    "url": "https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/telegram.json",
+    "update_interval": "1d",
+    "outbound": "Telegram"
+  },
+  {
+    "tag": "network-rules-foreign-media",
+    "format": "source",
+    "url": "https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/foreign-media.json",
+    "update_interval": "1d",
+    "outbound": "国外媒体"
+  },
+  {
+    "tag": "network-rules-google",
+    "format": "source",
+    "url": "https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/google.json",
+    "update_interval": "1d",
+    "outbound": "自动选择"
+  },
+  {
+    "tag": "network-rules-apple",
+    "format": "source",
+    "url": "https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/apple.json",
+    "update_interval": "1d",
+    "outbound": "Apple"
+  },
+  {
+    "tag": "network-rules-overseas",
+    "format": "source",
+    "url": "https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/overseas.json",
+    "update_interval": "1d",
+    "outbound": "自动选择"
   }
 ]

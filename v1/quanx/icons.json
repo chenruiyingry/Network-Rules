@@ -1,4 +1,8 @@
 {
+  "tiktok": {
+    "policy": "TikTok",
+    "img-url": "https://raw.githubusercontent.com/Orz-3/mini/0e2bab71d8dbe512db9b5e7a9000a5661dd0e327/Color/TikTok.png"
+  },
   "openai": {
     "policy": "OpenAI",
     "img-url": "https://raw.githubusercontent.com/Orz-3/mini/0e2bab71d8dbe512db9b5e7a9000a5661dd0e327/Color/OpenAI.png"
@@ -8,7 +12,23 @@
     "img-url": "https://raw.githubusercontent.com/Orz-3/mini/0e2bab71d8dbe512db9b5e7a9000a5661dd0e327/Color/github.png"
   },
   "youtube": {
-    "policy": "YouTube",
+    "policy": "Youtube",
     "img-url": "https://raw.githubusercontent.com/Orz-3/mini/0e2bab71d8dbe512db9b5e7a9000a5661dd0e327/Color/YouTube.png"
+  },
+  "disney-plus": {
+    "policy": "DisneyPlus",
+    "img-url": "https://raw.githubusercontent.com/Orz-3/mini/0e2bab71d8dbe512db9b5e7a9000a5661dd0e327/Color/DisneyPlus.png"
+  },
+  "telegram": {
+    "policy": "Telegram",
+    "img-url": "https://raw.githubusercontent.com/Orz-3/mini/0e2bab71d8dbe512db9b5e7a9000a5661dd0e327/Color/Telegram.png"
+  },
+  "foreign-media": {
+    "policy": "国外媒体",
+    "img-url": "https://raw.githubusercontent.com/Orz-3/mini/0e2bab71d8dbe512db9b5e7a9000a5661dd0e327/Color/Streaming.png"
+  },
+  "apple": {
+    "policy": "Apple",
+    "img-url": "https://raw.githubusercontent.com/Orz-3/mini/0e2bab71d8dbe512db9b5e7a9000a5661dd0e327/Color/Apple.png"
   }
 }

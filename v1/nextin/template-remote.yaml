@@ -7,6 +7,27 @@ proxy-groups:
   type: select
   include-all-proxies: true
 rule-providers:
+  network-rules-nextin-pt:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-pt.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/pt.yaml
+  network-rules-nextin-tiktok:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-tiktok.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/tiktok.yaml
+  network-rules-nextin-binance:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-binance.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/binance.yaml
   network-rules-nextin-openai:
     type: http
     behavior: classical
@@ -28,8 +49,43 @@ rule-providers:
     interval: 86400
     path: ./rule_provider/network-rules-nextin-youtube.yaml
     url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/youtube.yaml
+  network-rules-nextin-telegram:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-telegram.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/telegram.yaml
+  network-rules-nextin-foreign-media:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-foreign-media.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/foreign-media.yaml
+  network-rules-nextin-google:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-google.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/google.yaml
+  network-rules-nextin-apple:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-apple.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/apple.yaml
 rules:
+- RULE-SET,network-rules-nextin-pt,DIRECT
+- RULE-SET,network-rules-nextin-tiktok,节点选择
+- RULE-SET,network-rules-nextin-binance,节点选择
 - RULE-SET,network-rules-nextin-openai,节点选择
 - RULE-SET,network-rules-nextin-github,节点选择
 - RULE-SET,network-rules-nextin-youtube,节点选择
+- RULE-SET,network-rules-nextin-telegram,节点选择
+- RULE-SET,network-rules-nextin-foreign-media,节点选择
+- RULE-SET,network-rules-nextin-google,节点选择
+- RULE-SET,network-rules-nextin-apple,节点选择
 - MATCH,节点选择

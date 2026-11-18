@@ -1,0 +1,7 @@
+quanx_icons:
+  repository: Orz-3/mini
+  commit: 0e2bab71d8dbe512db9b5e7a9000a5661dd0e327
+  files:
+    openai: Color/OpenAI.png
+    github: Color/github.png
+    youtube: Color/YouTube.png

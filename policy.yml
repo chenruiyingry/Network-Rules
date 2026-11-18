@@ -1,0 +1,13 @@
+# Trial settings. Replace the policy names after reviewing your active profiles.
+homeproxy_rule_set_version: 2
+nextin_fallback: 节点选择
+categories:
+  - id: openai
+    dlc: openai
+    policies: {openclash: OpenAI, quanx: OpenAI, homeproxy: OpenAI, nextin: 节点选择}
+  - id: github
+    dlc: github
+    policies: {openclash: GitHub, quanx: GitHub, homeproxy: GitHub, nextin: 节点选择}
+  - id: youtube
+    dlc: youtube
+    policies: {openclash: YouTube, quanx: YouTube, homeproxy: YouTube, nextin: 节点选择}

@@ -1,0 +1,329 @@
+"""Build and validate static rule sets from an official DLC release."""
+
+import argparse
+from dataclasses import dataclass
+import hashlib
+import json
+from pathlib import Path
+import re
+import sys
+from tempfile import TemporaryDirectory
+from time import sleep
+from urllib.error import URLError
+from urllib.parse import quote, urlencode
+from urllib.request import Request, urlopen
+
+import yaml
+
+
+ROOT = Path(__file__).resolve().parents[1]
+ASSET = "dlc.dat_plain.yml"
+TARGETS = {
+    "openclash": {"full": "DOMAIN", "domain": "DOMAIN-SUFFIX",
+                  "keyword": "DOMAIN-KEYWORD", "regexp": "DOMAIN-REGEX"},
+    "quanx": {"full": "host", "domain": "host-suffix", "keyword": "host-keyword"},
+    "homeproxy": {"full": "domain", "domain": "domain_suffix",
+                  "keyword": "domain_keyword", "regexp": "domain_regex"},
+    "nextin": {"full": "DOMAIN", "domain": "DOMAIN-SUFFIX", "keyword": "DOMAIN-KEYWORD"},
+}
+SLUG = re.compile(r"[a-z0-9][a-z0-9_-]*")
+ATTRIBUTE_TAIL = re.compile(r":((?:@[\w-]+,)*@[\w-]+)$")
+DOMAIN = re.compile(r"(?=.{1,253}$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*")
+
+
+@dataclass(frozen=True)
+class Rule:
+    kind: str
+    value: str
+    attributes: frozenset = frozenset()
+
+
+def read_yaml(path):
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
+def parse_rule(entry):
+    if not isinstance(entry, str):
+        raise ValueError(f"Invalid DLC entry: {entry!r}")
+    kind, _, value = entry.partition(":")
+    tail = ATTRIBUTE_TAIL.search(value)
+    attributes = frozenset()
+    if tail:
+        attributes = frozenset(part[1:] for part in tail[1].split(","))
+        value = value[:tail.start()]
+    if kind in {"full", "domain"}:
+        value = value.rstrip(".").encode("idna").decode("ascii").lower()
+        if not DOMAIN.fullmatch(value):
+            raise ValueError(f"Invalid domain: {entry}")
+    elif kind not in {"keyword", "regexp"} or not value.strip():
+        raise ValueError(f"Unsupported or invalid DLC entry: {entry}")
+    if any(char in value for char in "\r\n") or (kind == "keyword" and "," in value):
+        raise ValueError(f"Invalid delimiter in DLC entry: {entry}")
+    return Rule(kind, value, attributes)
+
+
+def fetch(url, max_bytes):
+    for attempt in range(3):
+        try:
+            request = Request(url, headers={"User-Agent": "Network-Rules"})
+            with urlopen(request, timeout=30) as response:
+                payload = response.read(max_bytes + 1)
+            if not payload or len(payload) > max_bytes:
+                raise ValueError(f"Unexpected download size: {url}")
+            return payload
+        except (URLError, TimeoutError):
+            if attempt == 2:
+                raise
+            sleep(2 ** attempt)
+
+
+def load_release(repo, tag):
+    base = f"https://github.com/{repo}/releases/download"
+    if tag is None:
+        endpoint = f"https://api.github.com/repos/{repo}/releases/latest"
+        tag = json.loads(fetch(endpoint, 1024 * 1024))["tag_name"]
+    if not re.fullmatch(r"\d{14}", tag):
+        raise ValueError(f"Unexpected DLC release tag: {tag}")
+    url = f"{base}/{tag}/{ASSET}"
+    checksum_fields = fetch(f"{url}.sha256sum", 1024).decode("ascii").split()
+    if not checksum_fields or not re.fullmatch(r"[a-fA-F0-9]{64}", checksum_fields[0]):
+        raise ValueError("Invalid DLC checksum file")
+    expected = checksum_fields[0]
+    payload = fetch(url, 32 * 1024 * 1024)
+    digest = hashlib.sha256(payload).hexdigest()
+    if expected.lower() != digest:
+        raise ValueError("DLC asset SHA-256 mismatch")
+    source = yaml.safe_load(payload)
+    lists = source["lists"]
+    by_name = {item["name"]: item for item in lists}
+    if len(by_name) != len(lists) or not by_name:
+        raise ValueError("DLC release contains duplicate categories or no categories")
+    return tag, digest, by_name
+
+
+def target_rules(category, source):
+    name = category["dlc"]
+    raw = source[name]["rules"]
+    if not isinstance(raw, list) or not raw or source[name]["length"] != len(raw):
+        raise ValueError(f"Invalid DLC rule count for {name}")
+    attrs = category.get("attributes", {})
+    include = set(attrs.get("require", []))
+    exclude = set(attrs.get("exclude", []))
+    overrides = ROOT / "overrides" / f'{category["id"]}.yml'
+    local = read_yaml(overrides) if overrides.is_file() else {}
+    removed = {(rule.kind, rule.value) for rule in map(parse_rule, local.get("remove", []))}
+    selected = [rule for rule in map(parse_rule, raw)
+                if include <= rule.attributes and not exclude & rule.attributes]
+    def match(rule):
+        return (rule.kind, rule.value)
+    merged = {match(rule): rule for rule in selected if match(rule) not in removed}
+    for rule in map(parse_rule, local.get("add", [])):
+        merged[match(rule)] = rule
+    if not merged:
+        raise ValueError(f"Selected category is empty: {name}")
+    return list(merged.values())
+
+
+def write(path, contents):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(contents, encoding="utf-8")
+
+
+def write_yaml(path, data):
+    write(path, yaml.safe_dump(data, allow_unicode=True, sort_keys=False))
+
+
+def write_json(path, data):
+    write(path, json.dumps(data, ensure_ascii=False, indent=2) + "\n")
+
+
+def policy_name(value):
+    if not isinstance(value, str) or not value.strip() or any(c in value for c in ",\r\n"):
+        raise ValueError(f"Invalid policy name: {value!r}")
+    return value
+
+
+def can_export(rule, target, types):
+    # Classical Clash providers use comma-separated fields.
+    return rule.kind in types and (target != "openclash" or "," not in rule.value)
+
+
+def provider_config(url, name):
+    return {"type": "http", "behavior": "classical", "format": "yaml",
+            "interval": 86400, "path": f"./rule_provider/{name}.yaml", "url": url}
+
+
+def build(output, repo_slug, tag):
+    config = read_yaml(ROOT / "sources.yml")
+    policy = read_yaml(ROOT / "policy.yml")
+    icons = read_yaml(ROOT / "resources.yml")["quanx_icons"]
+    release, checksum, source = load_release(config["dlc"], tag)
+    if output.exists():
+        raise ValueError(f"Choose a new output directory: {output}")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    base = f"https://raw.githubusercontent.com/{repo_slug}/publish/v1"
+    with TemporaryDirectory(dir=output.parent) as tmp:
+        stage = Path(tmp) / "output"
+        version = stage / "v1"
+        results = {}
+        providers = {}
+        clash_rules, quanx_lines, homeproxy_routes, index = [], [], [], []
+        nextin_providers, nextin_remote_rules, nextin_inline_rules = {}, [], []
+        icon_index = {}
+        for category in policy["categories"]:
+            slug = category["id"]
+            if not SLUG.fullmatch(slug) or slug in results:
+                raise ValueError(f"Invalid or duplicate category ID: {slug}")
+            selected = target_rules(category, source)
+            policies = {target: policy_name(category["policies"][target]) for target in TARGETS}
+            exports = {}
+            for target, types in TARGETS.items():
+                supported = [rule for rule in selected if can_export(rule, target, types)]
+                omitted = sorted(f"{rule.kind}:{rule.value}" for rule in selected
+                                 if not can_export(rule, target, types))
+                if not supported:
+                    raise ValueError(f"No convertible rules in {slug}/{target}")
+                exports[target] = {"count": len(supported), "omitted": omitted}
+                if target == "openclash":
+                    write_yaml(version / target / f"{slug}.yaml",
+                               {"payload": [f"{types[r.kind]},{r.value}" for r in supported]})
+                elif target == "quanx":
+                    lines = [f"{types[r.kind]}, {r.value}, {policies[target]}" for r in supported]
+                    write(version / target / f"{slug}.list", "\n".join(lines) + "\n")
+                elif target == "homeproxy":
+                    fields = {}
+                    for rule in supported:
+                        fields.setdefault(types[rule.kind], []).append(rule.value)
+                    rules = [{key: values} for key, values in fields.items()]
+                    write_json(version / target / f"{slug}.json",
+                               {"version": policy["homeproxy_rule_set_version"], "rules": rules})
+                else:
+                    payload = [f"{types[r.kind]},{r.value}" for r in supported]
+                    write_yaml(version / target / f"{slug}.yaml", {"payload": payload})
+                    nextin_inline_rules.extend(f"{line},{policies[target]}" for line in payload)
+            results[slug] = {"source": category["dlc"], "selected": len(selected), "targets": exports}
+            provider = f"network-rules-{slug}"
+            clash_url = f"{base}/openclash/{slug}.yaml"
+            quanx_url = f"{base}/quanx/{slug}.list"
+            homeproxy_url = f"{base}/homeproxy/{slug}.json"
+            providers[provider] = provider_config(clash_url, provider)
+            nextin_provider = f"network-rules-nextin-{slug}"
+            nextin_providers[nextin_provider] = provider_config(f"{base}/nextin/{slug}.yaml",
+                                                               nextin_provider)
+            nextin_remote_rules.append(f"RULE-SET,{nextin_provider},{policies['nextin']}")
+            clash_rules.append(f"RULE-SET,{provider},{policies['openclash']}")
+            quanx_lines.append(f"{quanx_url}, tag={slug}, force-policy={policies['quanx']}, "
+                               "update-interval=86400, enabled=true")
+            homeproxy_routes.append({"tag": provider, "format": "source", "url": homeproxy_url,
+                                     "update_interval": "1d", "outbound": policies["homeproxy"]})
+            index.append(f"| {slug} | [YAML]({clash_url}) | [规则列表]({quanx_url}) | [JSON]({homeproxy_url}) |")
+            if slug in icons["files"]:
+                if not re.fullmatch(r"[a-f0-9]{40}", icons["commit"]):
+                    raise ValueError("QuanX icon source must use a pinned commit")
+                icon = quote(icons["files"][slug], safe="/")
+                icon_index[slug] = {"policy": policies["quanx"], "img-url":
+                                    f"https://raw.githubusercontent.com/{icons['repository']}/{icons['commit']}/{icon}"}
+        if not results:
+            raise ValueError("No categories configured")
+        write(version / "openclash" / "overwrite.conf", "[YAML]\n" + yaml.safe_dump(
+            {"rule-providers": providers, "+rules": clash_rules}, allow_unicode=True, sort_keys=False))
+        write(version / "quanx" / "filter-remote.conf", "[filter_remote]\n" + "\n".join(quanx_lines) + "\n")
+        write_json(version / "quanx" / "icons.json", icon_index)
+        write_json(version / "homeproxy" / "setup.json", homeproxy_routes)
+        fallback = policy_name(policy["nextin_fallback"])
+        groups = dict.fromkeys([fallback] + [c["policies"]["nextin"] for c in policy["categories"]])
+        nextin_template = {
+            "x-nextin": {"version": 1, "mode": "subscription-template"},
+            "proxies": [],
+            "proxy-groups": [{"name": name, "type": "select", "include-all-proxies": True} for name in groups],
+        }
+        write_yaml(version / "nextin" / "template.yaml",
+                   {**nextin_template, "rules": nextin_inline_rules + [f"MATCH,{fallback}"]})
+        write_yaml(version / "nextin" / "template-remote.yaml", {
+            **nextin_template, "rule-providers": nextin_providers,
+            "rules": nextin_remote_rules + [f"MATCH,{fallback}"],
+        })
+        nextin_url = f"{base}/nextin/template.yaml"
+        nextin_remote_url = f"{base}/nextin/template-remote.yaml"
+        deep_link = "nextin://install?" + urlencode({"module": "subscription-template",
+                                                   "url": nextin_remote_url})
+        write(version / "README.md", "# Network-Rules 订阅目录\n\n"
+              "| 分类 | OpenClash | QuanX | HomeProxy |\n| --- | --- | --- | --- |\n"
+              + "\n".join(index) + f"\n\n[Nextin 自动拉取模板]({nextin_remote_url})"
+              f" · [Nextin 内嵌模板]({nextin_url})\n\n"
+              f"Nextin 自动拉取模板导入链接\n\n`{deep_link}`\n\n"
+              "QuanX 图标见 [icons.json](quanx/icons.json)。将 `img-url` 加到对应 `[policy]` 策略组。\n\n"
+              "各端省略的规则见 [manifest.json](manifest.json) 中的 `omitted`。\n")
+        license_text = fetch(f"https://raw.githubusercontent.com/{config['dlc']}/{release}/LICENSE", 64 * 1024)
+        write(version / "LICENSE-DLC.txt", license_text.decode("utf-8"))
+        artifacts = {path.relative_to(stage).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+                     for path in sorted(version.rglob("*")) if path.is_file()}
+        write_json(version / "manifest.json", {"release": release, "source_sha256": checksum,
+                                              "categories": results, "files": artifacts})
+        stage.rename(output)
+    print(f"DLC {release}: {len(results)} categories in {output}")
+
+
+def manifest(directory):
+    return json.loads((directory / "v1" / "manifest.json").read_text(encoding="utf-8"))
+
+
+def check(directory):
+    data = manifest(directory)
+    expected = set(data["files"]) | {"v1/manifest.json"}
+    actual = {path.relative_to(directory).as_posix() for path in directory.rglob("*") if path.is_file()}
+    if expected != actual:
+        raise ValueError("Output file list differs from manifest")
+    for path, digest in data["files"].items():
+        if hashlib.sha256((directory / path).read_bytes()).hexdigest() != digest:
+            raise ValueError(f"Output hash mismatch: {path}")
+    for slug, category in data["categories"].items():
+        for target, info in category["targets"].items():
+            if info["omitted"]:
+                print(f"{slug}/{target}: {len(info['omitted'])} omitted ({'; '.join(info['omitted'])})")
+    print(f"Verified {len(data['files'])} artifacts")
+
+
+def diff(previous, candidate, gate):
+    old, new = manifest(previous), manifest(candidate)
+    if gate and old["release"] > new["release"]:
+        raise ValueError("Refusing to publish an older DLC release")
+    for slug in sorted(old["categories"].keys() - new["categories"].keys()):
+        print(f"{slug}: category removed")
+    for slug, entry in new["categories"].items():
+        prior = old["categories"].get(slug, {}).get("selected", 0)
+        current = entry["selected"]
+        print(f"{slug}: {prior} -> {current}")
+        if prior and abs(current - prior) / prior >= 0.30:
+            print(f"{slug}: rule count changed by at least 30%")
+
+
+def main():
+    cli = argparse.ArgumentParser(description=__doc__)
+    commands = cli.add_subparsers(dest="command", required=True)
+    make = commands.add_parser("build")
+    make.add_argument("--output", type=Path, default=Path("dist"))
+    make.add_argument("--release")
+    make.add_argument("--repository", default="chenruiyingry/Network-Rules")
+    verify = commands.add_parser("check")
+    verify.add_argument("directory", type=Path)
+    compare = commands.add_parser("diff")
+    compare.add_argument("previous", type=Path)
+    compare.add_argument("candidate", type=Path)
+    compare.add_argument("--gate", action="store_true")
+    args = cli.parse_args()
+    if args.command == "build":
+        if not re.fullmatch(r"[\w.-]+/[\w.-]+", args.repository):
+            raise ValueError("Repository must be owner/name")
+        build(args.output, args.repository, args.release)
+    elif args.command == "check":
+        check(args.directory)
+    else:
+        diff(args.previous, args.candidate, args.gate)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except (ValueError, OSError, KeyError, TypeError, yaml.YAMLError) as error:
+        sys.exit(f"Network-Rules: {error}")

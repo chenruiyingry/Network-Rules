@@ -253,6 +253,16 @@ def build(output, repo_slug, tag):
             if not policies or not policies.keys() <= TARGETS.keys():
                 raise ValueError(f"Invalid target selection: {slug}")
             active = category.get("enabled", True)
+            compat_path = category.get("quanx_compat")
+            merge_compat = category.get("quanx_merge_compat", False)
+            compat_rows = []
+            if compat_path:
+                compat_source = f"{compat_base}/{compat_path}"
+                compat_content = fetch(compat_source, 1024 * 1024)
+                compat_rows = list(quanx_legacy_rules(
+                    compat_content.decode("utf-8-sig"), compat_source, policies["quanx"]))
+                if not compat_rows:
+                    raise ValueError(f"No rules in QuanX companion file: {compat_source}")
             exports = {}
             for target, types in TARGETS.items():
                 if target not in policies:
@@ -261,7 +271,8 @@ def build(output, repo_slug, tag):
                 omitted = gfw_omitted + sorted(f"{rule.kind}:{rule.value}" for rule in selected
                                                if not can_export(rule, target, types))
                 legacy_path = category.get("quanx_legacy") if target == "quanx" else None
-                if not supported and not legacy_path:
+                include_compat = target == "quanx" and merge_compat and bool(compat_rows)
+                if not supported and not legacy_path and not include_compat:
                     raise ValueError(f"No convertible rules in {slug}/{target}")
                 exports[target] = {"count": len(supported), "omitted": omitted}
                 if target == "openclash":
@@ -274,6 +285,9 @@ def build(output, repo_slug, tag):
                         content = fetch(legacy_url, 1024 * 1024).decode("utf-8-sig")
                         rows.extend(quanx_legacy_rules(content, legacy_url, policies[target]))
                         exports[target]["legacy_source"] = legacy_url
+                    if include_compat:
+                        rows.extend(compat_rows)
+                        exports[target]["compat_source"] = compat_source
                     rows = dict.fromkeys(rows)
                     if not rows:
                         raise ValueError(f"No QuanX rules in {slug}")
@@ -284,6 +298,9 @@ def build(output, repo_slug, tag):
                                  "# Source snapshot: ../sources/gfwlist.txt", *lines]
                     if legacy_path:
                         lines = [f"# Legacy source: {legacy_url}", "# See ../LICENSE-QuanX-fork.txt", *lines]
+                    if include_compat:
+                        lines = [f"# Compatibility source: {compat_source}",
+                                 "# See ../LICENSE-QuanX-compat.txt", *lines]
                     write(version / target / f"{slug}.list", "\n".join(lines) + "\n")
                 elif target == "homeproxy":
                     fields = {}
@@ -314,20 +331,14 @@ def build(output, repo_slug, tag):
             if "quanx" in policies:
                 quanx_lines.append(f"{quanx_url}, tag={slug}, force-policy={policies['quanx']}, "
                                    f"update-interval=86400, enabled={str(active).lower()}")
-            compat_path = category.get("quanx_compat")
             if compat_path:
-                compat_source = f"{compat_base}/{compat_path}"
-                content = fetch(compat_source, 1024 * 1024)
-                rule_count = sum(1 for _ in quanx_legacy_rules(
-                    content.decode("utf-8-sig"), compat_source, policies["quanx"]))
-                if not rule_count:
-                    raise ValueError(f"No rules in QuanX companion file: {compat_source}")
                 compat_name = f"{slug}-compat.list"
-                (version / "quanx" / compat_name).write_bytes(content)
+                (version / "quanx" / compat_name).write_bytes(compat_content)
                 compat_url = f"{base}/quanx/{compat_name}"
-                quanx_lines.append(f"{compat_url}, tag={slug}-compat, force-policy={policies['quanx']}, "
-                                   f"update-interval=86400, enabled={str(active).lower()}")
-                exports["quanx"]["companion"] = {"source": compat_source, "count": rule_count}
+                if not merge_compat:
+                    quanx_lines.append(f"{compat_url}, tag={slug}-compat, force-policy={policies['quanx']}, "
+                                       f"update-interval=86400, enabled={str(active).lower()}")
+                exports["quanx"]["companion"] = {"source": compat_source, "count": len(compat_rows)}
             if active and "homeproxy" in policies:
                 homeproxy_routes.append({"tag": provider, "format": "source", "url": homeproxy_url,
                                          "update_interval": "1d", "outbound": policies["homeproxy"]})
@@ -337,7 +348,7 @@ def build(output, repo_slug, tag):
                 f"[JSON]({homeproxy_url})" if "homeproxy" in policies else "—",
                 f"[YAML]({base}/nextin/{slug}.yaml)" if "nextin" in policies else "—",
             ]
-            if compat_path:
+            if compat_path and not merge_compat:
                 links[1] += f" · [兼容补充]({compat_url})"
             index.append(f"| {slug} | " + " | ".join(links) + " |")
             if slug in icons["files"]:

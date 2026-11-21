@@ -10,7 +10,12 @@ categories:
     dlc: category-pt
     quanx_legacy: Rules/PT.list
     quanx_compat: rule/QuantumultX/PrivateTracker/PrivateTracker.list
+    quanx_merge_compat: true
     policies: {openclash: DIRECT, quanx: DIRECT, homeproxy: direct, nextin: DIRECT}
+  - id: personal-sites
+    dlc: []
+    quanx_legacy: Rules/MySelf.list
+    policies: {quanx: DIRECT}
   - id: tiktok
     dlc: tiktok
     quanx_compat: rule/QuantumultX/TikTok/TikTok.list

@@ -3,57 +3,28 @@ x-nextin:
   mode: subscription-template
 proxies: []
 proxy-groups:
-- name: AUTO
-  type: url-test
-  include-all-proxies: true
-  filter: .*
-  url: https://www.gstatic.com/generate_204
-  interval: 300
-  empty-fallback: REJECT
-- name: ST
-  type: url-test
-  include-all-proxies: true
-  filter: (?i)-[ \t]*ST[ \t]*-
-  url: https://www.gstatic.com/generate_204
-  interval: 300
-  empty-fallback: REJECT
-- name: GZ-ST
-  type: url-test
-  include-all-proxies: true
-  filter: (?i)(?:^|-)frpst-gz(?:-|$)
-  url: https://www.gstatic.com/generate_204
-  interval: 300
-  empty-fallback: REJECT
-- name: GZ-TC
-  type: url-test
-  include-all-proxies: true
-  filter: (?i)(?:^|-)frptc-gz(?:-|$)
-  url: https://www.gstatic.com/generate_204
-  interval: 300
-  empty-fallback: REJECT
-- name: GZ
-  type: select
-  proxies:
-  - GZ-ST
-  - GZ-TC
 - name: 通用分流
-  type: select
-  proxies:
-  - AUTO
-  - GZ
-  - ST
-- name: OpenAI
-  type: select
-  proxies:
-  - AUTO
-  - GZ
-  - ST
+  type: url-test
+  include-all-proxies: true
+  exclude-filter: (?i)(?<![a-z0-9])(?:[x×][ \t]*[0-9]+(?:[.．][0-9]+)?|[0-9]+(?:[.．][0-9]+)?[
+    \t]*[x×])(?![a-z0-9])
+  url: https://www.gstatic.com/generate_204
+  interval: 300
+  empty-fallback: REJECT
 - name: AppleTV
-  type: select
-  proxies:
-  - AUTO
-  - GZ
-  - ST
+  type: url-test
+  include-all-proxies: true
+  filter: (?i)美国|美國|🇺🇸|united[ _-]+states|(?<![a-z0-9])usa?[0-9]*(?![a-z0-9])
+  url: https://www.gstatic.com/generate_204
+  interval: 300
+  empty-fallback: REJECT
+- name: OpenAI
+  type: url-test
+  include-all-proxies: true
+  filter: (?i)^(?=.*(?:美国|美國|🇺🇸|united[ _-]+states|新加坡|狮城|獅城|🇸🇬|singapore|(?<![a-z0-9])(?:usa?|sg)[0-9]*(?![a-z0-9])))(?=.*(?<![a-z0-9])ai[0-9]*(?![a-z0-9]))
+  url: https://www.gstatic.com/generate_204
+  interval: 300
+  empty-fallback: REJECT
 - name: Apple
   type: select
   proxies:

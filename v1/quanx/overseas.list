@@ -357,6 +357,7 @@ host-suffix, 51dh.site, 自动选择
 host-suffix, 51lieqi.com, 自动选择
 host-suffix, 51luoli.info, 自动选择
 host-suffix, 51mh.app, 自动选择
+host-suffix, 51papaya.com, 自动选择
 host-suffix, 51pincha.cc, 自动选择
 host-suffix, 51tuqiang.com, 自动选择
 host-suffix, 520aa.tv, 自动选择
@@ -4339,6 +4340,7 @@ host-suffix, bravoporn.com, 自动选择
 host-suffix, bravoteens.com, 自动选择
 host-suffix, bravotube.net, 自动选择
 host-suffix, bravotube.tv, 自动选择
+host-suffix, bravotv.com, 自动选择
 host-suffix, brawlstars.com, 自动选择
 host-suffix, brawlstarsgame.com, 自动选择
 host-suffix, brazilpartneruniversity.com, 自动选择
@@ -5406,6 +5408,7 @@ host-suffix, cn.mm.bing.net, 自动选择
 host-suffix, cn.pool.ntp.org, 自动选择
 host-suffix, cna.com.tw, 自动选择
 host-suffix, cnbc.com, 自动选择
+host-suffix, cnbccouncils.com, 自动选择
 host-suffix, cnbcfm.com, 自动选择
 host-suffix, cnbeta.com, 自动选择
 host-suffix, cnbeta.com.tw, 自动选择
@@ -8066,6 +8069,7 @@ host-suffix, fantasti.cc, 自动选择
 host-suffix, fantom.foundation, 自动选择
 host-suffix, fantom.network, 自动选择
 host-suffix, fantv.hk, 自动选择
+host-suffix, fanza.jp, 自动选择
 host-suffix, fap-xxx.com, 自动选择
 host-suffix, fap18.net, 自动选择
 host-suffix, fap666.com, 自动选择
@@ -8468,6 +8472,7 @@ host-suffix, fnacebook.com, 自动选择
 host-suffix, fnlondon.com, 自动选择
 host-suffix, fnmt.es, 自动选择
 host-suffix, foampositeshoes.com, 自动选择
+host-suffix, focusfeatures.com, 自动选择
 host-suffix, foftolia.com, 自动选择
 host-suffix, follasian.com, 自动选择
 host-suffix, followpype.com, 自动选择
@@ -10061,6 +10066,7 @@ host-suffix, hayabusa.io, 自动选择
 host-suffix, hayabusa.media, 自动选择
 host-suffix, hayday.com, 自动选择
 host-suffix, haydaygame.com, 自动选择
+host-suffix, hayu.com, 自动选择
 host-suffix, hayya.ae, 自动选择
 host-suffix, hbabit.com, 自动选择
 host-suffix, hbfile.net, 自动选择
@@ -10452,6 +10458,7 @@ host-suffix, hkheadline.com, 自动选择
 host-suffix, hkopentv.com, 自动选择
 host-suffix, hkporn.net, 自动选择
 host-suffix, hkreadingcity.net, 自动选择
+host-suffix, hkt, 自动选择
 host-suffix, hkt-enterprise.com, 自动选择
 host-suffix, hkt-eye.com, 自动选择
 host-suffix, hkt.com, 自动选择
@@ -11295,6 +11302,7 @@ host-suffix, ilife.eu, 自动选择
 host-suffix, ilife.gr, 自动选择
 host-suffix, ilife.wang, 自动选择
 host-suffix, illgames.jp, 自动选择
+host-suffix, illumination.com, 自动选择
 host-suffix, illusion111.com, 自动选择
 host-suffix, illusionas.com, 自动选择
 host-suffix, illusionchn.com, 自动选择
@@ -14752,7 +14760,6 @@ host-suffix, msk.kitazawa.me, 自动选择
 host-suffix, msn.cn, 自动选择
 host-suffix, msn.com, 自动选择
 host-suffix, msn.net, 自动选择
-host-suffix, msnbc.com, 自动选择
 host-suffix, msnewskids.com, 自动选择
 host-suffix, msnewskids.net, 自动选择
 host-suffix, msnewskids.org, 自动选择
@@ -15115,8 +15122,11 @@ host-suffix, nbcnews.com, 自动选择
 host-suffix, nbcolympics.com, 自动选择
 host-suffix, nbcsports.com, 自动选择
 host-suffix, nbcudigitaladops.com, 自动选择
+host-suffix, nbcumv.com, 自动选择
 host-suffix, nbcuni.com, 自动选择
+host-suffix, nbcunicareers.com, 自动选择
 host-suffix, nbcuniversal.com, 自动选择
+host-suffix, nbcuniversalprivacy.com, 自动选择
 host-suffix, nbdh15.buzz, 自动选择
 host-suffix, nbys.tv, 自动选择
 host-suffix, nbys1.tv, 自动选择
@@ -16649,6 +16659,7 @@ host-suffix, pbjar1205.pro, 自动选择
 host-suffix, pbs.org, 自动选择
 host-suffix, pc.com, 自动选择
 host-suffix, pca.st, 自动选择
+host-suffix, pccw, 自动选择
 host-suffix, pccw.com, 自动选择
 host-suffix, pccwglobal.com, 自动选择
 host-suffix, pccwsolutions.com, 自动选择
@@ -18094,6 +18105,7 @@ host-suffix, rentaride.com, 自动选择
 host-suffix, rentaride.de, 自动选择
 host-suffix, renzhe.cloud, 自动选择
 host-suffix, repe21.com, 自动选择
+host-suffix, replit.com, 自动选择
 host-suffix, repo.new, 自动选择
 host-suffix, report-megafon.ru, 自动选择
 host-suffix, repotama.com, 自动选择
@@ -20302,6 +20314,7 @@ host-suffix, telegram.space, 自动选择
 host-suffix, telekom.com, 自动选择
 host-suffix, telekom.de, 自动选择
 host-suffix, telemetry.microsoft.com, 自动选择
+host-suffix, telemundo.com, 自动选择
 host-suffix, telerik.com, 自动选择
 host-suffix, telesco.pe, 自动选择
 host-suffix, telesec.de, 自动选择
@@ -20764,6 +20777,7 @@ host-suffix, toroporno.com, 自动选择
 host-suffix, torproject.org, 自动选择
 host-suffix, torrentkitty.tv, 自动选择
 host-suffix, torrindex.net, 自动选择
+host-suffix, tortoisegit.org, 自动选择
 host-suffix, tospo-keiba.jp, 自动选择
 host-suffix, tospotify.com, 自动选择
 host-suffix, totalmateria.com, 自动选择
@@ -21157,6 +21171,7 @@ host-suffix, udn.com.tw, 自动选择
 host-suffix, udndata.com, 自动选择
 host-suffix, udnfunlife.com, 自动选择
 host-suffix, udtrucksmeena.com, 自动选择
+host-suffix, udxfpp.com, 自动选择
 host-suffix, ueberamazon.de, 自动选择
 host-suffix, uflash.tv, 自动选择
 host-suffix, uguide.ru, 自动选择
@@ -21217,11 +21232,18 @@ host-suffix, united.ru, 自动选择
 host-suffix, unity.com, 自动选择
 host-suffix, unity3d.com, 自动选择
 host-suffix, unityads.unity3d.com, 自动选择
+host-suffix, universalbeijingresort.com, 自动选择
+host-suffix, universalhorrorunleashed.com, 自动选择
+host-suffix, universalkidsresort.com, 自动选择
 host-suffix, universalorlando.com, 自动选择
+host-suffix, universalpictures.co.uk, 自动选择
 host-suffix, universalpictures.com, 自动选择
+host-suffix, universalpicturesathome.com, 自动选择
 host-suffix, universalpicturesinternational.com, 自动选择
+host-suffix, universalproductsexperiences.com, 自动选择
 host-suffix, universalscalablefirmware.org, 自动选择
 host-suffix, universalstudioshollywood.com, 自动选择
+host-suffix, universalukproject.co.uk, 自动选择
 host-suffix, universitypressscholarship.com, 自动选择
 host-suffix, unkoscene.com, 自动选择
 host-suffix, unlocklimitlesslearning.com, 自动选择
@@ -21240,6 +21262,7 @@ host-suffix, up01.cc, 自动选择
 host-suffix, updatetube.com, 自动选择
 host-suffix, upfrontcfd.com, 自动选择
 host-suffix, upfrontfea.com, 自动选择
+host-suffix, uphe.com, 自动选择
 host-suffix, upholdjustice.org, 自动选择
 host-suffix, upjav.cc, 自动选择
 host-suffix, uplay-istrip.com, 自动选择
@@ -21277,6 +21300,7 @@ host-suffix, userdrive.org, 自动选择
 host-suffix, userpxt.io, 自动选择
 host-suffix, usersdrive.com, 自动选择
 host-suffix, usertrust.com, 自动选择
+host-suffix, usj.co.jp, 自动选择
 host-suffix, usocial.pro, 自动选择
 host-suffix, usvimosquito.com, 自动选择
 host-suffix, usvimosquitoproject.com, 自动选择

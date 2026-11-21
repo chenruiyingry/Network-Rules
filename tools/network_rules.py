@@ -32,7 +32,7 @@ SLUG = re.compile(r"[a-z0-9][a-z0-9_-]*")
 ATTRIBUTE_TAIL = re.compile(r":((?:@!?[\w-]+,)*@!?[\w-]+)$")
 DOMAIN = re.compile(r"(?=.{1,253}$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*")
 QUANX_TYPES = {"host", "host-suffix", "host-keyword", "host-wildcard", "user-agent",
-               "ip-cidr", "ip6-cidr", "ip-asn"}
+               "ip-cidr", "ip6-cidr", "ip-asn", "geoip"}
 GFW_SUFFIX = re.compile(r"\|\|((?:[a-z0-9-]+\.)+[a-z0-9-]+)\^?", re.I)
 GFW_EXCEPTION = re.compile(r"\|\|(?:\*\.)?((?:[a-z0-9-]+\.)+[a-z0-9-]+)", re.I)
 GFW_REGEX_SUFFIX = re.compile(r"((?:[a-z0-9-]+\\\.)+[a-z0-9-]+)\$/?$", re.I)
@@ -184,6 +184,19 @@ def quanx_legacy_rules(content, url, policy):
         yield (fields[0].lower(), fields[1], policy, *fields[3:])
 
 
+def nextin_legacy_payload(rows):
+    types = {"host": "DOMAIN", "host-suffix": "DOMAIN-SUFFIX",
+             "host-keyword": "DOMAIN-KEYWORD", "ip-cidr": "IP-CIDR",
+             "ip6-cidr": "IP-CIDR6", "ip-asn": "IP-ASN"}
+    payload, omitted = [], []
+    for kind, value, _, *options in rows:
+        if kind in types and all(option == "no-resolve" for option in options):
+            payload.append(",".join([types[kind], value, *options]))
+        else:
+            omitted.append(f"{kind}:{value}")
+    return payload, omitted
+
+
 def write(path, contents):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(contents, encoding="utf-8")
@@ -211,6 +224,27 @@ def can_export(rule, target, types):
 def provider_config(url, name):
     return {"type": "http", "behavior": "classical", "format": "yaml",
             "interval": 86400, "path": f"./rule_provider/{name}.yaml", "url": url}
+
+
+def nextin_routing_template(template, routing, results, base):
+    groups = [
+        {"name": name, "type": "url-test", "include-all-proxies": True, "filter": pattern,
+         "url": "https://www.gstatic.com/generate_204", "interval": 300,
+         "empty-fallback": "REJECT"}
+        for name, pattern in routing["auto_filters"].items()
+    ]
+    groups.extend({"name": name, "type": "select", "proxies": members}
+                  for name, members in routing["groups"].items())
+    providers, rules = {}, list(routing["before"])
+    policy_names = {"DIRECT", "REJECT"} | {group["name"] for group in groups}
+    for slug, policy in routing["categories"].items():
+        if "nextin" not in results[slug]["targets"] or policy not in policy_names:
+            raise ValueError(f"Invalid Nextin routing category: {slug}/{policy}")
+        name = f"network-rules-nextin-{slug}"
+        providers[name] = provider_config(f"{base}/nextin/{slug}.yaml", name)
+        rules.append(f"RULE-SET,{name},{policy}")
+    rules.extend(routing["after"])
+    return {**template, "proxy-groups": groups, "rule-providers": providers, "rules": rules}
 
 
 def build(output, repo_slug, tag):
@@ -260,9 +294,15 @@ def build(output, repo_slug, tag):
                 compat_source = f"{compat_base}/{compat_path}"
                 compat_content = fetch(compat_source, 1024 * 1024)
                 compat_rows = list(quanx_legacy_rules(
-                    compat_content.decode("utf-8-sig"), compat_source, policies["quanx"]))
+                    compat_content.decode("utf-8-sig"), compat_source, policies.get("quanx", "DIRECT")))
                 if not compat_rows:
                     raise ValueError(f"No rules in QuanX companion file: {compat_source}")
+            legacy_path = category.get("quanx_legacy")
+            legacy_rows = []
+            if legacy_path:
+                legacy_url = f"{legacy_base}/{legacy_path}"
+                content = fetch(legacy_url, 1024 * 1024).decode("utf-8-sig")
+                legacy_rows = list(quanx_legacy_rules(content, legacy_url, policies.get("quanx", "DIRECT")))
             exports = {}
             for target, types in TARGETS.items():
                 if target not in policies:
@@ -270,9 +310,10 @@ def build(output, repo_slug, tag):
                 supported = [rule for rule in selected if can_export(rule, target, types)]
                 omitted = gfw_omitted + sorted(f"{rule.kind}:{rule.value}" for rule in selected
                                                if not can_export(rule, target, types))
-                legacy_path = category.get("quanx_legacy") if target == "quanx" else None
+                include_legacy = target == "quanx" and legacy_path
                 include_compat = target == "quanx" and merge_compat and bool(compat_rows)
-                if not supported and not legacy_path and not include_compat:
+                import_quanx = target == "nextin" and category.get("nextin_import_quanx", False)
+                if not supported and not include_legacy and not include_compat and not import_quanx:
                     raise ValueError(f"No convertible rules in {slug}/{target}")
                 exports[target] = {"count": len(supported), "omitted": omitted}
                 if target == "openclash":
@@ -280,10 +321,8 @@ def build(output, repo_slug, tag):
                                {"payload": [f"{types[r.kind]},{r.value}" for r in supported]})
                 elif target == "quanx":
                     rows = [(types[r.kind], r.value, policies[target]) for r in supported]
-                    if legacy_path:
-                        legacy_url = f"{legacy_base}/{legacy_path}"
-                        content = fetch(legacy_url, 1024 * 1024).decode("utf-8-sig")
-                        rows.extend(quanx_legacy_rules(content, legacy_url, policies[target]))
+                    if include_legacy:
+                        rows.extend(legacy_rows)
                         exports[target]["legacy_source"] = legacy_url
                     if include_compat:
                         rows.extend(compat_rows)
@@ -296,7 +335,7 @@ def build(output, repo_slug, tag):
                     if gfw:
                         lines = [f"# GFWList: {gfw['url']}", "# License: ../LICENSE-GFWList.txt",
                                  "# Source snapshot: ../sources/gfwlist.txt", *lines]
-                    if legacy_path:
+                    if include_legacy:
                         lines = [f"# Legacy source: {legacy_url}", "# See ../LICENSE-QuanX-fork.txt", *lines]
                     if include_compat:
                         lines = [f"# Compatibility source: {compat_source}",
@@ -311,9 +350,22 @@ def build(output, repo_slug, tag):
                                {"version": policy["homeproxy_rule_set_version"], "rules": rules})
                 else:
                     payload = [f"{types[r.kind]},{r.value}" for r in supported]
+                    if import_quanx:
+                        extra, unconverted = nextin_legacy_payload(legacy_rows + (compat_rows if merge_compat else []))
+                        payload = list(dict.fromkeys(payload + extra))
+                        if not payload:
+                            raise ValueError(f"No Nextin rules in {slug}")
+                        exports[target]["count"] = len(payload)
+                        exports[target]["omitted"].extend(unconverted)
+                        if legacy_path:
+                            exports[target]["legacy_source"] = legacy_url
+                        if merge_compat and compat_rows:
+                            exports[target]["compat_source"] = compat_source
                     write_yaml(version / target / f"{slug}.yaml", {"payload": payload})
                     if active and category.get("nextin_default", True):
-                        nextin_inline_rules.extend(f"{line},{policies[target]}" for line in payload)
+                        for line in payload:
+                            rule_type, value, *options = line.split(",")
+                            nextin_inline_rules.append(",".join([rule_type, value, policies[target], *options]))
             results[slug] = {"source": gfw["url"] if gfw else category["dlc"],
                              "selected": len(selected), "targets": exports}
             provider = f"network-rules-{slug}"
@@ -331,7 +383,7 @@ def build(output, repo_slug, tag):
             if "quanx" in policies:
                 quanx_lines.append(f"{quanx_url}, tag={slug}, force-policy={policies['quanx']}, "
                                    f"update-interval=86400, enabled={str(active).lower()}")
-            if compat_path:
+            if compat_path and "quanx" in policies:
                 compat_name = f"{slug}-compat.list"
                 (version / "quanx" / compat_name).write_bytes(compat_content)
                 compat_url = f"{base}/quanx/{compat_name}"
@@ -348,7 +400,7 @@ def build(output, repo_slug, tag):
                 f"[JSON]({homeproxy_url})" if "homeproxy" in policies else "—",
                 f"[YAML]({base}/nextin/{slug}.yaml)" if "nextin" in policies else "—",
             ]
-            if compat_path and not merge_compat:
+            if compat_path and "quanx" in policies and not merge_compat:
                 links[1] += f" · [兼容补充]({compat_url})"
             index.append(f"| {slug} | " + " | ".join(links) + " |")
             if slug in icons["files"]:
@@ -381,6 +433,8 @@ def build(output, repo_slug, tag):
             **nextin_template, "rule-providers": nextin_providers,
             "rules": nextin_remote_rules + [f"MATCH,{fallback}"],
         })
+        write_yaml(version / "nextin" / "quanx-routing.yaml",
+                   nextin_routing_template(nextin_template, policy["nextin_routing"], results, base))
         nextin_url = f"{base}/nextin/template.yaml"
         nextin_remote_url = f"{base}/nextin/template-remote.yaml"
         deep_link = "nextin://install?" + urlencode({"module": "subscription-template",
@@ -389,6 +443,7 @@ def build(output, repo_slug, tag):
               "| 分类 | OpenClash | QuanX | HomeProxy | Nextin |\n| --- | --- | --- | --- | --- |\n"
               + "\n".join(index) + f"\n\n[Nextin 自动拉取模板]({nextin_remote_url})"
               f" · [Nextin 内嵌模板]({nextin_url})\n\n"
+              f"[Nextin 个人分流模板]({base}/nextin/quanx-routing.yaml)\n\n"
               f"Nextin 自动拉取模板导入链接\n\n`{deep_link}`\n\n"
               "QuanX 图标见 [icons.json](quanx/icons.json)。将 `img-url` 加到对应 `[policy]` 策略组。\n\n"
               "各端省略的规则见 [manifest.json](manifest.json) 中的 `omitted`。\n")

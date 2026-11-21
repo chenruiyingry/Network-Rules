@@ -1,6 +1,41 @@
 # Order keeps explicit service and DIRECT policies above broad fallbacks.
 homeproxy_rule_set_version: 2
 nextin_fallback: 节点选择
+nextin_routing:
+  auto_filters:
+    AUTO: '.*'
+    ST: '(?i)-[ \t]*ST[ \t]*-'
+    GZ-ST: '(?i)(?:^|-)frpst-gz(?:-|$)'
+    GZ-TC: '(?i)(?:^|-)frptc-gz(?:-|$)'
+  groups:
+    GZ: [GZ-ST, GZ-TC]
+    通用分流: [AUTO, GZ, ST]
+    OpenAI: [AUTO, GZ, ST]
+    AppleTV: [AUTO, GZ, ST]
+    Apple: [DIRECT, 通用分流]
+    漏网之鱼: [DIRECT, 通用分流]
+  before:
+    - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+    - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+    - IP-CIDR,169.254.0.0/16,DIRECT,no-resolve
+    - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+    - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+    - IP-CIDR6,fc00::/7,DIRECT,no-resolve
+    - IP-CIDR6,fe80::/10,DIRECT,no-resolve
+    - DOMAIN-SUFFIX,local,DIRECT
+  categories:
+    pt: DIRECT
+    personal-sites: DIRECT
+    binance: 通用分流
+    openai: OpenAI
+    apple-tv: AppleTV
+    gfw: 通用分流
+    google: 通用分流
+    apple: Apple
+    china-sites: DIRECT
+  after:
+    - GEOIP,CN,DIRECT
+    - MATCH,漏网之鱼
 categories:
   - id: application-cleanup
     dlc: []
@@ -11,11 +46,14 @@ categories:
     quanx_legacy: Rules/PT.list
     quanx_compat: rule/QuantumultX/PrivateTracker/PrivateTracker.list
     quanx_merge_compat: true
+    nextin_import_quanx: true
     policies: {openclash: DIRECT, quanx: DIRECT, homeproxy: direct, nextin: DIRECT}
   - id: personal-sites
     dlc: []
     quanx_legacy: Rules/MySelf.list
-    policies: {quanx: DIRECT}
+    nextin_import_quanx: true
+    nextin_default: false
+    policies: {quanx: DIRECT, nextin: DIRECT}
   - id: tiktok
     dlc: tiktok
     quanx_compat: rule/QuantumultX/TikTok/TikTok.list
@@ -57,7 +95,21 @@ categories:
     policies: {openclash: Apple, quanx: Apple, homeproxy: Apple, nextin: 节点选择}
   - id: gfw
     gfwlist: true
-    policies: {quanx: GFW}
+    nextin_default: false
+    policies: {quanx: GFW, nextin: 节点选择}
+  - id: apple-tv
+    dlc: apple-tvplus
+    quanx_compat: rule/QuantumultX/AppleTV/AppleTV.list
+    quanx_merge_compat: true
+    nextin_import_quanx: true
+    nextin_default: false
+    policies: {nextin: AppleTV}
+  - id: china-sites
+    dlc: []
+    quanx_legacy: Rules/Region/China.list
+    nextin_import_quanx: true
+    nextin_default: false
+    policies: {nextin: DIRECT}
   - id: overseas
     dlc: geolocation-!cn
     quanx_legacy: Rules/Region/Global.list

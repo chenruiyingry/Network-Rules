@@ -1,6 +1,6 @@
 {
-  "release": "20261118003829",
-  "source_sha256": "e72c4a8bf60dbc0e37ab5f31d53f8c5aeddcb913fb54783d6fde1947b85edb2a",
+  "release": "20261120151928",
+  "source_sha256": "3a45cb1d47eb694b681ca27be83c4b20f20cf544d6820a85ccbd3a8dca8df5d9",
   "categories": {
     "application-cleanup": {
       "source": [],
@@ -288,33 +288,33 @@
     },
     "apple": {
       "source": "apple",
-      "selected": 1791,
+      "selected": 1661,
       "targets": {
         "openclash": {
-          "count": 1791,
+          "count": 1661,
           "omitted": []
         },
         "quanx": {
-          "count": 1862,
+          "count": 1732,
           "omitted": [],
           "legacy_source": "https://raw.githubusercontent.com/chenruiyingry/Rules-For-Quantumult-X/9458655333183e915f74c4d2e655e77ebede0164/Rules/Services/Apple.list"
         },
         "homeproxy": {
-          "count": 1791,
+          "count": 1661,
           "omitted": []
         },
         "nextin": {
-          "count": 1791,
+          "count": 1661,
           "omitted": []
         }
       }
     },
     "overseas": {
       "source": "geolocation-!cn",
-      "selected": 25223,
+      "selected": 25093,
       "targets": {
         "openclash": {
-          "count": 25217,
+          "count": 25087,
           "omitted": [
             "regexp:(^|\\.)chuzs[1-9]{0,2}\\.buzz$",
             "regexp:(^|\\.)gossipfuli[0-9]{3,4}\\.xyz$",
@@ -325,7 +325,7 @@
           ]
         },
         "quanx": {
-          "count": 25453,
+          "count": 25323,
           "omitted": [
             "regexp:(^|\\.)13mei[5-7]\\.buzz$",
             "regexp:(^|\\.)18j[efg]\\.life$",
@@ -489,11 +489,11 @@
           "legacy_source": "https://raw.githubusercontent.com/chenruiyingry/Rules-For-Quantumult-X/9458655333183e915f74c4d2e655e77ebede0164/Rules/Region/Global.list"
         },
         "homeproxy": {
-          "count": 25223,
+          "count": 25093,
           "omitted": []
         },
         "nextin": {
-          "count": 25065,
+          "count": 24935,
           "omitted": [
             "regexp:(^|\\.)13mei[5-7]\\.buzz$",
             "regexp:(^|\\.)18j[efg]\\.life$",
@@ -663,47 +663,47 @@
     "v1/LICENSE-QuanX-compat.txt": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
     "v1/LICENSE-QuanX-fork.txt": "63814d59a40b61e1090074dac3bbda145d4c0f6a37486b2ef225075880ea2bac",
     "v1/README.md": "aeb5469932ec36f38a5bf2c6b9f34ac13a5768fec0f23f4e7780c39c3b719e4c",
-    "v1/homeproxy/apple.json": "04aa31dbe38e30fe0d637603427d4e408b3e7781fdce3f62097d9ef265d37be3",
+    "v1/homeproxy/apple.json": "04d300b15e35e28498392c661b38d11d67939944499292141f6b2c1504d902be",
     "v1/homeproxy/binance.json": "88f8d4ee318ad5e9fb0c979b7ca043cefe304ad495ceb9032984c0dbdbbb7f7f",
     "v1/homeproxy/disney-plus.json": "0fa67392af4a53a8471359345f8dac26eb680b5ea6e7e393ac921859b8ae6946",
     "v1/homeproxy/foreign-media.json": "cd376d596cc80a32d9c9b4eddf53e50249cd17d50c3a74e1d59389037b6420cd",
     "v1/homeproxy/github.json": "e0a6740bc87125c541521242110d38316c071a17177f73dc52752430778df39d",
     "v1/homeproxy/google.json": "04c635faa7ec7ee683708d2ec1c769958dd52ba8418b09b2d59b6fb088e05e39",
     "v1/homeproxy/openai.json": "ce3adea32eeb3a8c7f52bcd46b90237f8610c96b0071d8080e8b529ca55d833e",
-    "v1/homeproxy/overseas.json": "73987f548a6824c6239cda85e86bdc57055176306f58fd63b4b29aac3e932dde",
+    "v1/homeproxy/overseas.json": "b0cc8c243d92b886c123efa80b6fc8ec221fda236d1c53c04a04a1f941567bd9",
     "v1/homeproxy/pt.json": "3edd197f71741f943dd64714097853a3c35a6312241b8af32619a4b05ecf6e83",
     "v1/homeproxy/setup.json": "e353fd047abf9152debe83996d93f4dec2a238c7623909a452a1b822bfe6d672",
     "v1/homeproxy/telegram.json": "54a7fc8bdae3b55473763208cbe0e1bcbdc84336d0671d329e587fcf75489d5c",
     "v1/homeproxy/tiktok.json": "a12d47ccf69dc0eeea3085313bc407b72f3699d545d87d5682ab0657ad5c302c",
     "v1/homeproxy/youtube.json": "e3b8efef5307a4552acc501f62c2673bff52dd14074436d70869f0d67d487f38",
-    "v1/nextin/apple.yaml": "33fed016d9b99bc467d06d4f10f21b9709778c3a89f75ad9fb821ecfa5617d40",
+    "v1/nextin/apple.yaml": "4e7e31170cc8a88cf4f2d5c0eab3128c7ad31c79a7ba632bdda8f91cdcd1a0de",
     "v1/nextin/binance.yaml": "0dfc435d40959a8fc5e476e01e33448c631a45f97a4475556f400e9c24473c20",
     "v1/nextin/disney-plus.yaml": "e249f003b9df22ffa896d6a87bead6d2e57b43e71d6287b3c8271a7ed5895885",
     "v1/nextin/foreign-media.yaml": "d22c9786f083fa624fe1f33f75bd0cc89095433a7efcc963b8280962a869bcc5",
     "v1/nextin/github.yaml": "fb99d9e48dc5b87ed8082e30f349190a3045e74177a10596521d054c2d1bbb5d",
     "v1/nextin/google.yaml": "5d622cf55389134f2f5649a921944500e97678154feb47e1da069cb04cb0db19",
     "v1/nextin/openai.yaml": "69f46706c4abb2691a55cc243ff1f5337fbac77b930c6e45cdc5ea6ca840ccb2",
-    "v1/nextin/overseas.yaml": "71490f9ee34953432bceb4f36786a0da0d9a59d5b45267c77a679d0690b3270c",
+    "v1/nextin/overseas.yaml": "713613995d979b12edfdf603a800cbeac4ba290bb7db462950cce006865b3114",
     "v1/nextin/pt.yaml": "cb8556e273666aafc96b7ffd41e5127e14dbc1ca805821c69add504a2f2d5a95",
     "v1/nextin/telegram.yaml": "a680e71bfbd2ad499dad184f182108689b4345ddd15824d7e3756c3baec96910",
     "v1/nextin/template-remote.yaml": "c9e4673ef26be6fb8ffc105a5b5a35f6e62f7c4b6850091c457e38ea0fc2ad65",
-    "v1/nextin/template.yaml": "ecaa2aac0448fcfdb75836b7bdbef3f3d6b2239e765576932fe7d28e8b6d182f",
+    "v1/nextin/template.yaml": "dfafcf960fd18bc7a5ba1674eaa0c3dbeea5ab88d26f53543629312d792589b7",
     "v1/nextin/tiktok.yaml": "8b2a822bd2e40443b58673b05de9504c748431cf403821de1729bb3612968b66",
     "v1/nextin/youtube.yaml": "e3f065253a0cab8ff79c7acf09bfdf44fcdbe79eed731bc01339103a556fa161",
-    "v1/openclash/apple.yaml": "33fed016d9b99bc467d06d4f10f21b9709778c3a89f75ad9fb821ecfa5617d40",
+    "v1/openclash/apple.yaml": "4e7e31170cc8a88cf4f2d5c0eab3128c7ad31c79a7ba632bdda8f91cdcd1a0de",
     "v1/openclash/binance.yaml": "0dfc435d40959a8fc5e476e01e33448c631a45f97a4475556f400e9c24473c20",
     "v1/openclash/disney-plus.yaml": "148281bd181711c9debb9a82f232bca4bd576d5c524d9d7daac86be63a075ccb",
     "v1/openclash/foreign-media.yaml": "55404ecf724bb9a106d3f5c57530f2a03a4fcf9394dc293a96f11b0cac2d3ca7",
     "v1/openclash/github.yaml": "fb99d9e48dc5b87ed8082e30f349190a3045e74177a10596521d054c2d1bbb5d",
     "v1/openclash/google.yaml": "e3dcc9114d3d3f33b565e29093adb666de223bcc51df6329bc4ef5949d794b68",
     "v1/openclash/openai.yaml": "d81130324fc590b31f7d8d49b1caab05cdf79353be40ec3d5828525ed4035e26",
-    "v1/openclash/overseas.yaml": "32887615bf44023a7a4a913a868dbd55acd0867d4d7308c19fe566eabc48206e",
+    "v1/openclash/overseas.yaml": "b202b2fbfa6b9364d435851ef6a11582f866075dcbc732e94575a98d0b5b6ae3",
     "v1/openclash/overwrite.conf": "afe95faaa1c575554d7a1cd2d644574784e52a4acb2999a1c4e011276106b744",
     "v1/openclash/pt.yaml": "cb8556e273666aafc96b7ffd41e5127e14dbc1ca805821c69add504a2f2d5a95",
     "v1/openclash/telegram.yaml": "a680e71bfbd2ad499dad184f182108689b4345ddd15824d7e3756c3baec96910",
     "v1/openclash/tiktok.yaml": "8b2a822bd2e40443b58673b05de9504c748431cf403821de1729bb3612968b66",
     "v1/openclash/youtube.yaml": "e3f065253a0cab8ff79c7acf09bfdf44fcdbe79eed731bc01339103a556fa161",
-    "v1/quanx/apple.list": "24098d7ca9a09c3b2c83b443d965dc356b7410ee272221a897398f5de9f743f0",
+    "v1/quanx/apple.list": "18984b01b26fbea1d2f589b42d0d0072005bd86c646ba2598879c4ce1327dc46",
     "v1/quanx/application-cleanup.list": "e176322bb9b021a7cfac62184318696fb0022f452d688a4b7b61082f58ed0bbc",
     "v1/quanx/binance.list": "52c9516435af2055f116f58442a1bbfa3e3f2f3898e4f988727c2425a7a31b16",
     "v1/quanx/disney-plus.list": "8637cc0e95a5d230b358f15cb02200bd5f4f85fb0c7a6eaf7f824d149134d23d",
@@ -713,7 +713,7 @@
     "v1/quanx/google.list": "edf871e10be4a4d5ef50cd5603082915ac3945dc0944d4e18a1940b3d3b8dec6",
     "v1/quanx/icons.json": "2aaa2e76fd1a823125a1e5b89dee49d11f763ceb90b480e142c9e28dcd89ae97",
     "v1/quanx/openai.list": "f17f04052ad0ae27a36b880540715d104abb55bd3157c8f8c9bfb06f9f189f3f",
-    "v1/quanx/overseas.list": "aec58d87178da98db1350c9693deaac6845f5d8dcfec3361406f683f1cad4894",
+    "v1/quanx/overseas.list": "6b841377d3943b80b372fdb49b6415aa642a2f7d260c430de9aedca18b579292",
     "v1/quanx/pt-compat.list": "431d1c2c061cd5110f6b335bc8bdfef8bf97188a5b2d9a721484b6d4fd1d72ad",
     "v1/quanx/pt.list": "6b910a4ba96349ffd2e05250f4482a6a998cbc4537b850cedd22bc5f7daccb17",
     "v1/quanx/telegram.list": "dcf5d5723d564b0ee5ed4521f92a00ac1cca2cfbf49a6fe1e46bcace885dcdf5",

@@ -4,6 +4,8 @@
 
 ## QuanX 迁移
 
+订阅目录提供 `quanx/gfw.list`。定时构建从官方 GFWList 提取 QuanX 可表达的域名规则，并把省略的 URL、正则和例外涉及的条目记录到发布清单。原始列表和 LGPL-2.1 许可随制品提供。将 AppleTV 和 OpenAI 放在 GFW 之前，国内域名和国内 IP 放在其后，最后用 `FINAL, GFW` 代理其余流量。
+
 从发布目录的 `quanx/filter-remote.conf` 复制需要的条目。国外媒体的 DLC 集合参考两个 fork 的平台覆盖。QuanX 产物从原 QuanX fork 补入了 IP、ASN、通配等旧规则，应用净化按原规则发布。TikTok 和 PT 的兼容列表单独订阅，分别保留旧版匹配范围及私有 Tracker 规则。[MyRules 国外媒体](https://github.com/chenruiyingry/MyRules/blob/021bff632a62a7b7b3511011ade3ab00370107bd/Clash/ProxyMedia.list) · [QuanX 国外媒体](https://github.com/chenruiyingry/Rules-For-Quantumult-X/blob/9458655333183e915f74c4d2e655e77ebede0164/Rules/Media/ForeignMedia.list)
 
 Disney+ 文件已提供，独立策略的订阅条目默认关闭。应用净化和 PT 直连在通用规则之前，YouTube 在 Google 和国外媒体之前，国外网站排在最后。Nextin 提供国外网站规则集文件，默认模板暂缓加载这个大型集合。

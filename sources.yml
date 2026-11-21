@@ -1,4 +1,7 @@
 dlc: v2fly/domain-list-community
+gfwlist:
+  url: https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt
+  license: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
 quanx_legacy:
   repository: chenruiyingry/Rules-For-Quantumult-X
   commit: 9458655333183e915f74c4d2e655e77ebede0164

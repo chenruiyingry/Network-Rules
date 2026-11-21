@@ -50,6 +50,9 @@ categories:
     dlc: apple
     quanx_legacy: Rules/Services/Apple.list
     policies: {openclash: Apple, quanx: Apple, homeproxy: Apple, nextin: 节点选择}
+  - id: gfw
+    gfwlist: true
+    policies: {quanx: GFW}
   - id: overseas
     dlc: geolocation-!cn
     quanx_legacy: Rules/Region/Global.list

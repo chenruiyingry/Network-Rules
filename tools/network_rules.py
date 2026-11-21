@@ -1,6 +1,7 @@
 """Build and validate static rule sets from an official DLC release."""
 
 import argparse
+import base64
 from dataclasses import dataclass
 import hashlib
 import json
@@ -32,6 +33,9 @@ ATTRIBUTE_TAIL = re.compile(r":((?:@!?[\w-]+,)*@!?[\w-]+)$")
 DOMAIN = re.compile(r"(?=.{1,253}$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*")
 QUANX_TYPES = {"host", "host-suffix", "host-keyword", "host-wildcard", "user-agent",
                "ip-cidr", "ip6-cidr", "ip-asn"}
+GFW_SUFFIX = re.compile(r"\|\|((?:[a-z0-9-]+\.)+[a-z0-9-]+)\^?", re.I)
+GFW_EXCEPTION = re.compile(r"\|\|(?:\*\.)?((?:[a-z0-9-]+\.)+[a-z0-9-]+)", re.I)
+GFW_REGEX_SUFFIX = re.compile(r"((?:[a-z0-9-]+\\\.)+[a-z0-9-]+)\$/?$", re.I)
 
 
 @dataclass(frozen=True)
@@ -133,6 +137,42 @@ def target_rules(category, source):
     return list(merged.values())
 
 
+def gfwlist_rules(payload):
+    lines = base64.b64decode(b"".join(payload.split()), validate=True).decode("utf-8-sig").splitlines()
+    if not lines or not lines[0].startswith("[AutoProxy "):
+        raise ValueError("Invalid GFWList payload")
+    domains, exceptions, omitted = set(), set(), []
+    for raw in lines[1:]:
+        line = raw.strip()
+        if not line or line.startswith("!"):
+            continue
+        if line.startswith("@@"):
+            match = GFW_EXCEPTION.fullmatch(line[2:].removesuffix("^"))
+            if match:
+                exceptions.add(match[1].lower())
+            else:
+                suffix = GFW_REGEX_SUFFIX.search(line)
+                if suffix:
+                    exceptions.add(suffix[1].replace(r"\.", ".").lower())
+                omitted.append(line)
+        elif (match := GFW_SUFFIX.fullmatch(line)) and DOMAIN.fullmatch(match[1].lower()):
+            domains.add(match[1].lower())
+        else:
+            omitted.append(line)
+    rules = []
+    for domain in sorted(domains):
+        if any(domain == e or domain.endswith("." + e) for e in exceptions):
+            omitted.append("||" + domain)
+        elif any(e.endswith("." + domain) for e in exceptions):
+            rules.append(Rule("full", domain))
+            omitted.append("||" + domain)
+        else:
+            rules.append(Rule("domain", domain))
+    if not rules:
+        raise ValueError("GFWList has no exportable domain suffixes")
+    return rules, sorted(set(omitted))
+
+
 def quanx_legacy_rules(content, url, policy):
     for line in content.splitlines():
         line = line.strip()
@@ -200,7 +240,15 @@ def build(output, repo_slug, tag):
             slug = category["id"]
             if not SLUG.fullmatch(slug) or slug in results:
                 raise ValueError(f"Invalid or duplicate category ID: {slug}")
-            selected = target_rules(category, source)
+            gfw = config["gfwlist"] if category.get("gfwlist") else None
+            gfw_omitted = []
+            if gfw:
+                original = fetch(gfw["url"], 1024 * 1024)
+                selected, gfw_omitted = gfwlist_rules(original)
+                write(version / "sources" / "gfwlist.txt", original.decode("ascii"))
+                write(version / "LICENSE-GFWList.txt", fetch(gfw["license"], 64 * 1024).decode("utf-8"))
+            else:
+                selected = target_rules(category, source)
             policies = {target: policy_name(value) for target, value in category["policies"].items()}
             if not policies or not policies.keys() <= TARGETS.keys():
                 raise ValueError(f"Invalid target selection: {slug}")
@@ -210,8 +258,8 @@ def build(output, repo_slug, tag):
                 if target not in policies:
                     continue
                 supported = [rule for rule in selected if can_export(rule, target, types)]
-                omitted = sorted(f"{rule.kind}:{rule.value}" for rule in selected
-                                 if not can_export(rule, target, types))
+                omitted = gfw_omitted + sorted(f"{rule.kind}:{rule.value}" for rule in selected
+                                               if not can_export(rule, target, types))
                 legacy_path = category.get("quanx_legacy") if target == "quanx" else None
                 if not supported and not legacy_path:
                     raise ValueError(f"No convertible rules in {slug}/{target}")
@@ -231,6 +279,9 @@ def build(output, repo_slug, tag):
                         raise ValueError(f"No QuanX rules in {slug}")
                     exports[target]["count"] = len(rows)
                     lines = [", ".join(row) for row in rows]
+                    if gfw:
+                        lines = [f"# GFWList: {gfw['url']}", "# License: ../LICENSE-GFWList.txt",
+                                 "# Source snapshot: ../sources/gfwlist.txt", *lines]
                     if legacy_path:
                         lines = [f"# Legacy source: {legacy_url}", "# See ../LICENSE-QuanX-fork.txt", *lines]
                     write(version / target / f"{slug}.list", "\n".join(lines) + "\n")
@@ -246,7 +297,8 @@ def build(output, repo_slug, tag):
                     write_yaml(version / target / f"{slug}.yaml", {"payload": payload})
                     if active and category.get("nextin_default", True):
                         nextin_inline_rules.extend(f"{line},{policies[target]}" for line in payload)
-            results[slug] = {"source": category["dlc"], "selected": len(selected), "targets": exports}
+            results[slug] = {"source": gfw["url"] if gfw else category["dlc"],
+                             "selected": len(selected), "targets": exports}
             provider = f"network-rules-{slug}"
             clash_url = f"{base}/openclash/{slug}.yaml"
             quanx_url = f"{base}/quanx/{slug}.list"
@@ -361,7 +413,7 @@ def check(directory):
     for slug, category in data["categories"].items():
         for target, info in category["targets"].items():
             if info["omitted"]:
-                print(f"{slug}/{target}: {len(info['omitted'])} omitted ({'; '.join(info['omitted'])})")
+                print(f"{slug}/{target}: {len(info['omitted'])} omitted (see manifest.json)")
     print(f"Verified {len(data['files'])} artifacts")
 
 

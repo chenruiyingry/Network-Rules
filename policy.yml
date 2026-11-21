@@ -3,15 +3,13 @@ homeproxy_rule_set_version: 2
 nextin_fallback: 节点选择
 nextin_routing:
   auto_filters:
-    AUTO: '.*'
-    ST: '(?i)-[ \t]*ST[ \t]*-'
-    GZ-ST: '(?i)(?:^|-)frpst-gz(?:-|$)'
-    GZ-TC: '(?i)(?:^|-)frptc-gz(?:-|$)'
+    通用分流:
+      exclude-filter: '(?i)(?<![a-z0-9])(?:[x×][ \t]*[0-9]+(?:[.．][0-9]+)?|[0-9]+(?:[.．][0-9]+)?[ \t]*[x×])(?![a-z0-9])'
+    AppleTV:
+      filter: '(?i)美国|美國|🇺🇸|united[ _-]+states|(?<![a-z0-9])usa?[0-9]*(?![a-z0-9])'
+    OpenAI:
+      filter: '(?i)^(?=.*(?:美国|美國|🇺🇸|united[ _-]+states|新加坡|狮城|獅城|🇸🇬|singapore|(?<![a-z0-9])(?:usa?|sg)[0-9]*(?![a-z0-9])))(?=.*(?<![a-z0-9])ai[0-9]*(?![a-z0-9]))'
   groups:
-    GZ: [GZ-ST, GZ-TC]
-    通用分流: [AUTO, GZ, ST]
-    OpenAI: [AUTO, GZ, ST]
-    AppleTV: [AUTO, GZ, ST]
     Apple: [DIRECT, 通用分流]
     漏网之鱼: [DIRECT, 通用分流]
   before:

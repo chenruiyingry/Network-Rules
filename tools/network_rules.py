@@ -228,10 +228,10 @@ def provider_config(url, name):
 
 def nextin_routing_template(template, routing, results, base):
     groups = [
-        {"name": name, "type": "url-test", "include-all-proxies": True, "filter": pattern,
+        {"name": name, "type": "url-test", "include-all-proxies": True, **filters,
          "url": "https://www.gstatic.com/generate_204", "interval": 300,
          "empty-fallback": "REJECT"}
-        for name, pattern in routing["auto_filters"].items()
+        for name, filters in routing["auto_filters"].items()
     ]
     groups.extend({"name": name, "type": "select", "proxies": members}
                   for name, members in routing["groups"].items())

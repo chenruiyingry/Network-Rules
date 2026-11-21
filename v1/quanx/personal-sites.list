@@ -1,0 +1,7 @@
+# Legacy source: https://raw.githubusercontent.com/chenruiyingry/Rules-For-Quantumult-X/9458655333183e915f74c4d2e655e77ebede0164/Rules/MySelf.list
+# See ../LICENSE-QuanX-fork.txt
+host-suffix, lbxcn.com, DIRECT
+host-suffix, lbxdrugs.com, DIRECT
+host-suffix, ryanchan.top, DIRECT
+host-suffix, runjian.top, DIRECT
+host-suffix, runjian.com, DIRECT

@@ -22,9 +22,10 @@
           "omitted": []
         },
         "quanx": {
-          "count": 133,
+          "count": 321,
           "omitted": [],
           "legacy_source": "https://raw.githubusercontent.com/chenruiyingry/Rules-For-Quantumult-X/9458655333183e915f74c4d2e655e77ebede0164/Rules/PT.list",
+          "compat_source": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/QuantumultX/PrivateTracker/PrivateTracker.list",
           "companion": {
             "source": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/QuantumultX/PrivateTracker/PrivateTracker.list",
             "count": 248
@@ -37,6 +38,17 @@
         "nextin": {
           "count": 126,
           "omitted": []
+        }
+      }
+    },
+    "personal-sites": {
+      "source": [],
+      "selected": 0,
+      "targets": {
+        "quanx": {
+          "count": 5,
+          "omitted": [],
+          "legacy_source": "https://raw.githubusercontent.com/chenruiyingry/Rules-For-Quantumult-X/9458655333183e915f74c4d2e655e77ebede0164/Rules/MySelf.list"
         }
       }
     },
@@ -977,7 +989,7 @@
     "v1/LICENSE-GFWList.txt": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95",
     "v1/LICENSE-QuanX-compat.txt": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
     "v1/LICENSE-QuanX-fork.txt": "63814d59a40b61e1090074dac3bbda145d4c0f6a37486b2ef225075880ea2bac",
-    "v1/README.md": "7e3558cb142be717248096dfa83572051b904ccec7684066f33025b23c5f3295",
+    "v1/README.md": "d9ac8cfc7236766903876137c25aed2737f7972f22cbb8ceb78e7a10c3d2184d",
     "v1/homeproxy/apple.json": "04d300b15e35e28498392c661b38d11d67939944499292141f6b2c1504d902be",
     "v1/homeproxy/binance.json": "88f8d4ee318ad5e9fb0c979b7ca043cefe304ad495ceb9032984c0dbdbbb7f7f",
     "v1/homeproxy/disney-plus.json": "0fa67392af4a53a8471359345f8dac26eb680b5ea6e7e393ac921859b8ae6946",
@@ -1022,7 +1034,7 @@
     "v1/quanx/application-cleanup.list": "e176322bb9b021a7cfac62184318696fb0022f452d688a4b7b61082f58ed0bbc",
     "v1/quanx/binance.list": "52c9516435af2055f116f58442a1bbfa3e3f2f3898e4f988727c2425a7a31b16",
     "v1/quanx/disney-plus.list": "8637cc0e95a5d230b358f15cb02200bd5f4f85fb0c7a6eaf7f824d149134d23d",
-    "v1/quanx/filter-remote.conf": "4be006efc7a1ef60b3a666aede2f207fde9cf9f25251146cdb64b5c446e7026d",
+    "v1/quanx/filter-remote.conf": "63e8717f856d9c2ab149dee5cd08d41cc47a6f5f58ae5159471b89f5451b1be8",
     "v1/quanx/foreign-media.list": "c23581af2b59d747fcac95d4dfd7431e43a8dcf20e9e70e9b8ef7e3be000933f",
     "v1/quanx/gfw.list": "c66b0dc0101b0ce829368ca0f39b468b2dfc4aef74fd58a530e9500cb480b09b",
     "v1/quanx/github.list": "47d5c4381da04a7d7dd4a931df0d6c641bb6ce564a8b8ef2e50ed4a0056f6921",
@@ -1030,8 +1042,9 @@
     "v1/quanx/icons.json": "2aaa2e76fd1a823125a1e5b89dee49d11f763ceb90b480e142c9e28dcd89ae97",
     "v1/quanx/openai.list": "f17f04052ad0ae27a36b880540715d104abb55bd3157c8f8c9bfb06f9f189f3f",
     "v1/quanx/overseas.list": "f8fe386eb0f5528def798a542897ec6e316df182a6533bd6cea4bdee9305bd1a",
+    "v1/quanx/personal-sites.list": "d87a32e52cbdf51268d92dca83a926e45b4cdff105b25dd6359731474af1dcda",
     "v1/quanx/pt-compat.list": "431d1c2c061cd5110f6b335bc8bdfef8bf97188a5b2d9a721484b6d4fd1d72ad",
-    "v1/quanx/pt.list": "6b910a4ba96349ffd2e05250f4482a6a998cbc4537b850cedd22bc5f7daccb17",
+    "v1/quanx/pt.list": "ee1effd3459f570a68b8a9a770b4c0a5201ff253e267882428811fb78d49d1cf",
     "v1/quanx/telegram.list": "dcf5d5723d564b0ee5ed4521f92a00ac1cca2cfbf49a6fe1e46bcace885dcdf5",
     "v1/quanx/tiktok-compat.list": "b1a9cc643f72d4f105bf2eb1ba916ae7c56d34014355d97c1ff98f41006b9f75",
     "v1/quanx/tiktok.list": "8a8ceeecf278420133bdfa685d156ee53e177016de63420276a9efb0042c1b5a",

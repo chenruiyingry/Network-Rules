@@ -1,0 +1,150 @@
+x-nextin:
+  version: 1
+  mode: subscription-template
+proxies: []
+proxy-groups:
+- name: AUTO
+  type: url-test
+  include-all-proxies: true
+  filter: .*
+  url: https://www.gstatic.com/generate_204
+  interval: 300
+  empty-fallback: REJECT
+- name: ST
+  type: url-test
+  include-all-proxies: true
+  filter: (?i)-[ \t]*ST[ \t]*-
+  url: https://www.gstatic.com/generate_204
+  interval: 300
+  empty-fallback: REJECT
+- name: GZ-ST
+  type: url-test
+  include-all-proxies: true
+  filter: (?i)(?:^|-)frpst-gz(?:-|$)
+  url: https://www.gstatic.com/generate_204
+  interval: 300
+  empty-fallback: REJECT
+- name: GZ-TC
+  type: url-test
+  include-all-proxies: true
+  filter: (?i)(?:^|-)frptc-gz(?:-|$)
+  url: https://www.gstatic.com/generate_204
+  interval: 300
+  empty-fallback: REJECT
+- name: GZ
+  type: select
+  proxies:
+  - GZ-ST
+  - GZ-TC
+- name: 通用分流
+  type: select
+  proxies:
+  - AUTO
+  - GZ
+  - ST
+- name: OpenAI
+  type: select
+  proxies:
+  - AUTO
+  - GZ
+  - ST
+- name: AppleTV
+  type: select
+  proxies:
+  - AUTO
+  - GZ
+  - ST
+- name: Apple
+  type: select
+  proxies:
+  - DIRECT
+  - 通用分流
+- name: 漏网之鱼
+  type: select
+  proxies:
+  - DIRECT
+  - 通用分流
+rule-providers:
+  network-rules-nextin-pt:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-pt.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/pt.yaml
+  network-rules-nextin-personal-sites:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-personal-sites.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/personal-sites.yaml
+  network-rules-nextin-binance:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-binance.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/binance.yaml
+  network-rules-nextin-openai:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-openai.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/openai.yaml
+  network-rules-nextin-apple-tv:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-apple-tv.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/apple-tv.yaml
+  network-rules-nextin-gfw:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-gfw.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/gfw.yaml
+  network-rules-nextin-google:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-google.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/google.yaml
+  network-rules-nextin-apple:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-apple.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/apple.yaml
+  network-rules-nextin-china-sites:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-china-sites.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/china-sites.yaml
+rules:
+- IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+- IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+- IP-CIDR,169.254.0.0/16,DIRECT,no-resolve
+- IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+- IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+- IP-CIDR6,fc00::/7,DIRECT,no-resolve
+- IP-CIDR6,fe80::/10,DIRECT,no-resolve
+- DOMAIN-SUFFIX,local,DIRECT
+- RULE-SET,network-rules-nextin-pt,DIRECT
+- RULE-SET,network-rules-nextin-personal-sites,DIRECT
+- RULE-SET,network-rules-nextin-binance,通用分流
+- RULE-SET,network-rules-nextin-openai,OpenAI
+- RULE-SET,network-rules-nextin-apple-tv,AppleTV
+- RULE-SET,network-rules-nextin-gfw,通用分流
+- RULE-SET,network-rules-nextin-google,通用分流
+- RULE-SET,network-rules-nextin-apple,Apple
+- RULE-SET,network-rules-nextin-china-sites,DIRECT
+- GEOIP,CN,DIRECT
+- MATCH,漏网之鱼

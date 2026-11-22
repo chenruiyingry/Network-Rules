@@ -4,6 +4,7 @@ import argparse
 import base64
 from dataclasses import dataclass
 import hashlib
+from http.client import IncompleteRead
 import json
 import os
 from pathlib import Path
@@ -11,7 +12,7 @@ import re
 import sys
 from tempfile import TemporaryDirectory
 from time import sleep
-from urllib.error import URLError
+from urllib.error import HTTPError
 from urllib.parse import quote, urlencode
 from urllib.request import Request, urlopen
 
@@ -36,6 +37,8 @@ QUANX_TYPES = {"host", "host-suffix", "host-keyword", "host-wildcard", "user-age
 GFW_SUFFIX = re.compile(r"\|\|((?:[a-z0-9-]+\.)+[a-z0-9-]+)\^?", re.I)
 GFW_EXCEPTION = re.compile(r"\|\|(?:\*\.)?((?:[a-z0-9-]+\.)+[a-z0-9-]+)", re.I)
 GFW_REGEX_SUFFIX = re.compile(r"((?:[a-z0-9-]+\\\.)+[a-z0-9-]+)\$/?$", re.I)
+DOWNLOAD_RETRY_DELAYS = (5, 15, 30)
+RETRYABLE_HTTP_STATUS = {408, 429, 500, 502, 503, 504}
 
 
 @dataclass(frozen=True)
@@ -73,18 +76,21 @@ def fetch(url, max_bytes, token=None):
     headers = {"User-Agent": "Network-Rules"}
     if token:
         headers["Authorization"] = f"Bearer {token}"
-    for attempt in range(3):
+    request = Request(url, headers=headers)
+    delays = (*DOWNLOAD_RETRY_DELAYS, None)
+    for attempt, delay in enumerate(delays, 1):
         try:
-            request = Request(url, headers=headers)
             with urlopen(request, timeout=30) as response:
                 payload = response.read(max_bytes + 1)
             if not payload or len(payload) > max_bytes:
                 raise ValueError(f"Unexpected download size: {url}")
             return payload
-        except (URLError, TimeoutError):
-            if attempt == 2:
-                raise
-            sleep(2 ** attempt)
+        except (OSError, IncompleteRead) as error:
+            if delay is None or (isinstance(error, HTTPError) and error.code not in RETRYABLE_HTTP_STATUS):
+                raise OSError(f"Download failed: {url} (attempt {attempt}/{len(delays)}): {error}") from error
+            print(f"Download failed: {url} (attempt {attempt}/{len(delays)}): {error}; "
+                  f"retrying in {delay}s", file=sys.stderr, flush=True)
+            sleep(delay)
 
 
 def load_release(repo, tag):

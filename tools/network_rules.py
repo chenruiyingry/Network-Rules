@@ -180,25 +180,32 @@ def gfwlist_rules(payload):
     return rules, sorted(set(omitted))
 
 
-def adblock_dns_rules(lite, full):
-    blocked, allowed = set(), set()
-    for payload, exceptions_only in ((lite, False), (full, True)):
+def adblock_dns_exceptions(*payloads):
+    allowed = set()
+    for payload in payloads:
         for raw in payload.decode("utf-8-sig").splitlines():
             line = raw.strip().lower()
-            if not line or line.startswith(("!", "#")):
+            if not line.startswith("@@"):
                 continue
-            if line.startswith("@@"):
-                match = ADBLOCK_DNS_SUFFIX.fullmatch(line[2:].removesuffix("$important"))
-                if not match or not DOMAIN.fullmatch(match[1]) or "." not in match[1]:
-                    raise ValueError(f"Unsupported AdBlock DNS exception: {raw}")
-                allowed.add(match[1])
-            elif not exceptions_only:
-                match = ADBLOCK_DNS_SUFFIX.fullmatch(line)
-                if not match or not DOMAIN.fullmatch(match[1]) or "." not in match[1]:
-                    raise ValueError(f"Unsupported AdBlock DNS Lite rule: {raw}")
-                blocked.add(match[1])
-    if not blocked or not allowed:
-        raise ValueError("AdBlock DNS source is missing block or allow rules")
+            match = ADBLOCK_DNS_SUFFIX.fullmatch(line[2:].removesuffix("$important"))
+            if not match or not DOMAIN.fullmatch(match[1]) or "." not in match[1]:
+                raise ValueError(f"Unsupported AdBlock DNS exception: {raw}")
+            allowed.add(match[1])
+    if not allowed:
+        raise ValueError("AdBlock DNS source is missing allow rules")
+    return allowed
+
+
+def adblock_dns_lite_rules(payload, allowed):
+    blocked = set()
+    for raw in payload.decode("utf-8-sig").splitlines():
+        line = raw.strip().lower()
+        if not line or line.startswith(("!", "#", "@@")):
+            continue
+        match = ADBLOCK_DNS_SUFFIX.fullmatch(line)
+        if not match or not DOMAIN.fullmatch(match[1]) or "." not in match[1]:
+            raise ValueError(f"Unsupported AdBlock DNS Lite rule: {raw}")
+        blocked.add(match[1])
 
     def suffixes(domain):
         labels = domain.split(".")
@@ -211,6 +218,36 @@ def adblock_dns_rules(lite, full):
         raise ValueError("AdBlock DNS Lite has no rules after applying exceptions")
     omitted = sorted(blocked - included)
     return [Rule("domain", domain) for domain in sorted(included)], omitted
+
+
+def download_adblock_dns(version, slug, source):
+    repo, ref = source["repository"], source["ref"]
+    endpoint = f"https://api.github.com/repos/{repo}/git/ref/heads/{ref}"
+    commit = json.loads(fetch(endpoint, 64 * 1024, os.getenv("GITHUB_TOKEN")))["object"]["sha"]
+    if not re.fullmatch(r"[0-9a-f]{40}", commit):
+        raise ValueError("Invalid AdBlock DNS source commit")
+    raw_base = f"https://raw.githubusercontent.com/{repo}/{commit}"
+    mrs_url = f"{raw_base}/adblockmihomo.mrs"
+    full_url = f"{raw_base}/adblockdns.txt"
+    full = fetch(full_url, 12 * 1024 * 1024)
+    lite = fetch(f"{raw_base}/adblockdnslite.txt", 1024 * 1024)
+    data = fetch(mrs_url, 8 * 1024 * 1024)
+    count = re.search(rb"(?m)^! Blocked domains: ([1-9][0-9]*)\r?$", full)
+    if not count or not data.startswith(b"\x28\xb5\x2f\xfd") or len(data) < 256:
+        raise ValueError("Invalid AdBlock DNS full MRS release")
+    allowed = adblock_dns_exceptions(full, lite)
+    selected, omitted = adblock_dns_lite_rules(lite, allowed)
+    filename = f"{slug}.mrs"
+    exceptions = f"{slug}-exceptions.yaml"
+    folder = version / "nextin"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / filename).write_bytes(data)
+    write_yaml(folder / exceptions, {"payload": [f"+.{domain}" for domain in sorted(allowed)]})
+    write(version / "LICENSE-AdBlockDNS.txt", fetch(source["license"], 64 * 1024).decode("utf-8"))
+    metadata = {"filename": filename, "format": "mrs", "count": int(count[1]),
+                "source": mrs_url, "allow_source": full_url, "exceptions": exceptions,
+                "exception_count": len(allowed)}
+    return selected, omitted, metadata
 
 
 def quanx_legacy_rules(content, url, policy):
@@ -261,9 +298,9 @@ def can_export(rule, target, types):
     return rule.kind in types and (target != "openclash" or "," not in rule.value)
 
 
-def provider_config(url, name, behavior="classical"):
-    return {"type": "http", "behavior": behavior, "format": "yaml",
-            "interval": 86400, "path": f"./rule_provider/{name}.yaml", "url": url}
+def provider_config(url, name, behavior="classical", file_format="yaml"):
+    return {"type": "http", "behavior": behavior, "format": file_format,
+            "interval": 86400, "path": f"./rule_provider/{name}.{file_format}", "url": url}
 
 
 def nextin_routing_template(template, routing, results, base):
@@ -281,9 +318,16 @@ def nextin_routing_template(template, routing, results, base):
         if "nextin" not in results[slug]["targets"] or policy not in policy_names:
             raise ValueError(f"Invalid Nextin routing category: {slug}/{policy}")
         name = f"network-rules-nextin-{slug}"
-        behavior = results[slug]["targets"]["nextin"].get("behavior", "classical")
-        providers[name] = provider_config(f"{base}/nextin/{slug}.yaml", name, behavior)
-        rules.append(f"RULE-SET,{name},{policy}")
+        target = results[slug]["targets"]["nextin"]
+        if "mrs" in target:
+            mrs = target["mrs"]
+            allow = f"{name}-exceptions"
+            providers[allow] = provider_config(f"{base}/nextin/{mrs['exceptions']}", allow, "domain")
+            providers[name] = provider_config(f"{base}/nextin/{mrs['filename']}", name, "domain", "mrs")
+            rules.append(f"AND,((RULE-SET,{name}),(NOT,((RULE-SET,{allow})))),{policy}")
+        else:
+            providers[name] = provider_config(f"{base}/nextin/{slug}.yaml", name)
+            rules.append(f"RULE-SET,{name},{policy}")
     rules.extend(routing["after"])
     return {**template, "proxy-groups": groups, "rule-providers": providers, "rules": rules}
 
@@ -324,11 +368,7 @@ def build(output, repo_slug, tag):
                 write(version / "sources" / "gfwlist.txt", original.decode("ascii"))
                 write(version / "LICENSE-GFWList.txt", (ROOT / gfw["license"]).read_text(encoding="utf-8"))
             elif ads:
-                selected, source_omitted = adblock_dns_rules(
-                    fetch(ads["url"], 1024 * 1024),
-                    fetch(ads["exceptions"], 12 * 1024 * 1024),
-                )
-                write(version / "LICENSE-AdBlockDNS.txt", fetch(ads["license"], 64 * 1024).decode("utf-8"))
+                selected, source_omitted, mrs = download_adblock_dns(version, slug, ads)
             else:
                 selected = target_rules(category, source)
             policies = {target: policy_name(value) for target, value in category["policies"].items()}
@@ -400,7 +440,7 @@ def build(output, repo_slug, tag):
                     payload = [f"{types[r.kind]},{r.value}" for r in supported]
                     if ads:
                         payload = [f"+.{rule.value}" for rule in supported]
-                        exports[target].update(behavior="domain", allow_source=ads["exceptions"])
+                        exports[target].update(behavior="domain", mrs=mrs)
                     if import_quanx:
                         extra, unconverted = nextin_legacy_payload(legacy_rows + (compat_rows if merge_compat else []))
                         payload = list(dict.fromkeys(payload + extra))
@@ -417,8 +457,8 @@ def build(output, repo_slug, tag):
                         for line in payload:
                             rule_type, value, *options = line.split(",")
                             nextin_inline_rules.append(",".join([rule_type, value, policies[target], *options]))
-            external_source = gfw or ads
-            results[slug] = {"source": external_source["url"] if external_source else category["dlc"],
+            source_url = gfw["url"] if gfw else mrs["source"] if ads else category["dlc"]
+            results[slug] = {"source": source_url,
                              "selected": len(selected), "targets": exports}
             provider = f"network-rules-{slug}"
             clash_url = f"{base}/openclash/{slug}.yaml"
@@ -452,6 +492,8 @@ def build(output, repo_slug, tag):
                 f"[JSON]({homeproxy_url})" if "homeproxy" in policies else "—",
                 f"[YAML]({base}/nextin/{slug}.yaml)" if "nextin" in policies else "—",
             ]
+            if ads:
+                links[3] = f"[MRS]({base}/nextin/{mrs['filename']}) · {links[3]}"
             if compat_path and "quanx" in policies and not merge_compat:
                 links[1] += f" · [兼容补充]({compat_url})"
             index.append(f"| {slug} | " + " | ".join(links) + " |")

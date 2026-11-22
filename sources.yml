@@ -3,8 +3,8 @@ gfwlist:
   url: https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt
   license: licenses/GFWList-LGPL-2.1.txt
 adblock_dns:
-  url: https://raw.githubusercontent.com/217heidai/adblockfilters/dist/adblockdnslite.txt
-  exceptions: https://raw.githubusercontent.com/217heidai/adblockfilters/dist/adblockdns.txt
+  repository: 217heidai/adblockfilters
+  ref: dist
   license: https://raw.githubusercontent.com/217heidai/adblockfilters/main/LICENSE
 quanx_legacy:
   repository: chenruiyingry/Rules-For-Quantumult-X

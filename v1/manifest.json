@@ -60,7 +60,7 @@
       }
     },
     "adblock-dns": {
-      "source": "https://raw.githubusercontent.com/217heidai/adblockfilters/dist/adblockdnslite.txt",
+      "source": "https://raw.githubusercontent.com/217heidai/adblockfilters/f35f33ccc4c61bb7b23173926bd4a92f070cf445/adblockmihomo.mrs",
       "selected": 6023,
       "targets": {
         "nextin": {
@@ -74,7 +74,15 @@
             "wan.douyu.com"
           ],
           "behavior": "domain",
-          "allow_source": "https://raw.githubusercontent.com/217heidai/adblockfilters/dist/adblockdns.txt"
+          "mrs": {
+            "filename": "adblock-dns.mrs",
+            "format": "mrs",
+            "count": 257348,
+            "source": "https://raw.githubusercontent.com/217heidai/adblockfilters/f35f33ccc4c61bb7b23173926bd4a92f070cf445/adblockmihomo.mrs",
+            "allow_source": "https://raw.githubusercontent.com/217heidai/adblockfilters/f35f33ccc4c61bb7b23173926bd4a92f070cf445/adblockdns.txt",
+            "exceptions": "adblock-dns-exceptions.yaml",
+            "exception_count": 200
+          }
         }
       }
     },
@@ -1375,7 +1383,7 @@
     "v1/LICENSE-GFWList.txt": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95",
     "v1/LICENSE-QuanX-compat.txt": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
     "v1/LICENSE-QuanX-fork.txt": "63814d59a40b61e1090074dac3bbda145d4c0f6a37486b2ef225075880ea2bac",
-    "v1/README.md": "ba8e1ed9da051ec265b0d91d1de99983d6d2e7cf5d547d098722a8f2c19834fd",
+    "v1/README.md": "bc16ee1083011861f1a7c9279341e3125203949ff65c7a25acdd76cada462ebb",
     "v1/homeproxy/apple.json": "04d300b15e35e28498392c661b38d11d67939944499292141f6b2c1504d902be",
     "v1/homeproxy/binance.json": "88f8d4ee318ad5e9fb0c979b7ca043cefe304ad495ceb9032984c0dbdbbb7f7f",
     "v1/homeproxy/disney-plus.json": "0fa67392af4a53a8471359345f8dac26eb680b5ea6e7e393ac921859b8ae6946",
@@ -1389,6 +1397,8 @@
     "v1/homeproxy/telegram.json": "54a7fc8bdae3b55473763208cbe0e1bcbdc84336d0671d329e587fcf75489d5c",
     "v1/homeproxy/tiktok.json": "a12d47ccf69dc0eeea3085313bc407b72f3699d545d87d5682ab0657ad5c302c",
     "v1/homeproxy/youtube.json": "e3b8efef5307a4552acc501f62c2673bff52dd14074436d70869f0d67d487f38",
+    "v1/nextin/adblock-dns-exceptions.yaml": "5e660410de85f718dc5f32141ccb00677027ab7d007869f7eddf1209e8e46329",
+    "v1/nextin/adblock-dns.mrs": "5b15f89a7ea55007fb737c44d837311ebbc91179070fa52496720e59e79eef07",
     "v1/nextin/adblock-dns.yaml": "57ce831c26522a0acc4f7742674e3f4e7b71ec73b5af00cf58249ac47c2dc722",
     "v1/nextin/apple-tv.yaml": "2eb0a0a4e684d9e9cff57956252790b496126462ab39af8ed6af7abec0309c46",
     "v1/nextin/apple.yaml": "4e7e31170cc8a88cf4f2d5c0eab3128c7ad31c79a7ba632bdda8f91cdcd1a0de",
@@ -1403,7 +1413,7 @@
     "v1/nextin/overseas.yaml": "8a003c89ed47fb1dabc746af269b6819d700848aadf675cdc3b19e7002647b0b",
     "v1/nextin/personal-sites.yaml": "e52a65999fe81a9aef0e6c07bdd605693b317aa3d7afeaf38d6a7a4a8774867f",
     "v1/nextin/pt.yaml": "a8160fecefa9997094aa2110e6f62ad99ce5dd6cb3d9c42ac54e1dbf11eefa13",
-    "v1/nextin/quanx-routing.yaml": "b1cb9c2f460ae6afc96dbadc354c54aa03bcfe68483ddf0e24f50f733fec467d",
+    "v1/nextin/quanx-routing.yaml": "bcc3b90655b270feeb030e2d5b6fe9aa0e4545b566135ea7e883b01d4e606314",
     "v1/nextin/telegram.yaml": "a680e71bfbd2ad499dad184f182108689b4345ddd15824d7e3756c3baec96910",
     "v1/nextin/template-remote.yaml": "c9e4673ef26be6fb8ffc105a5b5a35f6e62f7c4b6850091c457e38ea0fc2ad65",
     "v1/nextin/template.yaml": "6c5a3ea6d762f7c2e4f830caf6d8ae67d12fca9d7edd6079952853802bb41181",

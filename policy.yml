@@ -28,6 +28,7 @@ nextin_routing:
     binance: 通用分流
     openai: OpenAI
     apple-tv: AppleTV
+    telegram: 通用分流
     gfw: 通用分流
     google: 通用分流
     apple: Apple
@@ -82,6 +83,7 @@ categories:
   - id: telegram
     dlc: telegram
     quanx_legacy: Rules/Services/SNS/Telegram.list
+    nextin_import_quanx: true
     policies: {openclash: Telegram, quanx: Telegram, homeproxy: Telegram, nextin: 节点选择}
   - id: foreign-media
     # Services common to the ProxyMedia and ForeignMedia profiles.

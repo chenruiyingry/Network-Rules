@@ -26,6 +26,18 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -r requirements.txt
+      - name: Install the Mihomo rule converter
+        run: |
+          version=v1.19.34
+          sha256=2763f5b414527f7baf6dc57e3f82f3ab561eedf34bfd7c2f2cde1f7e592efe06
+          archive="$RUNNER_TEMP/mihomo.gz"
+          curl -fsS --location --retry 4 --retry-all-errors --max-time 45 \
+            "https://github.com/MetaCubeX/mihomo/releases/download/$version/mihomo-linux-amd64-compatible-$version.gz" \
+            -o "$archive"
+          printf '%s  %s\n' "$sha256" "$archive" | sha256sum --check
+          gzip -dc "$archive" > "$RUNNER_TEMP/mihomo"
+          chmod 700 "$RUNNER_TEMP/mihomo"
+          printf 'MIHOMO=%s/mihomo\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
       - name: Build and validate the candidate
         env:
           REPOSITORY: ${{ github.repository }}

@@ -5,10 +5,12 @@ import base64
 from dataclasses import dataclass
 import hashlib
 from http.client import IncompleteRead
+from ipaddress import collapse_addresses, ip_network
 import json
 import os
 from pathlib import Path
 import re
+from subprocess import CalledProcessError, TimeoutExpired, run
 import sys
 from tempfile import TemporaryDirectory
 from time import sleep
@@ -220,7 +222,7 @@ def adblock_dns_lite_rules(payload, allowed):
     return [Rule("domain", domain) for domain in sorted(included)], omitted
 
 
-def download_adblock_dns(version, slug, source):
+def download_adblock_dns(version, slug, source, mihomo, scratch):
     repo, ref = source["repository"], source["ref"]
     endpoint = f"https://api.github.com/repos/{repo}/git/ref/heads/{ref}"
     commit = json.loads(fetch(endpoint, 64 * 1024, os.getenv("GITHUB_TOKEN")))["object"]["sha"]
@@ -242,10 +244,18 @@ def download_adblock_dns(version, slug, source):
     folder = version / "nextin"
     folder.mkdir(parents=True, exist_ok=True)
     (folder / filename).write_bytes(data)
-    write_yaml(folder / exceptions, {"payload": [f"+.{domain}" for domain in sorted(allowed)]})
+    decoded = scratch / "upstream-ads.txt"
+    convert_mrs(mihomo, "domain", "mrs", folder / filename, decoded)
+    with decoded.open(encoding="utf-8") as lines:
+        if sum(1 for _ in lines) != int(count[1]):
+            raise ValueError("AdBlock DNS MRS rule count differs from its source")
+    exceptions_payload = [f"+.{domain}" for domain in sorted(allowed)]
+    write_yaml(folder / exceptions, {"payload": exceptions_payload})
+    exceptions_mrs = folder / f"{slug}-exceptions.mrs"
+    compile_mrs(mihomo, scratch, "domain", exceptions_payload, exceptions_mrs)
     write(version / "LICENSE-AdBlockDNS.txt", fetch(source["license"], 64 * 1024).decode("utf-8"))
     metadata = {"filename": filename, "format": "mrs", "count": int(count[1]),
-                "source": mrs_url, "allow_source": full_url, "exceptions": exceptions,
+                "source": mrs_url, "allow_source": full_url, "exceptions": exceptions_mrs.name,
                 "exception_count": len(allowed)}
     return selected, omitted, metadata
 
@@ -303,6 +313,84 @@ def provider_config(url, name, behavior="classical", file_format="yaml"):
             "interval": 86400, "path": f"./rule_provider/{name}.{file_format}", "url": url}
 
 
+def convert_mrs(mihomo, behavior, input_format, source, output):
+    try:
+        run([mihomo, "convert-ruleset", behavior, input_format, str(source), str(output)],
+            capture_output=True, text=True, check=True, timeout=60)
+    except CalledProcessError as error:
+        raise ValueError(f"Mihomo failed to convert {source.name}: {error.stderr or error.stdout}") from error
+    except TimeoutExpired as error:
+        raise ValueError(f"Mihomo timed out converting {source.name}") from error
+    except FileNotFoundError as error:
+        raise ValueError("Install Mihomo or set MIHOMO to its executable path") from error
+
+
+def compile_mrs(mihomo, scratch, behavior, values, output):
+    text_path = scratch / f"{output.stem}.txt"
+    decoded_path = scratch / f"{output.stem}-decoded.txt"
+    write(text_path, "\n".join(values) + "\n")
+    convert_mrs(mihomo, behavior, "text", text_path, output)
+    convert_mrs(mihomo, behavior, "mrs", output, decoded_path)
+    decoded = decoded_path.read_text(encoding="utf-8").splitlines()
+    if behavior == "domain":
+        def domain_union(entries):
+            suffixes = {entry[2:] for entry in entries if entry.startswith("+.")}
+            exact = {entry for entry in entries if not entry.startswith("+.")}
+            def covered(domain, start):
+                labels = domain.split(".")
+                return any(".".join(labels[index:]) in suffixes for index in range(start, len(labels)))
+            return ({domain for domain in suffixes if not covered(domain, 1)},
+                    {domain for domain in exact if not covered(domain, 0)})
+        equivalent = domain_union(decoded) == domain_union(values)
+    else:
+        def address_union(entries):
+            networks = [ip_network(entry, strict=False) for entry in entries]
+            return {network for version in (4, 6) for network in collapse_addresses(
+                network for network in networks if network.version == version)}
+        equivalent = address_union(decoded) == address_union(values)
+    if not equivalent:
+        raise ValueError(f"Mihomo changed the match set for {output.name}")
+
+
+def nextin_provider_files(folder, slug, payload, mihomo, scratch):
+    sections = {}
+    for entry in payload:
+        kind, value, *options = entry.split(",")
+        if kind in {"DOMAIN", "DOMAIN-SUFFIX"} and not options and DOMAIN.fullmatch(value.lower()):
+            section = "domain"
+            value = f"+.{value.lower()}" if kind == "DOMAIN-SUFFIX" else value.lower()
+        elif kind in {"IP-CIDR", "IP-CIDR6"} and options in ([], ["no-resolve"]):
+            section = "ip-no-resolve" if options else "ip"
+            value = str(ip_network(value, strict=False))
+        else:
+            section, value = "classical", entry
+        sections.setdefault(section, []).append(value)
+
+    files = []
+    for section, values in sections.items():
+        if section == "classical":
+            filename, behavior, file_format = f"{slug}-classical.yaml", "classical", "yaml"
+            write_yaml(folder / filename, {"payload": values})
+        else:
+            behavior = "domain" if section == "domain" else "ipcidr"
+            filename = f"{slug}.mrs" if section == "domain" else f"{slug}-{section}.mrs"
+            file_format = "mrs"
+            compile_mrs(mihomo, scratch, behavior, values, folder / filename)
+        files.append({"filename": filename, "behavior": behavior, "format": file_format,
+                      "count": len(values), **({"no_resolve": True} if section == "ip-no-resolve" else {})})
+    return files
+
+
+def add_nextin_providers(base, slug, target, policy, providers, rules):
+    for asset in target["provider_files"]:
+        filename = asset["filename"]
+        name = f"network-rules-nextin-{Path(filename).stem}"
+        providers[name] = provider_config(f"{base}/nextin/{filename}", name,
+                                          asset["behavior"], asset["format"])
+        option = ",no-resolve" if asset.get("no_resolve") else ""
+        rules.append(f"RULE-SET,{name},{policy}{option}")
+
+
 def nextin_routing_template(template, routing, results, base):
     groups = [
         {"name": name, "type": "url-test", "include-all-proxies": True, **filters,
@@ -322,17 +410,16 @@ def nextin_routing_template(template, routing, results, base):
         if "mrs" in target:
             mrs = target["mrs"]
             allow = f"{name}-exceptions"
-            providers[allow] = provider_config(f"{base}/nextin/{mrs['exceptions']}", allow, "domain")
+            providers[allow] = provider_config(f"{base}/nextin/{mrs['exceptions']}", allow, "domain", "mrs")
             providers[name] = provider_config(f"{base}/nextin/{mrs['filename']}", name, "domain", "mrs")
             rules.append(f"AND,((RULE-SET,{name}),(NOT,((RULE-SET,{allow})))),{policy}")
         else:
-            providers[name] = provider_config(f"{base}/nextin/{slug}.yaml", name)
-            rules.append(f"RULE-SET,{name},{policy}")
+            add_nextin_providers(base, slug, target, policy, providers, rules)
     rules.extend(routing["after"])
     return {**template, "proxy-groups": groups, "rule-providers": providers, "rules": rules}
 
 
-def build(output, repo_slug, tag):
+def build(output, repo_slug, tag, mihomo="mihomo"):
     config = read_yaml(ROOT / "sources.yml")
     policy = read_yaml(ROOT / "policy.yml")
     icons = read_yaml(ROOT / "resources.yml")["quanx_icons"]
@@ -348,7 +435,8 @@ def build(output, repo_slug, tag):
     output.parent.mkdir(parents=True, exist_ok=True)
     base = f"https://raw.githubusercontent.com/{repo_slug}/publish/v1"
     with TemporaryDirectory(dir=output.parent) as tmp:
-        stage = Path(tmp) / "output"
+        scratch = Path(tmp)
+        stage = scratch / "output"
         version = stage / "v1"
         results = {}
         providers = {}
@@ -368,7 +456,7 @@ def build(output, repo_slug, tag):
                 write(version / "sources" / "gfwlist.txt", original.decode("ascii"))
                 write(version / "LICENSE-GFWList.txt", (ROOT / gfw["license"]).read_text(encoding="utf-8"))
             elif ads:
-                selected, source_omitted, mrs = download_adblock_dns(version, slug, ads)
+                selected, source_omitted, mrs = download_adblock_dns(version, slug, ads, mihomo, scratch)
             else:
                 selected = target_rules(category, source)
             policies = {target: policy_name(value) for target, value in category["policies"].items()}
@@ -453,6 +541,9 @@ def build(output, repo_slug, tag):
                         if merge_compat and compat_rows:
                             exports[target]["compat_source"] = compat_source
                     write_yaml(version / target / f"{slug}.yaml", {"payload": payload})
+                    if not ads:
+                        exports[target]["provider_files"] = nextin_provider_files(
+                            version / target, slug, payload, mihomo, scratch)
                     if active and category.get("nextin_default", True):
                         for line in payload:
                             rule_type, value, *options = line.split(",")
@@ -468,10 +559,8 @@ def build(output, repo_slug, tag):
                 providers[provider] = provider_config(clash_url, provider)
                 clash_rules.append(f"RULE-SET,{provider},{policies['openclash']}")
             if active and "nextin" in policies and category.get("nextin_default", True):
-                nextin_provider = f"network-rules-nextin-{slug}"
-                nextin_providers[nextin_provider] = provider_config(f"{base}/nextin/{slug}.yaml",
-                                                                   nextin_provider)
-                nextin_remote_rules.append(f"RULE-SET,{nextin_provider},{policies['nextin']}")
+                add_nextin_providers(base, slug, exports["nextin"], policies["nextin"],
+                                     nextin_providers, nextin_remote_rules)
             if "quanx" in policies:
                 quanx_lines.append(f"{quanx_url}, tag={slug}, force-policy={policies['quanx']}, "
                                    f"update-interval=86400, enabled={str(active).lower()}")
@@ -494,6 +583,10 @@ def build(output, repo_slug, tag):
             ]
             if ads:
                 links[3] = f"[MRS]({base}/nextin/{mrs['filename']}) · {links[3]}"
+            elif "nextin" in exports:
+                compact = [f"[MRS]({base}/nextin/{item['filename']})"
+                           for item in exports["nextin"]["provider_files"] if item["format"] == "mrs"]
+                links[3] = " · ".join([*compact, links[3]])
             if compat_path and "quanx" in policies and not merge_compat:
                 links[1] += f" · [兼容补充]({compat_url})"
             index.append(f"| {slug} | " + " | ".join(links) + " |")
@@ -608,7 +701,7 @@ def main():
     if args.command == "build":
         if not re.fullmatch(r"[\w.-]+/[\w.-]+", args.repository):
             raise ValueError("Repository must be owner/name")
-        build(args.output, args.repository, args.release)
+        build(args.output, args.repository, args.release, os.getenv("MIHOMO", "mihomo"))
     elif args.command == "check":
         check(args.directory)
     else:

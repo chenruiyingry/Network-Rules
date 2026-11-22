@@ -16,7 +16,11 @@ Disney+ 文件已提供，独立策略的订阅条目默认关闭。应用净化
 
 广告拦截取自 [217heidai/adblockfilters](https://github.com/217heidai/adblockfilters) 的完整版 MRS。模板在私网、PT、个人网站之后、服务规则之前匹配广告域名，并应用同一上游提交的公开白名单。例外仍按后续规则分流。旧模板使用的 Lite YAML 继续提供。共享模板未写入私网 DNS 或公网 DoH 地址。
 
+两个 Nextin 远程模板都用 MRS 加载可等效转换的域名和 IP 网段。关键词等规则继续使用独立的 Classical YAML，同一分类的各文件按模板顺序加载。已有 YAML 规则集和内嵌模板仍可使用。
+
 ## 本地预览
+
+构建 MRS 需要 Mihomo。将 `mihomo` 放在 `PATH` 中，或通过 `MIHOMO` 指定可执行文件的路径。GitHub Actions 使用固定版本并校验下载文件。
 
 ```sh
 python3 -m venv .venv
@@ -27,7 +31,7 @@ python3 -m venv .venv
 
 `build` 默认读取最新官方发布，`--release 20261118003829` 可以复现试点版本。使用独立的新目录生成候选，例如 `--output dist-candidate`。`diff PREVIOUS CANDIDATE` 比较分类条数，详细转换记录在各自的 `v1/manifest.json`。仓库路径变化时传入 `--repository owner/name`。
 
-产物中的策略组名为试点示例，首次接入请映射到自己的节点组、规则顺序和兜底。Nextin 的 `template-remote.yaml` 引用三个远程规则集，期望一次导入后由内核刷新分类内容。不同版本的 Nextin 需实测首次下载和后续刷新。模板中的策略组、优先级和规则集 URL 变更仍需重新导入。HomeProxy JSON 使用规则集版本 2，需 sing-box 1.10 或以上。QuanX 图标见 `v1/quanx/icons.json`，把对应的 `img-url` 加入现有策略组。
+产物中的策略组名为试点示例，首次接入请映射到自己的节点组、规则顺序和兜底。Nextin 的 `template-remote.yaml` 引用远程规则集，由内核刷新分类内容。不同版本的 Nextin 需实测首次下载和后续刷新。模板中的策略组、优先级和规则集 URL 变更仍需重新导入。HomeProxy JSON 使用规则集版本 2，需 sing-box 1.10 或以上。QuanX 图标见 `v1/quanx/icons.json`，把对应的 `img-url` 加入现有策略组。
 
 ## 更改规则
 

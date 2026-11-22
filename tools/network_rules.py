@@ -1,7 +1,6 @@
-"""Build and validate static rule sets from an official DLC release."""
+"""Build and validate static rule sets from pinned upstream data."""
 
 import argparse
-import base64
 from dataclasses import dataclass
 import hashlib
 from http.client import IncompleteRead
@@ -40,9 +39,6 @@ ATTRIBUTE_TAIL = re.compile(r":((?:@!?[\w-]+,)*@!?[\w-]+)$")
 DOMAIN = re.compile(r"(?=.{1,253}$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*")
 QUANX_TYPES = {"host", "host-suffix", "host-keyword", "host-wildcard", "user-agent",
                "ip-cidr", "ip6-cidr", "ip-asn", "geoip"}
-GFW_SUFFIX = re.compile(r"\|\|((?:[a-z0-9-]+\.)+[a-z0-9-]+)\^?", re.I)
-GFW_EXCEPTION = re.compile(r"\|\|(?:\*\.)?((?:[a-z0-9-]+\.)+[a-z0-9-]+)", re.I)
-GFW_REGEX_SUFFIX = re.compile(r"((?:[a-z0-9-]+\\\.)+[a-z0-9-]+)\$/?$", re.I)
 ADBLOCK_DNS_SUFFIX = re.compile(r"\|\|([a-z0-9.-]+)\^")
 DOWNLOAD_RETRY_DELAYS = (5, 15, 30)
 RETRYABLE_HTTP_STATUS = {408, 429, 500, 502, 503, 504}
@@ -150,40 +146,20 @@ def target_rules(category, source):
     return list(merged.values())
 
 
-def gfwlist_rules(payload):
-    lines = base64.b64decode(b"".join(payload.split()), validate=True).decode("utf-8-sig").splitlines()
-    if not lines or not lines[0].startswith("[AutoProxy "):
-        raise ValueError("Invalid GFWList payload")
-    domains, exceptions, omitted = set(), set(), []
-    for raw in lines[1:]:
-        line = raw.strip()
-        if not line or line.startswith("!"):
-            continue
-        if line.startswith("@@"):
-            match = GFW_EXCEPTION.fullmatch(line[2:].removesuffix("^"))
-            if match:
-                exceptions.add(match[1].lower())
-            else:
-                suffix = GFW_REGEX_SUFFIX.search(line)
-                if suffix:
-                    exceptions.add(suffix[1].replace(r"\.", ".").lower())
-                omitted.append(line)
-        elif (match := GFW_SUFFIX.fullmatch(line)) and DOMAIN.fullmatch(match[1].lower()):
-            domains.add(match[1].lower())
-        else:
-            omitted.append(line)
-    rules = []
-    for domain in sorted(domains):
-        if any(domain == e or domain.endswith("." + e) for e in exceptions):
-            omitted.append("||" + domain)
-        elif any(e.endswith("." + domain) for e in exceptions):
-            rules.append(Rule("full", domain))
-            omitted.append("||" + domain)
-        else:
-            rules.append(Rule("domain", domain))
-    if not rules:
-        raise ValueError("GFWList has no exportable domain suffixes")
-    return rules, sorted(set(omitted))
+def download_meta_geosite(url):
+    payload = yaml.safe_load(fetch(url, 8 * 1024 * 1024))["payload"]
+    if not isinstance(payload, list) or not payload:
+        raise ValueError(f"Empty or invalid MetaCubeX geosite: {url}")
+    rules = {}
+    for entry in payload:
+        if not isinstance(entry, str):
+            raise ValueError(f"Invalid MetaCubeX domain at {url}: {entry!r}")
+        suffix = entry.startswith("+.")
+        domain = entry.removeprefix("+.").lower()
+        if not DOMAIN.fullmatch(domain):
+            raise ValueError(f"Unsupported MetaCubeX domain matcher at {url}: {entry!r}")
+        rules[Rule("domain" if suffix else "full", domain)] = None
+    return list(rules)
 
 
 def adblock_dns_exceptions(*payloads):
@@ -348,11 +324,15 @@ def convert_mrs(mihomo, behavior, input_format, source, output):
         raise ValueError("Install Mihomo or set MIHOMO to its executable path") from error
 
 
-def compile_mrs(mihomo, scratch, behavior, values, output):
-    text_path = scratch / f"{output.stem}.txt"
+def compile_mrs(mihomo, scratch, behavior, values, output, source_url=None):
+    if source_url:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_bytes(fetch(source_url, 8 * 1024 * 1024))
+    else:
+        text_path = scratch / f"{output.stem}.txt"
+        write(text_path, "\n".join(values) + "\n")
+        convert_mrs(mihomo, behavior, "text", text_path, output)
     decoded_path = scratch / f"{output.stem}-decoded.txt"
-    write(text_path, "\n".join(values) + "\n")
-    convert_mrs(mihomo, behavior, "text", text_path, output)
     convert_mrs(mihomo, behavior, "mrs", output, decoded_path)
     decoded = decoded_path.read_text(encoding="utf-8").splitlines()
     if behavior == "domain":
@@ -375,7 +355,7 @@ def compile_mrs(mihomo, scratch, behavior, values, output):
         raise ValueError(f"Mihomo changed the match set for {output.name}")
 
 
-def nextin_provider_files(folder, slug, payload, mihomo, scratch):
+def nextin_provider_files(folder, slug, payload, mihomo, scratch, meta_mrs=None):
     sections = {}
     for entry in payload:
         kind, value, *options = entry.split(",")
@@ -391,6 +371,7 @@ def nextin_provider_files(folder, slug, payload, mihomo, scratch):
 
     files = []
     for section, values in sections.items():
+        domain_source, domain_url = meta_mrs if section == "domain" and meta_mrs else (None, None)
         if section == "classical":
             filename, behavior, file_format = f"{slug}-classical.yaml", "classical", "yaml"
             write_yaml(folder / filename, {"payload": values})
@@ -398,17 +379,21 @@ def nextin_provider_files(folder, slug, payload, mihomo, scratch):
             behavior = "domain" if section == "domain" else "ipcidr"
             filename = f"{slug}.mrs" if section == "domain" else f"{slug}-{section}.mrs"
             file_format = "mrs"
-            compile_mrs(mihomo, scratch, behavior, values, folder / filename)
-        files.append({"filename": filename, "behavior": behavior, "format": file_format,
-                      "count": len(values), **({"no_resolve": True} if section == "ip-no-resolve" else {})})
+            compile_mrs(mihomo, scratch, behavior, values, folder / filename, domain_source)
+        asset = {"filename": filename, "behavior": behavior, "format": file_format, "count": len(values)}
+        if domain_url:
+            asset["url"] = domain_url
+        if section == "ip-no-resolve":
+            asset["no_resolve"] = True
+        files.append(asset)
     return files
 
 
-def add_nextin_providers(base, slug, target, policy, providers, rules):
+def add_nextin_providers(base, target, policy, providers, rules):
     for asset in target["provider_files"]:
         filename = asset["filename"]
         name = f"network-rules-nextin-{Path(filename).stem}"
-        providers[name] = provider_config(f"{base}/nextin/{filename}", name,
+        providers[name] = provider_config(asset.get("url", f"{base}/nextin/{filename}"), name,
                                           asset["behavior"], asset["format"])
         option = ",no-resolve" if asset.get("no_resolve") else ""
         rules.append(f"RULE-SET,{name},{policy}{option}")
@@ -437,7 +422,7 @@ def nextin_routing_template(template, routing, results, base):
             providers[name] = provider_config(f"{base}/nextin/{mrs['filename']}", name, "domain", "mrs")
             rules.append(f"AND,((RULE-SET,{name}),(NOT,((RULE-SET,{allow})))),{policy}")
         else:
-            add_nextin_providers(base, slug, target, policy, providers, rules)
+            add_nextin_providers(base, target, policy, providers, rules)
     rules.extend(routing["after"])
     return {**template, "proxy-groups": groups, "rule-providers": providers, "rules": rules}
 
@@ -447,6 +432,9 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
     policy = read_yaml(ROOT / "policy.yml")
     icons = read_yaml(ROOT / "resources.yml")["quanx_icons"]
     compat_bases = {name: github_raw_base(source) for name, source in config["quanx_compat"].items()}
+    meta = config["meta_rules"]
+    meta_base = github_raw_base(meta)
+    meta_branch = f"https://raw.githubusercontent.com/{meta['repository']}/{meta['ref']}"
     release, checksum, source = load_release(config["dlc"], tag)
     if output.exists():
         raise ValueError(f"Choose a new output directory: {output}")
@@ -465,14 +453,15 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
             slug = category["id"]
             if not SLUG.fullmatch(slug) or slug in results:
                 raise ValueError(f"Invalid or duplicate category ID: {slug}")
-            gfw = config["gfwlist"] if category.get("gfwlist") else None
+            geosite = category.get("meta_geosite")
+            meta_mrs = None
             ads = config["adblock_dns"] if category.get("adblock_dns") else None
             source_omitted = []
-            if gfw:
-                original = fetch(gfw["url"], 1024 * 1024)
-                selected, source_omitted = gfwlist_rules(original)
-                write(version / "sources" / "gfwlist.txt", original.decode("ascii"))
-                write(version / "LICENSE-GFWList.txt", (ROOT / gfw["license"]).read_text(encoding="utf-8"))
+            if geosite:
+                geosite_path = f"geo/geosite/{geosite}"
+                geosite_url = f"{meta_base}/{geosite_path}.yaml"
+                selected = download_meta_geosite(geosite_url)
+                meta_mrs = (f"{meta_base}/{geosite_path}.mrs", f"{meta_branch}/{geosite_path}.mrs")
             elif ads:
                 selected, source_omitted, mrs = download_adblock_dns(version, slug, ads, mihomo, scratch)
             else:
@@ -522,13 +511,16 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
                         raise ValueError(f"No QuanX rules in {slug}")
                     exports[target]["count"] = len(rows)
                     lines = [", ".join(row) for row in rows]
-                    if gfw:
-                        lines = [f"# GFWList: {gfw['url']}", "# License: ../LICENSE-GFWList.txt",
-                                 "# Source snapshot: ../sources/gfwlist.txt", *lines]
+                    if geosite:
+                        lines = [f"# Source: {geosite_url}", "# License: ../LICENSE-MetaCubeX.txt",
+                                 *lines]
                     if include_compat:
                         lines = [f"# Compatibility source: {compat_source}",
                                  f"# See ../{compat_license}", *lines]
-                    write(version / target / f"{slug}.list", "\n".join(lines) + "\n")
+                    content = "\n".join(lines) + "\n"
+                    write(version / target / f"{slug}.list", content)
+                    if alias := category.get("quanx_alias"):
+                        write(version / target / alias, content)
                 elif target == "homeproxy":
                     fields = {}
                     for rule in supported:
@@ -556,12 +548,12 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
                         write_yaml(version / target / alias, {"payload": payload})
                     if not ads:
                         exports[target]["provider_files"] = nextin_provider_files(
-                            version / target, slug, payload, mihomo, scratch)
+                            version / target, slug, payload, mihomo, scratch, meta_mrs)
                     if active and category.get("nextin_default", True):
                         for line in payload:
                             rule_type, value, *options = line.split(",")
                             nextin_inline_rules.append(",".join([rule_type, value, policies[target], *options]))
-            source_url = gfw["url"] if gfw else mrs["source"] if ads else category["dlc"]
+            source_url = geosite_url if geosite else mrs["source"] if ads else category["dlc"]
             if not source_url:
                 source_url = compat_source if compat_path else f"overrides/{slug}.yml"
             results[slug] = {"source": source_url,
@@ -576,7 +568,7 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
                 providers[provider] = provider_config(clash_url, provider)
                 clash_rules.append(f"RULE-SET,{provider},{policies['openclash']}")
             if active and "nextin" in policies and category.get("nextin_default", True):
-                add_nextin_providers(base, slug, exports["nextin"], policies["nextin"],
+                add_nextin_providers(base, exports["nextin"], policies["nextin"],
                                      nextin_providers, nextin_remote_rules)
             if "quanx" in policies:
                 quanx_lines.append(f"{quanx_url}, tag={slug}, force-policy={policies['quanx']}, "
@@ -653,6 +645,8 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
               "各端省略的规则见 [manifest.json](manifest.json) 中的 `omitted`。\n")
         license_text = fetch(f"https://raw.githubusercontent.com/{config['dlc']}/{release}/LICENSE", 64 * 1024)
         write(version / "LICENSE-DLC.txt", license_text.decode("utf-8"))
+        license_text = fetch(f"https://raw.githubusercontent.com/{meta['repository']}/master/LICENSE", 64 * 1024)
+        write(version / "LICENSE-MetaCubeX.txt", license_text.decode("utf-8"))
         for name, upstream_base in compat_bases.items():
             license_text = fetch(f"{upstream_base}/LICENSE", 64 * 1024)
             write(version / f"LICENSE-QuanX-{name}.txt", license_text.decode("utf-8"))

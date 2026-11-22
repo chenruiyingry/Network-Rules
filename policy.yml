@@ -58,56 +58,52 @@ categories:
     nextin_default: false
     policies: {nextin: REJECT}
   - id: tiktok
-    dlc: tiktok
-    quanx_compat: rule/QuantumultX/TikTok/TikTok.list
+    meta_geosite: tiktok
+    quanx_alias: tiktok-compat.list
     policies: {openclash: TikTok, quanx: TikTok, homeproxy: TikTok, nextin: 节点选择}
   - id: binance
-    dlc: binance
+    meta_geosite: binance
     policies: {openclash: 自动选择, quanx: 自动选择, homeproxy: 自动选择, nextin: 节点选择}
   - id: openai
-    dlc: openai
+    meta_geosite: openai
     policies: {openclash: OpenAI, quanx: OpenAI, homeproxy: OpenAI, nextin: 节点选择}
   - id: github
-    dlc: github
+    meta_geosite: github
     policies: {openclash: GitHub, quanx: GitHub, homeproxy: GitHub, nextin: 节点选择}
   - id: youtube
-    dlc: youtube
+    meta_geosite: youtube
     policies: {openclash: YouTube, quanx: Youtube, homeproxy: YouTube, nextin: 节点选择}
   - id: disney-plus
-    dlc: disney
+    meta_geosite: disney
     enabled: false
     policies: {openclash: DisneyPlus, quanx: DisneyPlus, homeproxy: DisneyPlus, nextin: 节点选择}
   - id: telegram
-    dlc: telegram
+    meta_geosite: telegram
     cidr_source: telegram_cidr
     nextin_yaml_alias: telegram-classical.yaml
     policies: {openclash: Telegram, quanx: Telegram, homeproxy: Telegram, nextin: 节点选择}
   - id: foreign-media
-    # Shared DLC definitions of supported streaming services.
-    dlc: [abema, apple-tvplus, bahamut, bbc, dazn, disney, hbo, hulu, netflix, primevideo, spotify, twitch]
+    meta_geosite: category-media
     policies: {openclash: 国外媒体, quanx: 国外媒体, homeproxy: 国外媒体, nextin: 节点选择}
   - id: google
-    dlc: google
+    meta_geosite: google
     policies: {openclash: 自动选择, quanx: 自动选择, homeproxy: 自动选择, nextin: 节点选择}
   - id: apple
-    dlc: apple
+    meta_geosite: apple
     policies: {openclash: Apple, quanx: Apple, homeproxy: Apple, nextin: 节点选择}
   - id: gfw
-    gfwlist: true
+    meta_geosite: gfw
     nextin_default: false
     policies: {quanx: GFW, nextin: 节点选择}
   - id: apple-tv
-    dlc: apple-tvplus
-    quanx_compat: rule/QuantumultX/AppleTV/AppleTV.list
-    quanx_merge_compat: true
-    nextin_import_quanx: true
+    meta_geosite: apple-tvplus
     nextin_default: false
     policies: {quanx: AppleTV, nextin: AppleTV}
   - id: china-sites
-    dlc: cn
+    meta_geosite: cn
     nextin_default: false
     policies: {quanx: DIRECT, nextin: DIRECT}
   - id: overseas
-    dlc: geolocation-!cn
+    meta_geosite: geolocation-!cn
     nextin_default: false
     policies: {openclash: 自动选择, quanx: 自动选择, homeproxy: 自动选择, nextin: 节点选择}

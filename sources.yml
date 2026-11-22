@@ -1,8 +1,8 @@
 dlc: v2fly/domain-list-community
 telegram_cidr: https://core.telegram.org/resources/cidr.txt
-gfwlist:
-  url: https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt
-  license: licenses/GFWList-LGPL-2.1.txt
+meta_rules:
+  repository: MetaCubeX/meta-rules-dat
+  ref: meta
 adblock_dns:
   repository: 217heidai/adblockfilters
   ref: dist

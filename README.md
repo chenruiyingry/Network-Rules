@@ -6,7 +6,7 @@
 
 订阅目录提供 `quanx/gfw.list`。定时构建从官方 GFWList 提取域名规则，并把省略的 URL、正则和例外涉及的条目记录到发布清单。原始列表和 LGPL-2.1 许可随制品提供。将 AppleTV 和 OpenAI 放在 GFW 之前，国内域名和国内 IP 放在其后，可用 `FINAL, 漏网之鱼` 自选兜底策略。
 
-从发布目录的 `quanx/filter-remote.conf` 复制需要的条目。通用域名规则使用最新 [DLC 发布](https://github.com/v2fly/domain-list-community/releases)，国内网站使用 `cn` 分类。Telegram 在 DLC 域名之外使用 [Repcz/Tool](https://github.com/Repcz/Tool/tree/X/QuantumultX/Rules) 补充 IP、ASN 及兼容规则。PT、TikTok、AppleTV 和应用净化使用 [blackmatrix7](https://github.com/blackmatrix7/ios_rule_script) 的原生规则补充；TikTok 兼容文件单独订阅，PT 主列表已经合并。每次构建解析上游分支的实际提交，发布清单保留来源。个人网站直连规则维护在本仓库的 `overrides/personal-sites.yml`。
+从发布目录的 `quanx/filter-remote.conf` 复制需要的条目。通用域名规则使用最新 [DLC 发布](https://github.com/v2fly/domain-list-community/releases)，国内网站使用 `cn` 分类。Telegram 域名取自 DLC，IPv4 和 IPv6 网段取自 [Telegram 官方 CIDR 清单](https://core.telegram.org/resources/cidr.txt)，由构建器导出到四个客户端。PT、TikTok、AppleTV 和应用净化使用 [blackmatrix7](https://github.com/blackmatrix7/ios_rule_script) 的原生规则补充；TikTok 兼容文件单独订阅，PT 主列表已经合并。每次构建解析上游分支的实际提交，发布清单保留来源。个人网站直连规则维护在本仓库的 `overrides/personal-sites.yml`。
 
 Disney+ 文件已提供，独立策略的订阅条目默认关闭。应用净化和 PT 直连在通用规则之前，YouTube 在 Google 和国外媒体之前，国外网站排在最后。Nextin 提供国外网站规则集文件，默认模板暂缓加载这个大型集合。
 

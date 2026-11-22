@@ -25,11 +25,15 @@ ROOT = Path(__file__).resolve().parents[1]
 ASSET = "dlc.dat_plain.yml"
 TARGETS = {
     "openclash": {"full": "DOMAIN", "domain": "DOMAIN-SUFFIX",
-                  "keyword": "DOMAIN-KEYWORD", "regexp": "DOMAIN-REGEX"},
-    "quanx": {"full": "host", "domain": "host-suffix", "keyword": "host-keyword"},
+                  "keyword": "DOMAIN-KEYWORD", "regexp": "DOMAIN-REGEX",
+                  "ipv4": "IP-CIDR", "ipv6": "IP-CIDR6"},
+    "quanx": {"full": "host", "domain": "host-suffix", "keyword": "host-keyword",
+              "ipv4": "ip-cidr", "ipv6": "ip6-cidr"},
     "homeproxy": {"full": "domain", "domain": "domain_suffix",
-                  "keyword": "domain_keyword", "regexp": "domain_regex"},
-    "nextin": {"full": "DOMAIN", "domain": "DOMAIN-SUFFIX", "keyword": "DOMAIN-KEYWORD"},
+                  "keyword": "domain_keyword", "regexp": "domain_regex",
+                  "ipv4": "ip_cidr", "ipv6": "ip_cidr"},
+    "nextin": {"full": "DOMAIN", "domain": "DOMAIN-SUFFIX", "keyword": "DOMAIN-KEYWORD",
+               "ipv4": "IP-CIDR", "ipv6": "IP-CIDR6"},
 }
 SLUG = re.compile(r"[a-z0-9][a-z0-9_-]*")
 ATTRIBUTE_TAIL = re.compile(r":((?:@!?[\w-]+,)*@!?[\w-]+)$")
@@ -312,6 +316,21 @@ def can_export(rule, target, types):
     return rule.kind in types and (target != "openclash" or "," not in rule.value)
 
 
+def download_cidrs(url):
+    networks = set()
+    for raw in fetch(url, 64 * 1024).decode("ascii").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "/" not in line:
+            raise ValueError(f"Invalid CIDR at {url}: {line}")
+        networks.add(ip_network(line))
+    if not networks:
+        raise ValueError(f"No CIDRs at {url}")
+    return [Rule(f"ipv{network.version}", str(network))
+            for network in sorted(networks, key=lambda n: (n.version, n.network_address, n.prefixlen))]
+
+
 def provider_config(url, name, behavior="classical", file_format="yaml"):
     return {"type": "http", "behavior": behavior, "format": file_format,
             "interval": 86400, "path": f"./rule_provider/{name}.{file_format}", "url": url}
@@ -458,6 +477,10 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
                 selected, source_omitted, mrs = download_adblock_dns(version, slug, ads, mihomo, scratch)
             else:
                 selected = target_rules(category, source)
+            cidr_url = config[category["cidr_source"]] if "cidr_source" in category else None
+            if cidr_url:
+                cidrs = download_cidrs(cidr_url)
+                selected.extend(cidrs)
             policies = {target: policy_name(value) for target, value in category["policies"].items()}
             if not policies or not policies.keys() <= TARGETS.keys():
                 raise ValueError(f"Invalid target selection: {slug}")
@@ -528,6 +551,9 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
                         if merge_compat and compat_rows:
                             exports[target]["compat_source"] = compat_source
                     write_yaml(version / target / f"{slug}.yaml", {"payload": payload})
+                    # Existing Nextin imports continue to fetch the former residual provider.
+                    if alias := category.get("nextin_yaml_alias"):
+                        write_yaml(version / target / alias, {"payload": payload})
                     if not ads:
                         exports[target]["provider_files"] = nextin_provider_files(
                             version / target, slug, payload, mihomo, scratch)
@@ -540,6 +566,8 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
                 source_url = compat_source if compat_path else f"overrides/{slug}.yml"
             results[slug] = {"source": source_url,
                              "selected": len(selected), "targets": exports}
+            if cidr_url:
+                results[slug].update(cidr_source=cidr_url, cidr_count=len(cidrs))
             provider = f"network-rules-{slug}"
             clash_url = f"{base}/openclash/{slug}.yaml"
             quanx_url = f"{base}/quanx/{slug}.list"

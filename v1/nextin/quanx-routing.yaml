@@ -84,28 +84,28 @@ rule-providers:
     format: mrs
     interval: 86400
     path: ./rule_provider/network-rules-nextin-binance.mrs
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/binance.mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/binance.mrs
   network-rules-nextin-openai:
     type: http
     behavior: domain
     format: mrs
     interval: 86400
     path: ./rule_provider/network-rules-nextin-openai.mrs
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/openai.mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/openai.mrs
   network-rules-nextin-apple-tv:
     type: http
     behavior: domain
     format: mrs
     interval: 86400
     path: ./rule_provider/network-rules-nextin-apple-tv.mrs
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/apple-tv.mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple-tvplus.mrs
   network-rules-nextin-telegram:
     type: http
     behavior: domain
     format: mrs
     interval: 86400
     path: ./rule_provider/network-rules-nextin-telegram.mrs
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/telegram.mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs
   network-rules-nextin-telegram-ip:
     type: http
     behavior: ipcidr
@@ -119,28 +119,28 @@ rule-providers:
     format: mrs
     interval: 86400
     path: ./rule_provider/network-rules-nextin-gfw.mrs
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/gfw.mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.mrs
   network-rules-nextin-google:
     type: http
     behavior: domain
     format: mrs
     interval: 86400
     path: ./rule_provider/network-rules-nextin-google.mrs
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/google.mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs
   network-rules-nextin-apple:
     type: http
     behavior: domain
     format: mrs
     interval: 86400
     path: ./rule_provider/network-rules-nextin-apple.mrs
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/apple.mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs
   network-rules-nextin-china-sites:
     type: http
     behavior: domain
     format: mrs
     interval: 86400
     path: ./rule_provider/network-rules-nextin-china-sites.mrs
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/china-sites.mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs
 rules:
 - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
 - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve

@@ -1,3 +1,5 @@
+# Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/f7119625e8e225d0e5a06b137465e0c10cb906f8/geo/geosite/telegram.yaml
+# License: ../LICENSE-MetaCubeX.txt
 host-suffix, cdn-telegram.org, Telegram
 host-suffix, comments.app, Telegram
 host-suffix, contest.com, Telegram

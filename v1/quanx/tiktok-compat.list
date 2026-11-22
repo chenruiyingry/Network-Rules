@@ -1,44 +1,42 @@
-# NAME: TikTok
-# AUTHOR: blackmatrix7
-# REPO: https://github.com/blackmatrix7/ios_rule_script
-# UPDATED: 2026-10-16 04:51:01
-# HOST: 4
-# HOST-KEYWORD: 2
-# HOST-SUFFIX: 28
-# USER-AGENT: 1
-# TOTAL: 35
-HOST,lf16-effectcdn.byteeffecttos-g.com,TikTok
-HOST,lf16-pkgcdn.pitaya-clientai.com,TikTok
-HOST,p16-tiktokcdn-com.akamaized.net,TikTok
-HOST,trae-api-sg.mchost.guru,TikTok
-HOST-SUFFIX,bytedapm.com,TikTok
-HOST-SUFFIX,bytegecko-i18n.com,TikTok
-HOST-SUFFIX,byteintlapi.com,TikTok
-HOST-SUFFIX,byteoversea.com,TikTok
-HOST-SUFFIX,capcut.com,TikTok
-HOST-SUFFIX,capcutapi.com,TikTok
-HOST-SUFFIX,capcutapi.us,TikTok
-HOST-SUFFIX,capcutstatic.com,TikTok
-HOST-SUFFIX,ibytedtos.com,TikTok
-HOST-SUFFIX,ibyteimg.com,TikTok
-HOST-SUFFIX,ipstatp.com,TikTok
-HOST-SUFFIX,isnssdk.com,TikTok
-HOST-SUFFIX,marscode.com,TikTok
-HOST-SUFFIX,muscdn.com,TikTok
-HOST-SUFFIX,musical.ly,TikTok
-HOST-SUFFIX,sgpstatp.com,TikTok
-HOST-SUFFIX,snssdk.com,TikTok
-HOST-SUFFIX,tik-tokapi.com,TikTok
-HOST-SUFFIX,tiktok.com,TikTok
-HOST-SUFFIX,tiktokcdn-us.com,TikTok
-HOST-SUFFIX,tiktokcdn.com,TikTok
-HOST-SUFFIX,tiktokd.net,TikTok
-HOST-SUFFIX,tiktokd.org,TikTok
-HOST-SUFFIX,tiktokmusic.app,TikTok
-HOST-SUFFIX,tiktokv.com,TikTok
-HOST-SUFFIX,tiktokv.us,TikTok
-HOST-SUFFIX,trae.ai,TikTok
-HOST-SUFFIX,ttwebview.com,TikTok
-HOST-KEYWORD,musical.ly,TikTok
-HOST-KEYWORD,tiktok,TikTok
-USER-AGENT,TikTok*,TikTok
+# Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/f7119625e8e225d0e5a06b137465e0c10cb906f8/geo/geosite/tiktok.yaml
+# License: ../LICENSE-MetaCubeX.txt
+host-suffix, bytedapm.com, TikTok
+host-suffix, muscdn.com, TikTok
+host-suffix, musical.ly, TikTok
+host-suffix, tik-tokapi.com, TikTok
+host-suffix, tiktok-minis.com, TikTok
+host-suffix, tiktok-row.net, TikTok
+host-suffix, tiktok.com, TikTok
+host-suffix, tiktokcdn-eu.com, TikTok
+host-suffix, tiktokcdn-us.com, TikTok
+host-suffix, tiktokcdn.com, TikTok
+host-suffix, tiktokd.net, TikTok
+host-suffix, tiktokd.org, TikTok
+host-suffix, tiktokeu-cdn.com, TikTok
+host-suffix, tiktokglobalshopv.com, TikTok
+host-suffix, tiktokminis.us, TikTok
+host-suffix, tiktokrow-cdn.com, TikTok
+host-suffix, tiktokshop.com, TikTok
+host-suffix, tiktokstaticb.com, TikTok
+host-suffix, tiktokv.com, TikTok
+host-suffix, tiktokv.eu, TikTok
+host-suffix, tiktokv.us, TikTok
+host-suffix, tiktokvapp.com, TikTok
+host-suffix, tiktokw.eu, TikTok
+host-suffix, tiktokw.us, TikTok
+host-suffix, ttcdn-us.com, TikTok
+host-suffix, ttlivecdn.com, TikTok
+host-suffix, ttoverseaus.net, TikTok
+host-suffix, ttwstatic.com, TikTok
+host-suffix, tiktokcdn-us.com.edgesuite.net, TikTok
+host-suffix, tiktokcdn.com.akamaized.net, TikTok
+host-suffix, tiktokcdn.com.edgesuite.net, TikTok
+host-suffix, tiktokv.com.edgekey.net, TikTok
+host-suffix, tiktokv.com.edgesuite.net, TikTok
+host, p16-tiktokcdn-com.akamaized.net, TikTok
+host, p16-tiktok-dm-sticker-sign-sg.ibyteimg.com, TikTok
+host, roovza-launches.appsflyersdk.com, TikTok
+host, roovza.inapps.appsflyersdk.com, TikTok
+host, roovza.launches.appsflyersdk.com, TikTok
+host, roovza.skadsdk.appsflyersdk.com, TikTok
+host-suffix, analytics.tiktok.com, TikTok

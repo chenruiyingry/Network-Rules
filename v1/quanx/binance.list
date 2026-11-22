@@ -1,3 +1,7 @@
+# Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/f7119625e8e225d0e5a06b137465e0c10cb906f8/geo/geosite/binance.yaml
+# License: ../LICENSE-MetaCubeX.txt
+host, zftksc.cdn-settings.appsflyersdk.com, 自动选择
+host, zftksc.launches.appsflyersdk.com, 自动选择
 host-suffix, binance.cc, 自动选择
 host-suffix, binance.charity, 自动选择
 host-suffix, binance.cloud, 自动选择
@@ -9,9 +13,7 @@ host-suffix, binance.net, 自动选择
 host-suffix, binance.org, 自动选择
 host-suffix, binance.us, 自动选择
 host-suffix, binance.vision, 自动选择
-host-suffix, binanceapi.com, 自动选择
 host-suffix, binancecnt.com, 自动选择
-host-suffix, binanceru.net, 自动选择
 host-suffix, binancezh.be, 自动选择
 host-suffix, binancezh.biz, 自动选择
 host-suffix, binancezh.cc, 自动选择
@@ -27,10 +29,12 @@ host-suffix, binancezh.net, 自动选择
 host-suffix, binancezh.pro, 自动选择
 host-suffix, binancezh.sh, 自动选择
 host-suffix, binancezh.top, 自动选择
+host-suffix, binanceapi.com, 自动选择
+host-suffix, binanceru.net, 自动选择
 host-suffix, bmwweb.solutions, 自动选择
 host-suffix, bnappweb.black, 自动选择
-host-suffix, bnbchain.org, 自动选择
 host-suffix, bnbstatic.com, 自动选择
+host-suffix, bnbchain.org, 自动选择
 host-suffix, bntrace.com, 自动选择
 host-suffix, bsappapi.cc, 自动选择
 host-suffix, bsappapi.com, 自动选择
@@ -41,5 +45,3 @@ host-suffix, saasexch.co, 自动选择
 host-suffix, saasexch.com, 自动选择
 host-suffix, saasexch.info, 自动选择
 host-suffix, saasexch.io, 自动选择
-host, zftksc.cdn-settings.appsflyersdk.com, 自动选择
-host, zftksc.launches.appsflyersdk.com, 自动选择

@@ -1,4 +1,5 @@
-host-suffix, analytics.tiktok.com, TikTok
+# Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/f7119625e8e225d0e5a06b137465e0c10cb906f8/geo/geosite/tiktok.yaml
+# License: ../LICENSE-MetaCubeX.txt
 host-suffix, bytedapm.com, TikTok
 host-suffix, muscdn.com, TikTok
 host-suffix, musical.ly, TikTok
@@ -7,10 +8,7 @@ host-suffix, tiktok-minis.com, TikTok
 host-suffix, tiktok-row.net, TikTok
 host-suffix, tiktok.com, TikTok
 host-suffix, tiktokcdn-eu.com, TikTok
-host-suffix, tiktokcdn-us.com.edgesuite.net, TikTok
 host-suffix, tiktokcdn-us.com, TikTok
-host-suffix, tiktokcdn.com.akamaized.net, TikTok
-host-suffix, tiktokcdn.com.edgesuite.net, TikTok
 host-suffix, tiktokcdn.com, TikTok
 host-suffix, tiktokd.net, TikTok
 host-suffix, tiktokd.org, TikTok
@@ -20,8 +18,6 @@ host-suffix, tiktokminis.us, TikTok
 host-suffix, tiktokrow-cdn.com, TikTok
 host-suffix, tiktokshop.com, TikTok
 host-suffix, tiktokstaticb.com, TikTok
-host-suffix, tiktokv.com.edgekey.net, TikTok
-host-suffix, tiktokv.com.edgesuite.net, TikTok
 host-suffix, tiktokv.com, TikTok
 host-suffix, tiktokv.eu, TikTok
 host-suffix, tiktokv.us, TikTok
@@ -32,9 +28,15 @@ host-suffix, ttcdn-us.com, TikTok
 host-suffix, ttlivecdn.com, TikTok
 host-suffix, ttoverseaus.net, TikTok
 host-suffix, ttwstatic.com, TikTok
-host, p16-tiktok-dm-sticker-sign-sg.ibyteimg.com, TikTok
+host-suffix, tiktokcdn-us.com.edgesuite.net, TikTok
+host-suffix, tiktokcdn.com.akamaized.net, TikTok
+host-suffix, tiktokcdn.com.edgesuite.net, TikTok
+host-suffix, tiktokv.com.edgekey.net, TikTok
+host-suffix, tiktokv.com.edgesuite.net, TikTok
 host, p16-tiktokcdn-com.akamaized.net, TikTok
+host, p16-tiktok-dm-sticker-sign-sg.ibyteimg.com, TikTok
 host, roovza-launches.appsflyersdk.com, TikTok
 host, roovza.inapps.appsflyersdk.com, TikTok
 host, roovza.launches.appsflyersdk.com, TikTok
 host, roovza.skadsdk.appsflyersdk.com, TikTok
+host-suffix, analytics.tiktok.com, TikTok

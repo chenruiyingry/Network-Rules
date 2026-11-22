@@ -2,6 +2,12 @@
   "version": 2,
   "rules": [
     {
+      "domain": [
+        "zftksc.cdn-settings.appsflyersdk.com",
+        "zftksc.launches.appsflyersdk.com"
+      ]
+    },
+    {
       "domain_suffix": [
         "binance.cc",
         "binance.charity",
@@ -14,9 +20,7 @@
         "binance.org",
         "binance.us",
         "binance.vision",
-        "binanceapi.com",
         "binancecnt.com",
-        "binanceru.net",
         "binancezh.be",
         "binancezh.biz",
         "binancezh.cc",
@@ -32,10 +36,12 @@
         "binancezh.pro",
         "binancezh.sh",
         "binancezh.top",
+        "binanceapi.com",
+        "binanceru.net",
         "bmwweb.solutions",
         "bnappweb.black",
-        "bnbchain.org",
         "bnbstatic.com",
+        "bnbchain.org",
         "bntrace.com",
         "bsappapi.cc",
         "bsappapi.com",
@@ -46,12 +52,6 @@
         "saasexch.com",
         "saasexch.info",
         "saasexch.io"
-      ]
-    },
-    {
-      "domain": [
-        "zftksc.cdn-settings.appsflyersdk.com",
-        "zftksc.launches.appsflyersdk.com"
       ]
     }
   ]

@@ -1,4 +1,6 @@
 payload:
+- DOMAIN,zftksc.cdn-settings.appsflyersdk.com
+- DOMAIN,zftksc.launches.appsflyersdk.com
 - DOMAIN-SUFFIX,binance.cc
 - DOMAIN-SUFFIX,binance.charity
 - DOMAIN-SUFFIX,binance.cloud
@@ -10,9 +12,7 @@ payload:
 - DOMAIN-SUFFIX,binance.org
 - DOMAIN-SUFFIX,binance.us
 - DOMAIN-SUFFIX,binance.vision
-- DOMAIN-SUFFIX,binanceapi.com
 - DOMAIN-SUFFIX,binancecnt.com
-- DOMAIN-SUFFIX,binanceru.net
 - DOMAIN-SUFFIX,binancezh.be
 - DOMAIN-SUFFIX,binancezh.biz
 - DOMAIN-SUFFIX,binancezh.cc
@@ -28,10 +28,12 @@ payload:
 - DOMAIN-SUFFIX,binancezh.pro
 - DOMAIN-SUFFIX,binancezh.sh
 - DOMAIN-SUFFIX,binancezh.top
+- DOMAIN-SUFFIX,binanceapi.com
+- DOMAIN-SUFFIX,binanceru.net
 - DOMAIN-SUFFIX,bmwweb.solutions
 - DOMAIN-SUFFIX,bnappweb.black
-- DOMAIN-SUFFIX,bnbchain.org
 - DOMAIN-SUFFIX,bnbstatic.com
+- DOMAIN-SUFFIX,bnbchain.org
 - DOMAIN-SUFFIX,bntrace.com
 - DOMAIN-SUFFIX,bsappapi.cc
 - DOMAIN-SUFFIX,bsappapi.com
@@ -42,5 +44,3 @@ payload:
 - DOMAIN-SUFFIX,saasexch.com
 - DOMAIN-SUFFIX,saasexch.info
 - DOMAIN-SUFFIX,saasexch.io
-- DOMAIN,zftksc.cdn-settings.appsflyersdk.com
-- DOMAIN,zftksc.launches.appsflyersdk.com

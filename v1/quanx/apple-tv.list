@@ -1,0 +1,12 @@
+# Compatibility source: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/QuantumultX/AppleTV/AppleTV.list
+# See ../LICENSE-QuanX-blackmatrix.txt
+host-suffix, tv.apple.com, AppleTV
+host, apple-tv-plus-press.apple.com, AppleTV
+host, hls-amt.itunes.apple.com, AppleTV
+host, hls.itunes.apple.com, AppleTV
+host, np-edge.itunes.apple.com, AppleTV
+host, play-edge.itunes.apple.com, AppleTV
+host, tv.applemusic.com, AppleTV
+host, uts-api.itunes.apple.com, AppleTV
+user-agent, AppleTV*, AppleTV
+user-agent, com.apple.tv*, AppleTV

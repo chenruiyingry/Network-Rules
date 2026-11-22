@@ -1,7 +1,5 @@
 # Compatibility source: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/QuantumultX/PrivateTracker/PrivateTracker.list
-# See ../LICENSE-QuanX-compat.txt
-# Legacy source: https://raw.githubusercontent.com/chenruiyingry/Rules-For-Quantumult-X/9458655333183e915f74c4d2e655e77ebede0164/Rules/PT.list
-# See ../LICENSE-QuanX-fork.txt
+# See ../LICENSE-QuanX-blackmatrix.txt
 host-suffix, 1ptba.com, DIRECT
 host-suffix, 52dic.vip, DIRECT
 host-suffix, 52pt.site, DIRECT
@@ -128,13 +126,6 @@ host-suffix, ultrahd.net, DIRECT
 host-suffix, wintersakura.net, DIRECT
 host-suffix, zhuque.in, DIRECT
 host-suffix, zmpt.cc, DIRECT
-host-suffix, icc2022.de, DIRECT
-host-suffix, czhch.com, DIRECT
-host-suffix, icc2022.xyz, DIRECT
-host-suffix, raingfh.top, DIRECT
-host-suffix, ptlgs.org, DIRECT
-host-suffix, ptl.gs, DIRECT
-host-suffix, m-team.co, DIRECT
 host, 004430.xyz, DIRECT
 host, 021912.xyz, DIRECT
 host, 1337.abcvg.info, DIRECT

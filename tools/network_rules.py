@@ -322,7 +322,7 @@ def build(output, repo_slug, tag):
                 original = fetch(gfw["url"], 1024 * 1024)
                 selected, source_omitted = gfwlist_rules(original)
                 write(version / "sources" / "gfwlist.txt", original.decode("ascii"))
-                write(version / "LICENSE-GFWList.txt", fetch(gfw["license"], 64 * 1024).decode("utf-8"))
+                write(version / "LICENSE-GFWList.txt", (ROOT / gfw["license"]).read_text(encoding="utf-8"))
             elif ads:
                 selected, source_omitted = adblock_dns_rules(
                     fetch(ads["url"], 1024 * 1024),

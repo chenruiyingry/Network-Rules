@@ -1,7 +1,7 @@
 dlc: v2fly/domain-list-community
 gfwlist:
   url: https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt
-  license: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+  license: licenses/GFWList-LGPL-2.1.txt
 adblock_dns:
   url: https://raw.githubusercontent.com/217heidai/adblockfilters/dist/adblockdnslite.txt
   exceptions: https://raw.githubusercontent.com/217heidai/adblockfilters/dist/adblockdns.txt

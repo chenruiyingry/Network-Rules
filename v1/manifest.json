@@ -304,47 +304,41 @@
     },
     "telegram": {
       "source": "telegram",
-      "selected": 21,
+      "selected": 35,
       "targets": {
         "openclash": {
-          "count": 21,
+          "count": 35,
           "omitted": []
         },
         "quanx": {
-          "count": 54,
-          "omitted": [],
-          "compat_source": "https://raw.githubusercontent.com/Repcz/Tool/f4800f08f03703a074befb0f49187129d1810c4e/QuantumultX/Rules/Telegram.list"
+          "count": 35,
+          "omitted": []
         },
         "homeproxy": {
-          "count": 21,
+          "count": 35,
           "omitted": []
         },
         "nextin": {
-          "count": 54,
+          "count": 35,
           "omitted": [],
-          "compat_source": "https://raw.githubusercontent.com/Repcz/Tool/f4800f08f03703a074befb0f49187129d1810c4e/QuantumultX/Rules/Telegram.list",
           "provider_files": [
             {
               "filename": "telegram.mrs",
               "behavior": "domain",
               "format": "mrs",
-              "count": 31
-            },
-            {
-              "filename": "telegram-classical.yaml",
-              "behavior": "classical",
-              "format": "yaml",
-              "count": 7
+              "count": 21
             },
             {
               "filename": "telegram-ip.mrs",
               "behavior": "ipcidr",
               "format": "mrs",
-              "count": 16
+              "count": 14
             }
           ]
         }
-      }
+      },
+      "cidr_source": "https://core.telegram.org/resources/cidr.txt",
+      "cidr_count": 14
     },
     "foreign-media": {
       "source": [
@@ -1515,7 +1509,6 @@
     "v1/LICENSE-DLC.txt": "b9d84a22870d3f21c91a4c6e410c9cc51d00902f5233ad0c84011479244bf7d2",
     "v1/LICENSE-GFWList.txt": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95",
     "v1/LICENSE-QuanX-blackmatrix.txt": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
-    "v1/LICENSE-QuanX-repcz.txt": "44cc26fb4a78aca61163a61694060a92b136f05988d2d687cfd999c08205908d",
     "v1/README.md": "406f25e6a8858e37a0b16debafbf401a5184b8f2494e247d031085ed91b8bda3",
     "v1/homeproxy/apple.json": "04d300b15e35e28498392c661b38d11d67939944499292141f6b2c1504d902be",
     "v1/homeproxy/binance.json": "88f8d4ee318ad5e9fb0c979b7ca043cefe304ad495ceb9032984c0dbdbbb7f7f",
@@ -1527,7 +1520,7 @@
     "v1/homeproxy/overseas.json": "8dc505bb20b188d713692b23c5803264e560476bb443255aea6dcca5eac8a854",
     "v1/homeproxy/pt.json": "3edd197f71741f943dd64714097853a3c35a6312241b8af32619a4b05ecf6e83",
     "v1/homeproxy/setup.json": "e353fd047abf9152debe83996d93f4dec2a238c7623909a452a1b822bfe6d672",
-    "v1/homeproxy/telegram.json": "54a7fc8bdae3b55473763208cbe0e1bcbdc84336d0671d329e587fcf75489d5c",
+    "v1/homeproxy/telegram.json": "f49718fc73c9b1b6627418870d9567eac88afd752d3a6f1c589a69295b3d22f9",
     "v1/homeproxy/tiktok.json": "a12d47ccf69dc0eeea3085313bc407b72f3699d545d87d5682ab0657ad5c302c",
     "v1/homeproxy/youtube.json": "e3b8efef5307a4552acc501f62c2673bff52dd14074436d70869f0d67d487f38",
     "v1/nextin/adblock-dns-exceptions.mrs": "dcf9dddc8b8f580ef3c0ffb80a18bc97d82a6665714477d5281ea9216cdd9612",
@@ -1562,13 +1555,13 @@
     "v1/nextin/pt-ip.mrs": "3011973b7d5cdc3cc7830cee03d5c05d034bb0a29c633aee1f061f138abe6576",
     "v1/nextin/pt.mrs": "b5b124b82b8ada7728c33b6fc49dfa38a0c5065775286d81c632a57df2bc450f",
     "v1/nextin/pt.yaml": "702e6829350e38013542fb84263f36d87f246766bd54b42bcd4fd4655d6560d2",
-    "v1/nextin/quanx-routing.yaml": "be0ea6ef7d0db7d19ef7ba637b88f72a6ffe48a08d323c29954c70118250aad4",
-    "v1/nextin/telegram-classical.yaml": "9b1aa18af3845c0c8e1b291d4185d81ed2cfbf1211aeef0355cbd353b8d4a67e",
-    "v1/nextin/telegram-ip.mrs": "e0b36c2cd91a763c3fcf57eafaff49982632f7dadea8879fc265aaccd69ec63d",
-    "v1/nextin/telegram.mrs": "c8655b6379a833555b6cb8eef66d449a43dd2966e395c18b331a9323f4fa4b03",
-    "v1/nextin/telegram.yaml": "2bc971abd87c1e9151c381a6ced6d103bb296eef1032b55897df2d2faf65ff9a",
-    "v1/nextin/template-remote.yaml": "b6f86de244e4a80f401fbd52518f2db45c053c75d5f4f9d96982831ba75ebbb7",
-    "v1/nextin/template.yaml": "efc63cae8f82d5a91aa709dd9323da027710d97f3bdeef44ef7624c5a2e506ea",
+    "v1/nextin/quanx-routing.yaml": "4c8ef683b3f4909862fa9fac0674bb2ad2d397def95aeaee66f537a43d7f2d0a",
+    "v1/nextin/telegram-classical.yaml": "ce14ecf3886866b87b4fcdad602dd5b4c82eea6e49b83b6cc448731ac6eb9e38",
+    "v1/nextin/telegram-ip.mrs": "7f1c8e4cdb66c579a56f9c6214ac98d4a6f527ca4aa788a51a172fef29ecffc1",
+    "v1/nextin/telegram.mrs": "ffa4d1d3e8649965e529c1c570d8add75a0d6f70aa8503ece8add841ce48c0e7",
+    "v1/nextin/telegram.yaml": "ce14ecf3886866b87b4fcdad602dd5b4c82eea6e49b83b6cc448731ac6eb9e38",
+    "v1/nextin/template-remote.yaml": "bc30fa6c1b805513045de0c384b94e14e8fa5543ee96ab6abb2bd8b931d94028",
+    "v1/nextin/template.yaml": "825ec4e4e5f089ad10f52541db0bf8f4aa74946ddc70a182f5df98150e199674",
     "v1/nextin/tiktok.mrs": "00db2983b3cb4365e56ae8bcdc7f6085caa12d9c4358dbcbb0c75f00ecf4f7bd",
     "v1/nextin/tiktok.yaml": "8b2a822bd2e40443b58673b05de9504c748431cf403821de1729bb3612968b66",
     "v1/nextin/youtube.mrs": "e212b2ce9f39b30f4e2ab57da9ed0937673606bc56bb46e5d55ad7dd9af00aef",
@@ -1583,7 +1576,7 @@
     "v1/openclash/overseas.yaml": "4ed0b6a75bea9c62fcba1432184a4b97b2e8e489d78b8ad61b20020d13bd6527",
     "v1/openclash/overwrite.conf": "afe95faaa1c575554d7a1cd2d644574784e52a4acb2999a1c4e011276106b744",
     "v1/openclash/pt.yaml": "cb8556e273666aafc96b7ffd41e5127e14dbc1ca805821c69add504a2f2d5a95",
-    "v1/openclash/telegram.yaml": "a680e71bfbd2ad499dad184f182108689b4345ddd15824d7e3756c3baec96910",
+    "v1/openclash/telegram.yaml": "ce14ecf3886866b87b4fcdad602dd5b4c82eea6e49b83b6cc448731ac6eb9e38",
     "v1/openclash/tiktok.yaml": "8b2a822bd2e40443b58673b05de9504c748431cf403821de1729bb3612968b66",
     "v1/openclash/youtube.yaml": "e3f065253a0cab8ff79c7acf09bfdf44fcdbe79eed731bc01339103a556fa161",
     "v1/quanx/apple-tv.list": "7d8cc57a4c062f9932311dc51ab1d8533a42eb4bbd1ec25ac52c5ed79fd26a43",
@@ -1603,7 +1596,7 @@
     "v1/quanx/personal-sites.list": "f27f9b8caf2a5585f3b1318694aeb9c1dd515934b345a1f204f220db96e996f6",
     "v1/quanx/pt-compat.list": "431d1c2c061cd5110f6b335bc8bdfef8bf97188a5b2d9a721484b6d4fd1d72ad",
     "v1/quanx/pt.list": "b9187071b7af92a71a02baafd2b5ee8e71e64c0f7e7555ac391277d4f132d4e3",
-    "v1/quanx/telegram.list": "a6e3a10ad43132a77a37c2cd5cc72e3051e90ffe0a3898d21969bd47ca9e7224",
+    "v1/quanx/telegram.list": "68471831b71ec96ccbaaeb16226388777a70f332a0476f4a03a81365c9e01e62",
     "v1/quanx/tiktok-compat.list": "b1a9cc643f72d4f105bf2eb1ba916ae7c56d34014355d97c1ff98f41006b9f75",
     "v1/quanx/tiktok.list": "8a8ceeecf278420133bdfa685d156ee53e177016de63420276a9efb0042c1b5a",
     "v1/quanx/youtube.list": "b4bc0e8ccfb51b09fd35872ed19dddbe1bd147f1841204147d395e36f4a4e6ce",

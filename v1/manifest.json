@@ -326,14 +326,27 @@
           "omitted": []
         },
         "nextin": {
-          "count": 21,
+          "count": 45,
           "omitted": [],
+          "legacy_source": "https://raw.githubusercontent.com/chenruiyingry/Rules-For-Quantumult-X/9458655333183e915f74c4d2e655e77ebede0164/Rules/Services/SNS/Telegram.list",
           "provider_files": [
             {
               "filename": "telegram.mrs",
               "behavior": "domain",
               "format": "mrs",
               "count": 21
+            },
+            {
+              "filename": "telegram-ip.mrs",
+              "behavior": "ipcidr",
+              "format": "mrs",
+              "count": 19
+            },
+            {
+              "filename": "telegram-classical.yaml",
+              "behavior": "classical",
+              "format": "yaml",
+              "count": 5
             }
           ]
         }
@@ -1523,7 +1536,7 @@
     "v1/LICENSE-GFWList.txt": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95",
     "v1/LICENSE-QuanX-compat.txt": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
     "v1/LICENSE-QuanX-fork.txt": "63814d59a40b61e1090074dac3bbda145d4c0f6a37486b2ef225075880ea2bac",
-    "v1/README.md": "000c349f24b10eecedc7e96a9b4a9d5599cb057064e1abc646a61a4f5d5e21ef",
+    "v1/README.md": "d8b37303b31b8b718f61fb3b1ea1d4f76758fffdd229ccdb316365e3b76a57cc",
     "v1/homeproxy/apple.json": "04d300b15e35e28498392c661b38d11d67939944499292141f6b2c1504d902be",
     "v1/homeproxy/binance.json": "88f8d4ee318ad5e9fb0c979b7ca043cefe304ad495ceb9032984c0dbdbbb7f7f",
     "v1/homeproxy/disney-plus.json": "0fa67392af4a53a8471359345f8dac26eb680b5ea6e7e393ac921859b8ae6946",
@@ -1569,11 +1582,13 @@
     "v1/nextin/pt-ip.mrs": "3011973b7d5cdc3cc7830cee03d5c05d034bb0a29c633aee1f061f138abe6576",
     "v1/nextin/pt.mrs": "7f0624174eb79b3cf745c6d6c411b7b63a76b724cd83504767e390e9ac9ec35b",
     "v1/nextin/pt.yaml": "a8160fecefa9997094aa2110e6f62ad99ce5dd6cb3d9c42ac54e1dbf11eefa13",
-    "v1/nextin/quanx-routing.yaml": "3c1135233e05e2cee2ce324b3722e7cf3212ce967637d5f84153b100290fa4eb",
+    "v1/nextin/quanx-routing.yaml": "a178b0f60d87f1d80186f6d0ef69b12e913b986d91e16f26136d2c1b66d1920a",
+    "v1/nextin/telegram-classical.yaml": "8855eec89eb68e10ef7e9558aa1ff79abfdae2890dd84b219855a29a205f71e1",
+    "v1/nextin/telegram-ip.mrs": "10a271550ed1ce6920d1c401f2298a06ac1734e502385b9473017255470ce3da",
     "v1/nextin/telegram.mrs": "ffa4d1d3e8649965e529c1c570d8add75a0d6f70aa8503ece8add841ce48c0e7",
-    "v1/nextin/telegram.yaml": "a680e71bfbd2ad499dad184f182108689b4345ddd15824d7e3756c3baec96910",
-    "v1/nextin/template-remote.yaml": "c173fe6cfeb81f1391fd4d2b9e484ee61af12d33fc57efa09b9b7241512b7c0a",
-    "v1/nextin/template.yaml": "6c5a3ea6d762f7c2e4f830caf6d8ae67d12fca9d7edd6079952853802bb41181",
+    "v1/nextin/telegram.yaml": "9b682f465b586e5f5936f9f8f9b72e824014223f3a561f59359690973c5f99e7",
+    "v1/nextin/template-remote.yaml": "7cb05537c5d665b0c1352864741a78a02db4bd32624cd12d61412afcea7cf959",
+    "v1/nextin/template.yaml": "d5aa1d21d1cfc53b8a0db7e421f533c1c71afa7f4daf7e0a17cd2c1e7ea02c68",
     "v1/nextin/tiktok.mrs": "00db2983b3cb4365e56ae8bcdc7f6085caa12d9c4358dbcbb0c75f00ecf4f7bd",
     "v1/nextin/tiktok.yaml": "8b2a822bd2e40443b58673b05de9504c748431cf403821de1729bb3612968b66",
     "v1/nextin/youtube.mrs": "e212b2ce9f39b30f4e2ab57da9ed0937673606bc56bb46e5d55ad7dd9af00aef",

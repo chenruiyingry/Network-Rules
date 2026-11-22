@@ -99,6 +99,27 @@ rule-providers:
     interval: 86400
     path: ./rule_provider/network-rules-nextin-apple-tv.mrs
     url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/apple-tv.mrs
+  network-rules-nextin-telegram:
+    type: http
+    behavior: domain
+    format: mrs
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-telegram.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/telegram.mrs
+  network-rules-nextin-telegram-ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-telegram-ip.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/telegram-ip.mrs
+  network-rules-nextin-telegram-classical:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-telegram-classical.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/telegram-classical.yaml
   network-rules-nextin-gfw:
     type: http
     behavior: domain
@@ -144,6 +165,9 @@ rules:
 - RULE-SET,network-rules-nextin-binance,通用分流
 - RULE-SET,network-rules-nextin-openai,OpenAI
 - RULE-SET,network-rules-nextin-apple-tv,AppleTV
+- RULE-SET,network-rules-nextin-telegram,通用分流
+- RULE-SET,network-rules-nextin-telegram-ip,通用分流
+- RULE-SET,network-rules-nextin-telegram-classical,通用分流
 - RULE-SET,network-rules-nextin-gfw,通用分流
 - RULE-SET,network-rules-nextin-google,通用分流
 - RULE-SET,network-rules-nextin-apple,Apple

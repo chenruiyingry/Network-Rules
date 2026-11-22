@@ -70,6 +70,20 @@ rule-providers:
     interval: 86400
     path: ./rule_provider/network-rules-nextin-telegram.mrs
     url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/telegram.mrs
+  network-rules-nextin-telegram-ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-telegram-ip.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/telegram-ip.mrs
+  network-rules-nextin-telegram-classical:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-telegram-classical.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/telegram-classical.yaml
   network-rules-nextin-foreign-media:
     type: http
     behavior: domain
@@ -101,6 +115,8 @@ rules:
 - RULE-SET,network-rules-nextin-github,节点选择
 - RULE-SET,network-rules-nextin-youtube,节点选择
 - RULE-SET,network-rules-nextin-telegram,节点选择
+- RULE-SET,network-rules-nextin-telegram-ip,节点选择
+- RULE-SET,network-rules-nextin-telegram-classical,节点选择
 - RULE-SET,network-rules-nextin-foreign-media,节点选择
 - RULE-SET,network-rules-nextin-google,节点选择
 - RULE-SET,network-rules-nextin-apple,节点选择

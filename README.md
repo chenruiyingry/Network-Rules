@@ -14,6 +14,8 @@ Disney+ 文件已提供，独立策略的订阅条目默认关闭。应用净化
 
 在「设置 → 分流规则覆写」手动导入 [个人分流模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing.yaml)，再应用到已有节点订阅。模板先匹配私网、PT 和个人网站，再匹配服务专用规则、GFW、国内域名和中国 IP，最后由「漏网之鱼」选择直连或通用分流。分类通过仓库的远程规则集刷新，刷新间隔为 24 小时。AppleTV 只从美国节点测速选用。OpenAI 只从名称带 AI 的美国和新加坡节点测速选用。通用分流排除名称带 `x1`、`x2`、`1.5x` 等倍率标记的节点。节点分组改动后需重新导入模板。
 
+广告拦截取自 [217heidai/adblockfilters](https://github.com/217heidai/adblockfilters)。模板在私网、PT、个人网站之后、服务规则之前拦截 Lite 版的广告域名，并应用完整版公开例外。例外仍按后续规则分流。使用已迁移到 `dist` 分支的更新地址。模板未写入私网 DNS 或公网 DoH 地址。
+
 ## 本地预览
 
 ```sh

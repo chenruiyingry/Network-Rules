@@ -2,6 +2,10 @@ dlc: v2fly/domain-list-community
 gfwlist:
   url: https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt
   license: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+adblock_dns:
+  url: https://raw.githubusercontent.com/217heidai/adblockfilters/dist/adblockdnslite.txt
+  exceptions: https://raw.githubusercontent.com/217heidai/adblockfilters/dist/adblockdns.txt
+  license: https://raw.githubusercontent.com/217heidai/adblockfilters/main/LICENSE
 quanx_legacy:
   repository: chenruiyingry/Rules-For-Quantumult-X
   commit: 9458655333183e915f74c4d2e655e77ebede0164

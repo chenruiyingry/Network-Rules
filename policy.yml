@@ -24,6 +24,7 @@ nextin_routing:
   categories:
     pt: DIRECT
     personal-sites: DIRECT
+    adblock-dns: REJECT
     binance: 通用分流
     openai: OpenAI
     apple-tv: AppleTV
@@ -52,6 +53,10 @@ categories:
     nextin_import_quanx: true
     nextin_default: false
     policies: {quanx: DIRECT, nextin: DIRECT}
+  - id: adblock-dns
+    adblock_dns: true
+    nextin_default: false
+    policies: {nextin: REJECT}
   - id: tiktok
     dlc: tiktok
     quanx_compat: rule/QuantumultX/TikTok/TikTok.list

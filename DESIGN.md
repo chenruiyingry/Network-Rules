@@ -12,9 +12,9 @@
 
 已确认采用 DLC 单域名上游。该版本还有 `anthropic`、`google-gemini`、`perplexity`、`github-copilot`、`netflix`、`disney`、`hbo`、`primevideo`、`spotify`、`tiktok`、`whatsapp` 和 `discord` 等分类。微信、淘宝若需单独分流，应核对 `tencent`、`alibaba` 的范围，再补充所需的本地规则。迁移国内外分流时保留原策略优先级，分别评估 `cn`、`geolocation-cn` 和 `geolocation-!cn` 的命中范围。广告分类 `category-ads-all` 用于域名拦截，现有重写继续按原配置管理。
 
-[Loyalsoldier/domain-list-custom](https://github.com/Loyalsoldier/domain-list-custom) 在 DLC 上增加了自己的分类和数据，[MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat) 提供按内核发布的成品。两者可用于比较覆盖范围。自动构建始终从同一个 DLC 发布版本生成全套域名规则，缺项由你在 `overrides/` 明确增补，上游故障时保留上一批。IP / GeoIP 保持各设备现有设定，后续需要统一时另行确定数据来源。
+[Loyalsoldier/domain-list-custom](https://github.com/Loyalsoldier/domain-list-custom) 在 DLC 上增加了自己的分类和数据，[MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat) 提供按内核发布的成品。两者可用于比较覆盖范围。自动构建从同一个 DLC 发布版本生成域名基线，再按分类合并原生规则补充和本仓库例外。上游故障时保留上一批。
 
-[MyRules](https://github.com/chenruiyingry/MyRules) 的规则位于 `master:Clash/`，默认分支是 `rm`；[Rules-For-Quantumult-X](https://github.com/chenruiyingry/Rules-For-Quantumult-X) 的规则位于 `develop:Rules/`。两个 fork 用于盘点原 URL、策略、规则顺序和你自己的例外；语言或命名相同的分类也要比较实际命中范围。新仓库的工作流放在默认分支，制品发布到专用分支。
+通用域名分类采用最新的 DLC 发布。需要原生格式时，定时构建从维护中的第三方仓库取对应文件，并记录实际提交。个人直连例外由本仓库的 `overrides/` 管理。工作流放在默认分支，制品发布到专用分支。
 
 ## 文件组织与规则语义
 

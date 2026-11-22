@@ -222,13 +222,17 @@ def adblock_dns_lite_rules(payload, allowed):
     return [Rule("domain", domain) for domain in sorted(included)], omitted
 
 
-def download_adblock_dns(version, slug, source, mihomo, scratch):
+def github_raw_base(source):
     repo, ref = source["repository"], source["ref"]
     endpoint = f"https://api.github.com/repos/{repo}/git/ref/heads/{ref}"
     commit = json.loads(fetch(endpoint, 64 * 1024, os.getenv("GITHUB_TOKEN")))["object"]["sha"]
     if not re.fullmatch(r"[0-9a-f]{40}", commit):
-        raise ValueError("Invalid AdBlock DNS source commit")
-    raw_base = f"https://raw.githubusercontent.com/{repo}/{commit}"
+        raise ValueError(f"Invalid source commit: {repo}/{ref}")
+    return f"https://raw.githubusercontent.com/{repo}/{commit}"
+
+
+def download_adblock_dns(version, slug, source, mihomo, scratch):
+    raw_base = github_raw_base(source)
     mrs_url = f"{raw_base}/adblockmihomo.mrs"
     full_url = f"{raw_base}/adblockdns.txt"
     full = fetch(full_url, 12 * 1024 * 1024)
@@ -423,12 +427,7 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
     config = read_yaml(ROOT / "sources.yml")
     policy = read_yaml(ROOT / "policy.yml")
     icons = read_yaml(ROOT / "resources.yml")["quanx_icons"]
-    legacy = config.get("quanx_legacy", {})
-    legacy_base = (f"https://raw.githubusercontent.com/{legacy['repository']}/{legacy['commit']}"
-                   if legacy else "")
-    compat = config.get("quanx_compat", {})
-    compat_base = (f"https://raw.githubusercontent.com/{compat['repository']}/{compat['commit']}"
-                   if compat else "")
+    compat_bases = {name: github_raw_base(source) for name, source in config["quanx_compat"].items()}
     release, checksum, source = load_release(config["dlc"], tag)
     if output.exists():
         raise ValueError(f"Choose a new output directory: {output}")
@@ -467,18 +466,14 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
             merge_compat = category.get("quanx_merge_compat", False)
             compat_rows = []
             if compat_path:
-                compat_source = f"{compat_base}/{compat_path}"
+                source_name = category.get("quanx_source", "blackmatrix")
+                compat_source = f"{compat_bases[source_name]}/{compat_path}"
+                compat_license = f"LICENSE-QuanX-{source_name}.txt"
                 compat_content = fetch(compat_source, 1024 * 1024)
                 compat_rows = list(quanx_legacy_rules(
                     compat_content.decode("utf-8-sig"), compat_source, policies.get("quanx", "DIRECT")))
                 if not compat_rows:
                     raise ValueError(f"No rules in QuanX companion file: {compat_source}")
-            legacy_path = category.get("quanx_legacy")
-            legacy_rows = []
-            if legacy_path:
-                legacy_url = f"{legacy_base}/{legacy_path}"
-                content = fetch(legacy_url, 1024 * 1024).decode("utf-8-sig")
-                legacy_rows = list(quanx_legacy_rules(content, legacy_url, policies.get("quanx", "DIRECT")))
             exports = {}
             for target, types in TARGETS.items():
                 if target not in policies:
@@ -486,10 +481,9 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
                 supported = [rule for rule in selected if can_export(rule, target, types)]
                 omitted = source_omitted + sorted(f"{rule.kind}:{rule.value}" for rule in selected
                                                if not can_export(rule, target, types))
-                include_legacy = target == "quanx" and legacy_path
                 include_compat = target == "quanx" and merge_compat and bool(compat_rows)
                 import_quanx = target == "nextin" and category.get("nextin_import_quanx", False)
-                if not supported and not include_legacy and not include_compat and not import_quanx:
+                if not supported and not include_compat and not import_quanx:
                     raise ValueError(f"No convertible rules in {slug}/{target}")
                 exports[target] = {"count": len(supported), "omitted": omitted}
                 if target == "openclash":
@@ -497,9 +491,6 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
                                {"payload": [f"{types[r.kind]},{r.value}" for r in supported]})
                 elif target == "quanx":
                     rows = [(types[r.kind], r.value, policies[target]) for r in supported]
-                    if include_legacy:
-                        rows.extend(legacy_rows)
-                        exports[target]["legacy_source"] = legacy_url
                     if include_compat:
                         rows.extend(compat_rows)
                         exports[target]["compat_source"] = compat_source
@@ -511,11 +502,9 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
                     if gfw:
                         lines = [f"# GFWList: {gfw['url']}", "# License: ../LICENSE-GFWList.txt",
                                  "# Source snapshot: ../sources/gfwlist.txt", *lines]
-                    if include_legacy:
-                        lines = [f"# Legacy source: {legacy_url}", "# See ../LICENSE-QuanX-fork.txt", *lines]
                     if include_compat:
                         lines = [f"# Compatibility source: {compat_source}",
-                                 "# See ../LICENSE-QuanX-compat.txt", *lines]
+                                 f"# See ../{compat_license}", *lines]
                     write(version / target / f"{slug}.list", "\n".join(lines) + "\n")
                 elif target == "homeproxy":
                     fields = {}
@@ -530,14 +519,12 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
                         payload = [f"+.{rule.value}" for rule in supported]
                         exports[target].update(behavior="domain", mrs=mrs)
                     if import_quanx:
-                        extra, unconverted = nextin_legacy_payload(legacy_rows + (compat_rows if merge_compat else []))
+                        extra, unconverted = nextin_legacy_payload(compat_rows if merge_compat else [])
                         payload = list(dict.fromkeys(payload + extra))
                         if not payload:
                             raise ValueError(f"No Nextin rules in {slug}")
                         exports[target]["count"] = len(payload)
                         exports[target]["omitted"].extend(unconverted)
-                        if legacy_path:
-                            exports[target]["legacy_source"] = legacy_url
                         if merge_compat and compat_rows:
                             exports[target]["compat_source"] = compat_source
                     write_yaml(version / target / f"{slug}.yaml", {"payload": payload})
@@ -549,6 +536,8 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
                             rule_type, value, *options = line.split(",")
                             nextin_inline_rules.append(",".join([rule_type, value, policies[target], *options]))
             source_url = gfw["url"] if gfw else mrs["source"] if ads else category["dlc"]
+            if not source_url:
+                source_url = compat_source if compat_path else f"overrides/{slug}.yml"
             results[slug] = {"source": source_url,
                              "selected": len(selected), "targets": exports}
             provider = f"network-rules-{slug}"
@@ -564,7 +553,7 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
             if "quanx" in policies:
                 quanx_lines.append(f"{quanx_url}, tag={slug}, force-policy={policies['quanx']}, "
                                    f"update-interval=86400, enabled={str(active).lower()}")
-            if compat_path and "quanx" in policies:
+            if compat_path and "quanx" in policies and (not merge_compat or category.get("quanx_keep_companion")):
                 compat_name = f"{slug}-compat.list"
                 (version / "quanx" / compat_name).write_bytes(compat_content)
                 compat_url = f"{base}/quanx/{compat_name}"
@@ -636,12 +625,9 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
               "各端省略的规则见 [manifest.json](manifest.json) 中的 `omitted`。\n")
         license_text = fetch(f"https://raw.githubusercontent.com/{config['dlc']}/{release}/LICENSE", 64 * 1024)
         write(version / "LICENSE-DLC.txt", license_text.decode("utf-8"))
-        if legacy_base:
-            license_text = fetch(f"{legacy_base}/LICENSE", 64 * 1024)
-            write(version / "LICENSE-QuanX-fork.txt", license_text.decode("utf-8"))
-        if compat_base:
-            license_text = fetch(f"{compat_base}/LICENSE", 64 * 1024)
-            write(version / "LICENSE-QuanX-compat.txt", license_text.decode("utf-8"))
+        for name, upstream_base in compat_bases.items():
+            license_text = fetch(f"{upstream_base}/LICENSE", 64 * 1024)
+            write(version / f"LICENSE-QuanX-{name}.txt", license_text.decode("utf-8"))
         artifacts = {path.relative_to(stage).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
                      for path in sorted(version.rglob("*")) if path.is_file()}
         write_json(version / "manifest.json", {"release": release, "source_sha256": checksum,

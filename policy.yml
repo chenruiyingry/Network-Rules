@@ -39,19 +39,18 @@ nextin_routing:
 categories:
   - id: application-cleanup
     dlc: []
-    quanx_legacy: Rules/Advertising/Hijacking.list
+    quanx_compat: rule/QuantumultX/Hijacking/Hijacking.list
+    quanx_merge_compat: true
     policies: {quanx: REJECT}
   - id: pt
     dlc: category-pt
-    quanx_legacy: Rules/PT.list
     quanx_compat: rule/QuantumultX/PrivateTracker/PrivateTracker.list
     quanx_merge_compat: true
+    quanx_keep_companion: true
     nextin_import_quanx: true
     policies: {openclash: DIRECT, quanx: DIRECT, homeproxy: direct, nextin: DIRECT}
   - id: personal-sites
     dlc: []
-    quanx_legacy: Rules/MySelf.list
-    nextin_import_quanx: true
     nextin_default: false
     policies: {quanx: DIRECT, nextin: DIRECT}
   - id: adblock-dns
@@ -64,7 +63,6 @@ categories:
     policies: {openclash: TikTok, quanx: TikTok, homeproxy: TikTok, nextin: 节点选择}
   - id: binance
     dlc: binance
-    quanx_legacy: Rules/Binance.list
     policies: {openclash: 自动选择, quanx: 自动选择, homeproxy: 自动选择, nextin: 节点选择}
   - id: openai
     dlc: openai
@@ -77,26 +75,24 @@ categories:
     policies: {openclash: YouTube, quanx: Youtube, homeproxy: YouTube, nextin: 节点选择}
   - id: disney-plus
     dlc: disney
-    quanx_legacy: Rules/Media/Foreign/DisneyPlus.list
     enabled: false
     policies: {openclash: DisneyPlus, quanx: DisneyPlus, homeproxy: DisneyPlus, nextin: 节点选择}
   - id: telegram
     dlc: telegram
-    quanx_legacy: Rules/Services/SNS/Telegram.list
+    quanx_compat: QuantumultX/Rules/Telegram.list
+    quanx_source: repcz
+    quanx_merge_compat: true
     nextin_import_quanx: true
     policies: {openclash: Telegram, quanx: Telegram, homeproxy: Telegram, nextin: 节点选择}
   - id: foreign-media
-    # Services common to the ProxyMedia and ForeignMedia profiles.
+    # Shared DLC definitions of supported streaming services.
     dlc: [abema, apple-tvplus, bahamut, bbc, dazn, disney, hbo, hulu, netflix, primevideo, spotify, twitch]
-    quanx_legacy: Rules/Media/ForeignMedia.list
     policies: {openclash: 国外媒体, quanx: 国外媒体, homeproxy: 国外媒体, nextin: 节点选择}
   - id: google
     dlc: google
-    quanx_legacy: Rules/Services/Google.list
     policies: {openclash: 自动选择, quanx: 自动选择, homeproxy: 自动选择, nextin: 节点选择}
   - id: apple
     dlc: apple
-    quanx_legacy: Rules/Services/Apple.list
     policies: {openclash: Apple, quanx: Apple, homeproxy: Apple, nextin: 节点选择}
   - id: gfw
     gfwlist: true
@@ -108,15 +104,12 @@ categories:
     quanx_merge_compat: true
     nextin_import_quanx: true
     nextin_default: false
-    policies: {nextin: AppleTV}
+    policies: {quanx: AppleTV, nextin: AppleTV}
   - id: china-sites
-    dlc: []
-    quanx_legacy: Rules/Region/China.list
-    nextin_import_quanx: true
+    dlc: cn
     nextin_default: false
-    policies: {nextin: DIRECT}
+    policies: {quanx: DIRECT, nextin: DIRECT}
   - id: overseas
     dlc: geolocation-!cn
-    quanx_legacy: Rules/Region/Global.list
     nextin_default: false
     policies: {openclash: 自动选择, quanx: 自动选择, homeproxy: 自动选择, nextin: 节点选择}

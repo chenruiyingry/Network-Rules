@@ -6,9 +6,10 @@ adblock_dns:
   repository: 217heidai/adblockfilters
   ref: dist
   license: https://raw.githubusercontent.com/217heidai/adblockfilters/main/LICENSE
-quanx_legacy:
-  repository: chenruiyingry/Rules-For-Quantumult-X
-  commit: 9458655333183e915f74c4d2e655e77ebede0164
 quanx_compat:
-  repository: blackmatrix7/ios_rule_script
-  commit: 0b6897dc17e0c513d25449c935a9694818e32f0c
+  blackmatrix:
+    repository: blackmatrix7/ios_rule_script
+    ref: master
+  repcz:
+    repository: Repcz/Tool
+    ref: X

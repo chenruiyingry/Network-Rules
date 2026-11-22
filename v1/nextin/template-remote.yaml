@@ -9,76 +9,92 @@ proxy-groups:
 rule-providers:
   network-rules-nextin-pt:
     type: http
+    behavior: domain
+    format: mrs
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-pt.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/pt.mrs
+  network-rules-nextin-pt-classical:
+    type: http
     behavior: classical
     format: yaml
     interval: 86400
-    path: ./rule_provider/network-rules-nextin-pt.yaml
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/pt.yaml
+    path: ./rule_provider/network-rules-nextin-pt-classical.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/pt-classical.yaml
+  network-rules-nextin-pt-ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-pt-ip.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/pt-ip.mrs
   network-rules-nextin-tiktok:
     type: http
-    behavior: classical
-    format: yaml
+    behavior: domain
+    format: mrs
     interval: 86400
-    path: ./rule_provider/network-rules-nextin-tiktok.yaml
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/tiktok.yaml
+    path: ./rule_provider/network-rules-nextin-tiktok.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/tiktok.mrs
   network-rules-nextin-binance:
     type: http
-    behavior: classical
-    format: yaml
+    behavior: domain
+    format: mrs
     interval: 86400
-    path: ./rule_provider/network-rules-nextin-binance.yaml
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/binance.yaml
+    path: ./rule_provider/network-rules-nextin-binance.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/binance.mrs
   network-rules-nextin-openai:
     type: http
-    behavior: classical
-    format: yaml
+    behavior: domain
+    format: mrs
     interval: 86400
-    path: ./rule_provider/network-rules-nextin-openai.yaml
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/openai.yaml
+    path: ./rule_provider/network-rules-nextin-openai.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/openai.mrs
   network-rules-nextin-github:
     type: http
-    behavior: classical
-    format: yaml
+    behavior: domain
+    format: mrs
     interval: 86400
-    path: ./rule_provider/network-rules-nextin-github.yaml
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/github.yaml
+    path: ./rule_provider/network-rules-nextin-github.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/github.mrs
   network-rules-nextin-youtube:
     type: http
-    behavior: classical
-    format: yaml
+    behavior: domain
+    format: mrs
     interval: 86400
-    path: ./rule_provider/network-rules-nextin-youtube.yaml
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/youtube.yaml
+    path: ./rule_provider/network-rules-nextin-youtube.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/youtube.mrs
   network-rules-nextin-telegram:
     type: http
-    behavior: classical
-    format: yaml
+    behavior: domain
+    format: mrs
     interval: 86400
-    path: ./rule_provider/network-rules-nextin-telegram.yaml
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/telegram.yaml
+    path: ./rule_provider/network-rules-nextin-telegram.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/telegram.mrs
   network-rules-nextin-foreign-media:
     type: http
-    behavior: classical
-    format: yaml
+    behavior: domain
+    format: mrs
     interval: 86400
-    path: ./rule_provider/network-rules-nextin-foreign-media.yaml
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/foreign-media.yaml
+    path: ./rule_provider/network-rules-nextin-foreign-media.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/foreign-media.mrs
   network-rules-nextin-google:
     type: http
-    behavior: classical
-    format: yaml
+    behavior: domain
+    format: mrs
     interval: 86400
-    path: ./rule_provider/network-rules-nextin-google.yaml
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/google.yaml
+    path: ./rule_provider/network-rules-nextin-google.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/google.mrs
   network-rules-nextin-apple:
     type: http
-    behavior: classical
-    format: yaml
+    behavior: domain
+    format: mrs
     interval: 86400
-    path: ./rule_provider/network-rules-nextin-apple.yaml
-    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/apple.yaml
+    path: ./rule_provider/network-rules-nextin-apple.mrs
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/apple.mrs
 rules:
 - RULE-SET,network-rules-nextin-pt,DIRECT
+- RULE-SET,network-rules-nextin-pt-classical,DIRECT
+- RULE-SET,network-rules-nextin-pt-ip,DIRECT
 - RULE-SET,network-rules-nextin-tiktok,节点选择
 - RULE-SET,network-rules-nextin-binance,节点选择
 - RULE-SET,network-rules-nextin-openai,节点选择

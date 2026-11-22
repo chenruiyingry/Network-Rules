@@ -39,7 +39,27 @@
           "count": 321,
           "omitted": [],
           "legacy_source": "https://raw.githubusercontent.com/chenruiyingry/Rules-For-Quantumult-X/9458655333183e915f74c4d2e655e77ebede0164/Rules/PT.list",
-          "compat_source": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/QuantumultX/PrivateTracker/PrivateTracker.list"
+          "compat_source": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/QuantumultX/PrivateTracker/PrivateTracker.list",
+          "provider_files": [
+            {
+              "filename": "pt.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 314
+            },
+            {
+              "filename": "pt-classical.yaml",
+              "behavior": "classical",
+              "format": "yaml",
+              "count": 4
+            },
+            {
+              "filename": "pt-ip.mrs",
+              "behavior": "ipcidr",
+              "format": "mrs",
+              "count": 3
+            }
+          ]
         }
       }
     },
@@ -55,7 +75,15 @@
         "nextin": {
           "count": 5,
           "omitted": [],
-          "legacy_source": "https://raw.githubusercontent.com/chenruiyingry/Rules-For-Quantumult-X/9458655333183e915f74c4d2e655e77ebede0164/Rules/MySelf.list"
+          "legacy_source": "https://raw.githubusercontent.com/chenruiyingry/Rules-For-Quantumult-X/9458655333183e915f74c4d2e655e77ebede0164/Rules/MySelf.list",
+          "provider_files": [
+            {
+              "filename": "personal-sites.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 5
+            }
+          ]
         }
       }
     },
@@ -80,7 +108,7 @@
             "count": 257348,
             "source": "https://raw.githubusercontent.com/217heidai/adblockfilters/f35f33ccc4c61bb7b23173926bd4a92f070cf445/adblockmihomo.mrs",
             "allow_source": "https://raw.githubusercontent.com/217heidai/adblockfilters/f35f33ccc4c61bb7b23173926bd4a92f070cf445/adblockdns.txt",
-            "exceptions": "adblock-dns-exceptions.yaml",
+            "exceptions": "adblock-dns-exceptions.mrs",
             "exception_count": 200
           }
         }
@@ -108,7 +136,15 @@
         },
         "nextin": {
           "count": 40,
-          "omitted": []
+          "omitted": [],
+          "provider_files": [
+            {
+              "filename": "tiktok.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 40
+            }
+          ]
         }
       }
     },
@@ -131,7 +167,15 @@
         },
         "nextin": {
           "count": 45,
-          "omitted": []
+          "omitted": [],
+          "provider_files": [
+            {
+              "filename": "binance.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 45
+            }
+          ]
         }
       }
     },
@@ -157,6 +201,14 @@
           "count": 24,
           "omitted": [
             "regexp:^chatgpt-async-webps-prod-\\S+-\\d+\\.webpubsub\\.azure\\.com$"
+          ],
+          "provider_files": [
+            {
+              "filename": "openai.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 24
+            }
           ]
         }
       }
@@ -179,7 +231,15 @@
         },
         "nextin": {
           "count": 64,
-          "omitted": []
+          "omitted": [],
+          "provider_files": [
+            {
+              "filename": "github.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 64
+            }
+          ]
         }
       }
     },
@@ -201,7 +261,15 @@
         },
         "nextin": {
           "count": 178,
-          "omitted": []
+          "omitted": [],
+          "provider_files": [
+            {
+              "filename": "youtube.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 178
+            }
+          ]
         }
       }
     },
@@ -228,6 +296,14 @@
           "count": 222,
           "omitted": [
             "regexp:^hses[1-7]?\\.akamaized\\.net$"
+          ],
+          "provider_files": [
+            {
+              "filename": "disney-plus.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 222
+            }
           ]
         }
       }
@@ -251,7 +327,15 @@
         },
         "nextin": {
           "count": 21,
-          "omitted": []
+          "omitted": [],
+          "provider_files": [
+            {
+              "filename": "telegram.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 21
+            }
+          ]
         }
       }
     },
@@ -299,6 +383,14 @@
             "regexp:(^|\\.)dualstack\\.apiproxy-.+\\.amazonaws\\.com$",
             "regexp:(^|\\.)dualstack\\.ichnaea-web-.+\\.amazonaws\\.com$",
             "regexp:^hses[1-7]?\\.akamaized\\.net$"
+          ],
+          "provider_files": [
+            {
+              "filename": "foreign-media.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 469
+            }
           ]
         }
       }
@@ -328,6 +420,14 @@
           "omitted": [
             "regexp:^r+[0-9]+(---|\\.)sn-(2x3|ni5|j5o)\\w{5}\\.googlevideo\\.com$",
             "regexp:^r+[0-9]+(---|\\.)sn-(2x3|ni5|j5o)\\w{5}\\.xn--ngstr-lra8j\\.com$"
+          ],
+          "provider_files": [
+            {
+              "filename": "google.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 964
+            }
           ]
         }
       }
@@ -351,7 +451,15 @@
         },
         "nextin": {
           "count": 1661,
-          "omitted": []
+          "omitted": [],
+          "provider_files": [
+            {
+              "filename": "apple.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 1661
+            }
+          ]
         }
       }
     },
@@ -973,6 +1081,14 @@
             "||tokenplus.app",
             "||typepad.com",
             "||xn--ngstr-lra8j.com"
+          ],
+          "provider_files": [
+            {
+              "filename": "gfw.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 4137
+            }
           ]
         }
       }
@@ -987,7 +1103,15 @@
             "user-agent:AppleTV*",
             "user-agent:com.apple.tv*"
           ],
-          "compat_source": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/QuantumultX/AppleTV/AppleTV.list"
+          "compat_source": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/QuantumultX/AppleTV/AppleTV.list",
+          "provider_files": [
+            {
+              "filename": "apple-tv.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 8
+            }
+          ]
         }
       }
     },
@@ -1024,7 +1148,15 @@
             "user-agent:%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90*",
             "geoip:cn"
           ],
-          "legacy_source": "https://raw.githubusercontent.com/chenruiyingry/Rules-For-Quantumult-X/9458655333183e915f74c4d2e655e77ebede0164/Rules/Region/China.list"
+          "legacy_source": "https://raw.githubusercontent.com/chenruiyingry/Rules-For-Quantumult-X/9458655333183e915f74c4d2e655e77ebede0164/Rules/Region/China.list",
+          "provider_files": [
+            {
+              "filename": "china-sites.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 250
+            }
+          ]
         }
       }
     },
@@ -1372,6 +1504,14 @@
             "regexp:^hses[1-7]?\\.akamaized\\.net$",
             "regexp:^r+[0-9]+(---|\\.)sn-(2x3|ni5|j5o)\\w{5}\\.googlevideo\\.com$",
             "regexp:^r+[0-9]+(---|\\.)sn-(2x3|ni5|j5o)\\w{5}\\.xn--ngstr-lra8j\\.com$"
+          ],
+          "provider_files": [
+            {
+              "filename": "overseas.mrs",
+              "behavior": "domain",
+              "format": "mrs",
+              "count": 24959
+            }
           ]
         }
       }
@@ -1383,7 +1523,7 @@
     "v1/LICENSE-GFWList.txt": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95",
     "v1/LICENSE-QuanX-compat.txt": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
     "v1/LICENSE-QuanX-fork.txt": "63814d59a40b61e1090074dac3bbda145d4c0f6a37486b2ef225075880ea2bac",
-    "v1/README.md": "bc16ee1083011861f1a7c9279341e3125203949ff65c7a25acdd76cada462ebb",
+    "v1/README.md": "000c349f24b10eecedc7e96a9b4a9d5599cb057064e1abc646a61a4f5d5e21ef",
     "v1/homeproxy/apple.json": "04d300b15e35e28498392c661b38d11d67939944499292141f6b2c1504d902be",
     "v1/homeproxy/binance.json": "88f8d4ee318ad5e9fb0c979b7ca043cefe304ad495ceb9032984c0dbdbbb7f7f",
     "v1/homeproxy/disney-plus.json": "0fa67392af4a53a8471359345f8dac26eb680b5ea6e7e393ac921859b8ae6946",
@@ -1397,27 +1537,46 @@
     "v1/homeproxy/telegram.json": "54a7fc8bdae3b55473763208cbe0e1bcbdc84336d0671d329e587fcf75489d5c",
     "v1/homeproxy/tiktok.json": "a12d47ccf69dc0eeea3085313bc407b72f3699d545d87d5682ab0657ad5c302c",
     "v1/homeproxy/youtube.json": "e3b8efef5307a4552acc501f62c2673bff52dd14074436d70869f0d67d487f38",
+    "v1/nextin/adblock-dns-exceptions.mrs": "dcf9dddc8b8f580ef3c0ffb80a18bc97d82a6665714477d5281ea9216cdd9612",
     "v1/nextin/adblock-dns-exceptions.yaml": "5e660410de85f718dc5f32141ccb00677027ab7d007869f7eddf1209e8e46329",
     "v1/nextin/adblock-dns.mrs": "5b15f89a7ea55007fb737c44d837311ebbc91179070fa52496720e59e79eef07",
     "v1/nextin/adblock-dns.yaml": "57ce831c26522a0acc4f7742674e3f4e7b71ec73b5af00cf58249ac47c2dc722",
+    "v1/nextin/apple-tv.mrs": "8cc9cead8cdbc4eeaa37bdbdd64ae8b61a84e4025bd3c7213bae054574217e49",
     "v1/nextin/apple-tv.yaml": "2eb0a0a4e684d9e9cff57956252790b496126462ab39af8ed6af7abec0309c46",
+    "v1/nextin/apple.mrs": "36bb65e5c191450b685bcc7885153cc2bc35c0ca0104da32129e09b4a05d0c79",
     "v1/nextin/apple.yaml": "4e7e31170cc8a88cf4f2d5c0eab3128c7ad31c79a7ba632bdda8f91cdcd1a0de",
+    "v1/nextin/binance.mrs": "920afb436c16184faf3ef90b5a02a36bd67178d1a77a855013e36ebbe30dcd26",
     "v1/nextin/binance.yaml": "0dfc435d40959a8fc5e476e01e33448c631a45f97a4475556f400e9c24473c20",
+    "v1/nextin/china-sites.mrs": "18b92c40429b812c1eb33d5ebf58c09ccfaff20eb16b15ccc4c3f4912e775b2e",
     "v1/nextin/china-sites.yaml": "927fc7ac76f7de298977c089172b8b6cb3d7c48745da336ff54b791df786f082",
+    "v1/nextin/disney-plus.mrs": "ee5a7cc293510bc47b5ad131108f3108e299be7725a4aecbc38c6d9a8729feca",
     "v1/nextin/disney-plus.yaml": "e249f003b9df22ffa896d6a87bead6d2e57b43e71d6287b3c8271a7ed5895885",
+    "v1/nextin/foreign-media.mrs": "ebba2a9f8cdab29cee4f09f8b152835908502ce7c8399e6694acad1b3258fa45",
     "v1/nextin/foreign-media.yaml": "d22c9786f083fa624fe1f33f75bd0cc89095433a7efcc963b8280962a869bcc5",
+    "v1/nextin/gfw.mrs": "67a4ed676891ad329bb78b022ebfac1f078bc56bf9f3ad18a18cb8e3f2f3f711",
     "v1/nextin/gfw.yaml": "6a99eb6c4a120904703c395b29acb2cac03f47b65d2c72cd1c88a8b1f663962b",
+    "v1/nextin/github.mrs": "a0e1ab9018ff089483694748dba30d37a54954c855fe330d7e0965b77cb4a546",
     "v1/nextin/github.yaml": "fb99d9e48dc5b87ed8082e30f349190a3045e74177a10596521d054c2d1bbb5d",
+    "v1/nextin/google.mrs": "f14bd7288d738a490902368d595167e8ce94645f3572ceaff4498cca5c616f5f",
     "v1/nextin/google.yaml": "5d622cf55389134f2f5649a921944500e97678154feb47e1da069cb04cb0db19",
+    "v1/nextin/openai.mrs": "842a11bfebd1078258407617ac14380529e1f3873e0e01a87d9dc64300a4ba63",
     "v1/nextin/openai.yaml": "69f46706c4abb2691a55cc243ff1f5337fbac77b930c6e45cdc5ea6ca840ccb2",
+    "v1/nextin/overseas.mrs": "24bb3996e1ad5b8dd83d880885cfc3e57ba6c2d473f95ba45c5e12b14e12330a",
     "v1/nextin/overseas.yaml": "8a003c89ed47fb1dabc746af269b6819d700848aadf675cdc3b19e7002647b0b",
+    "v1/nextin/personal-sites.mrs": "5936a3478feeb2591b187d11e8649615f410e61b3d12edaa46bd77eff37ade96",
     "v1/nextin/personal-sites.yaml": "e52a65999fe81a9aef0e6c07bdd605693b317aa3d7afeaf38d6a7a4a8774867f",
+    "v1/nextin/pt-classical.yaml": "5a21cd680e36e7308f27c8b538c901888a12d36e676d3a2979c6684e78201477",
+    "v1/nextin/pt-ip.mrs": "3011973b7d5cdc3cc7830cee03d5c05d034bb0a29c633aee1f061f138abe6576",
+    "v1/nextin/pt.mrs": "7f0624174eb79b3cf745c6d6c411b7b63a76b724cd83504767e390e9ac9ec35b",
     "v1/nextin/pt.yaml": "a8160fecefa9997094aa2110e6f62ad99ce5dd6cb3d9c42ac54e1dbf11eefa13",
-    "v1/nextin/quanx-routing.yaml": "bcc3b90655b270feeb030e2d5b6fe9aa0e4545b566135ea7e883b01d4e606314",
+    "v1/nextin/quanx-routing.yaml": "3c1135233e05e2cee2ce324b3722e7cf3212ce967637d5f84153b100290fa4eb",
+    "v1/nextin/telegram.mrs": "ffa4d1d3e8649965e529c1c570d8add75a0d6f70aa8503ece8add841ce48c0e7",
     "v1/nextin/telegram.yaml": "a680e71bfbd2ad499dad184f182108689b4345ddd15824d7e3756c3baec96910",
-    "v1/nextin/template-remote.yaml": "c9e4673ef26be6fb8ffc105a5b5a35f6e62f7c4b6850091c457e38ea0fc2ad65",
+    "v1/nextin/template-remote.yaml": "c173fe6cfeb81f1391fd4d2b9e484ee61af12d33fc57efa09b9b7241512b7c0a",
     "v1/nextin/template.yaml": "6c5a3ea6d762f7c2e4f830caf6d8ae67d12fca9d7edd6079952853802bb41181",
+    "v1/nextin/tiktok.mrs": "00db2983b3cb4365e56ae8bcdc7f6085caa12d9c4358dbcbb0c75f00ecf4f7bd",
     "v1/nextin/tiktok.yaml": "8b2a822bd2e40443b58673b05de9504c748431cf403821de1729bb3612968b66",
+    "v1/nextin/youtube.mrs": "e212b2ce9f39b30f4e2ab57da9ed0937673606bc56bb46e5d55ad7dd9af00aef",
     "v1/nextin/youtube.yaml": "e3f065253a0cab8ff79c7acf09bfdf44fcdbe79eed731bc01339103a556fa161",
     "v1/openclash/apple.yaml": "4e7e31170cc8a88cf4f2d5c0eab3128c7ad31c79a7ba632bdda8f91cdcd1a0de",
     "v1/openclash/binance.yaml": "0dfc435d40959a8fc5e476e01e33448c631a45f97a4475556f400e9c24473c20",

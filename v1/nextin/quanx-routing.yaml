@@ -50,6 +50,13 @@ rule-providers:
     interval: 86400
     path: ./rule_provider/network-rules-nextin-personal-sites.yaml
     url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/personal-sites.yaml
+  network-rules-nextin-adblock-dns:
+    type: http
+    behavior: domain
+    format: yaml
+    interval: 86400
+    path: ./rule_provider/network-rules-nextin-adblock-dns.yaml
+    url: https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/adblock-dns.yaml
   network-rules-nextin-binance:
     type: http
     behavior: classical
@@ -110,6 +117,7 @@ rules:
 - DOMAIN-SUFFIX,local,DIRECT
 - RULE-SET,network-rules-nextin-pt,DIRECT
 - RULE-SET,network-rules-nextin-personal-sites,DIRECT
+- RULE-SET,network-rules-nextin-adblock-dns,REJECT
 - RULE-SET,network-rules-nextin-binance,通用分流
 - RULE-SET,network-rules-nextin-openai,OpenAI
 - RULE-SET,network-rules-nextin-apple-tv,AppleTV

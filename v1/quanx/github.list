@@ -1,4 +1,4 @@
-# Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/f7119625e8e225d0e5a06b137465e0c10cb906f8/geo/geosite/github.yaml
+# Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/ca7d9d641cf31a25d465861d8af0352e6721b6e0/geo/geosite/github.yaml
 # License: ../LICENSE-MetaCubeX.txt
 host, github-api.arkoselabs.com, GitHub
 host, github-cloud.s3.amazonaws.com, GitHub
@@ -58,10 +58,10 @@ host-suffix, octocaptcha.com, GitHub
 host-suffix, opensource.guide, GitHub
 host-suffix, repo.new, GitHub
 host-suffix, thegithubshop.com, GitHub
+host-suffix, githubcopilot.com, GitHub
 host-suffix, npm.community, GitHub
 host-suffix, npmjs.com, GitHub
 host-suffix, npmjs.org, GitHub
-host-suffix, githubcopilot.com, GitHub
 host-suffix, cafe.github.com, GitHub
 host-suffix, collector.github.com, GitHub
 host, copilot-telemetry-service.githubusercontent.com, GitHub

@@ -1,4 +1,4 @@
-# Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/ca7d9d641cf31a25d465861d8af0352e6721b6e0/geo/geosite/disney.yaml
+# Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/13c258bce343dfc81d5600e535a59588386ef4b9/geo/geosite/disney.yaml
 # License: ../LICENSE-MetaCubeX.txt
 host, disneyplus.com.ssl.sc.omtrdc.net, DisneyPlus
 host, espn.api.edge.bamgrid.com, DisneyPlus

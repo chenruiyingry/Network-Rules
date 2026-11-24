@@ -1,4 +1,4 @@
-# Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/ca7d9d641cf31a25d465861d8af0352e6721b6e0/geo/geosite/geolocation-!cn.yaml
+# Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/13c258bce343dfc81d5600e535a59588386ef4b9/geo/geosite/geolocation-!cn.yaml
 # License: ../LICENSE-MetaCubeX.txt
 host, 1password.drift.click, 自动选择
 host, 3dns-1.adobe.com, 自动选择

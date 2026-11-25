@@ -1,6 +1,7 @@
 x-nextin:
   version: 1
   mode: subscription-template
+  name: 个人分流
 proxies: []
 proxy-groups:
 - name: 通用分流

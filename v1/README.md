@@ -21,13 +21,13 @@
 | china-sites | — | [规则列表](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/quanx/china-sites.list) | — | [MRS](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/china-sites.mrs) · [YAML](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/china-sites.yaml) |
 | overseas | [YAML](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/openclash/overseas.yaml) | [规则列表](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/quanx/overseas.list) | [JSON](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/overseas.json) | [MRS](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/overseas.mrs) · [YAML](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/overseas.yaml) |
 
-[Nextin 自动拉取模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/template-remote.yaml) · [Nextin 内嵌模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/template.yaml)
+[Nextin 个人分流模板（手机与电视共用）](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing.yaml) · [Nextin 完整版内嵌个人分流模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing-inline.yaml)
 
-[Nextin 个人分流模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing.yaml) · [Nextin 内嵌个人分流模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing-inline.yaml) · [Nextin Apple TV 模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing-apple-tv.yaml)
+Nextin 个人分流模板导入链接
 
-Nextin 自动拉取模板导入链接
+`nextin://install?module=subscription-template&url=https%3A%2F%2Fraw.githubusercontent.com%2Fchenruiyingry%2FNetwork-Rules%2Fpublish%2Fv1%2Fnextin%2Fquanx-routing.yaml`
 
-`nextin://install?module=subscription-template&url=https%3A%2F%2Fraw.githubusercontent.com%2Fchenruiyingry%2FNetwork-Rules%2Fpublish%2Fv1%2Fnextin%2Ftemplate-remote.yaml`
+[Nextin 通用远程模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/template-remote.yaml) · [Nextin 通用内嵌模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/template.yaml)
 
 QuanX 图标见 [icons.json](quanx/icons.json)。将 `img-url` 加到对应 `[policy]` 策略组。
 

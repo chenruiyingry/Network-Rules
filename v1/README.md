@@ -23,7 +23,7 @@
 
 [Nextin 自动拉取模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/template-remote.yaml) · [Nextin 内嵌模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/template.yaml)
 
-[Nextin 个人分流模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing.yaml)
+[Nextin 个人分流模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing.yaml) · [Nextin 内嵌个人分流模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing-inline.yaml) · [Nextin Apple TV 模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing-apple-tv.yaml)
 
 Nextin 自动拉取模板导入链接
 

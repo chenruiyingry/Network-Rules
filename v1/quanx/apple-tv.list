@@ -1,4 +1,4 @@
-# Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/ce616601064422e7acfe75ea201549dc7372becf/geo/geosite/apple-tvplus.yaml
+# Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/ebdf916c315bb0411a7ce323a7a6c002e15146a7/geo/geosite/apple-tvplus.yaml
 # License: ../LICENSE-MetaCubeX.txt
 host, apple-tv-plus-press.apple.com, AppleTV
 host, hls-amt.itunes.apple.com, AppleTV

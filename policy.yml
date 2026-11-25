@@ -8,7 +8,7 @@ nextin_routing:
     AppleTV:
       filter: '(?i)美国|美國|🇺🇸|united[ _-]+states|(?<![a-z0-9])usa?[0-9]*(?![a-z0-9])'
     OpenAI:
-      filter: '(?i)^(?=.*(?:美国|美國|🇺🇸|united[ _-]+states|新加坡|狮城|獅城|🇸🇬|singapore|(?<![a-z0-9])(?:usa?|sg)[0-9]*(?![a-z0-9])))(?=.*(?<![a-z0-9])ai[0-9]*(?![a-z0-9]))'
+      filter: '(?i)^(?=.*(?:美国|美國|🇺🇸|united[ _-]+states|(?<![a-z0-9])usa?[0-9]*(?![a-z0-9])))(?=.*(?<![a-z0-9])ai[0-9]*(?![a-z0-9]))'
   groups:
     Apple: [DIRECT, 通用分流]
     漏网之鱼: [DIRECT, 通用分流]

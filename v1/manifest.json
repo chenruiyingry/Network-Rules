@@ -1,6 +1,6 @@
 {
-  "release": "20261125062049",
-  "source_sha256": "a594b32994f7ecaa53aee487bc94e18732d5364fafd9ea87e001b736df946295",
+  "release": "20261125080930",
+  "source_sha256": "51e395bd7e80b77a96e2aed975e0116472c4eb3d4c944935c72e664870424ef4",
   "nextin_inline_geoip_sources": {
     "CN": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/ebdf916c315bb0411a7ce323a7a6c002e15146a7/geo/geoip/cn.yaml"
   },
@@ -583,9 +583,9 @@
     "v1/nextin/pt-ip.mrs": "3011973b7d5cdc3cc7830cee03d5c05d034bb0a29c633aee1f061f138abe6576",
     "v1/nextin/pt.mrs": "b5b124b82b8ada7728c33b6fc49dfa38a0c5065775286d81c632a57df2bc450f",
     "v1/nextin/pt.yaml": "702e6829350e38013542fb84263f36d87f246766bd54b42bcd4fd4655d6560d2",
-    "v1/nextin/quanx-routing-apple-tv.yaml": "34d66096ff8c1c084ef333b854312811a913eea84cdb2fa9259b7fa5e97ad1b6",
-    "v1/nextin/quanx-routing-inline.yaml": "64350367d63f931b91456cb237eaa79a8ebba45fa3fd285a1cb07121437c2df8",
-    "v1/nextin/quanx-routing.yaml": "34d66096ff8c1c084ef333b854312811a913eea84cdb2fa9259b7fa5e97ad1b6",
+    "v1/nextin/quanx-routing-apple-tv.yaml": "bb64c27657401fbec7f58a8c26c4457db8317ee43eaa98f36f3073f53950fe5d",
+    "v1/nextin/quanx-routing-inline.yaml": "941ed5a9275e8845ad08d058bf9acf32e47a80dd8911e33e6907aaad12172fa3",
+    "v1/nextin/quanx-routing.yaml": "bb64c27657401fbec7f58a8c26c4457db8317ee43eaa98f36f3073f53950fe5d",
     "v1/nextin/telegram-classical.yaml": "ce14ecf3886866b87b4fcdad602dd5b4c82eea6e49b83b6cc448731ac6eb9e38",
     "v1/nextin/telegram-ip.mrs": "7f1c8e4cdb66c579a56f9c6214ac98d4a6f527ca4aa788a51a172fef29ecffc1",
     "v1/nextin/telegram.mrs": "ffa4d1d3e8649965e529c1c570d8add75a0d6f70aa8503ece8add841ce48c0e7",

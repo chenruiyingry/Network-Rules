@@ -22,7 +22,7 @@ proxy-groups:
 - name: OpenAI
   type: url-test
   include-all-proxies: true
-  filter: (?i)^(?=.*(?:美国|美國|🇺🇸|united[ _-]+states|新加坡|狮城|獅城|🇸🇬|singapore|(?<![a-z0-9])(?:usa?|sg)[0-9]*(?![a-z0-9])))(?=.*(?<![a-z0-9])ai[0-9]*(?![a-z0-9]))
+  filter: (?i)^(?=.*(?:美国|美國|🇺🇸|united[ _-]+states|(?<![a-z0-9])usa?[0-9]*(?![a-z0-9])))(?=.*(?<![a-z0-9])ai[0-9]*(?![a-z0-9]))
   url: https://www.gstatic.com/generate_204
   interval: 300
   empty-fallback: REJECT

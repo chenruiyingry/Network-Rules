@@ -228,7 +228,7 @@ def download_adblock_dns(version, slug, source, mihomo, scratch):
     folder = version / "nextin"
     folder.mkdir(parents=True, exist_ok=True)
     (folder / filename).write_bytes(data)
-    decoded = scratch / "upstream-ads.txt"
+    decoded = scratch / f"{slug}-decoded.txt"
     convert_mrs(mihomo, "domain", "mrs", folder / filename, decoded)
     with decoded.open(encoding="utf-8") as lines:
         if sum(1 for _ in lines) != int(count[1]):
@@ -425,6 +425,71 @@ def nextin_routing_template(template, routing, results, base):
             add_nextin_providers(base, target, policy, providers, rules)
     rules.extend(routing["after"])
     return {**template, "proxy-groups": groups, "rule-providers": providers, "rules": rules}
+
+
+def nextin_inline_routing_template(remote, folder, scratch, geoip_sources):
+    providers = {}
+    for name, config in remote["rule-providers"].items():
+        slug = name.removeprefix("network-rules-nextin-")
+        if config["format"] == "mrs":
+            payload = (scratch / f"{slug}-decoded.txt").read_text(encoding="utf-8").splitlines()
+        else:
+            payload = read_yaml(folder / f"{slug}.yaml")["payload"]
+        if not payload:
+            raise ValueError(f"Empty Nextin inline rule set: {slug}")
+        providers[name] = {"type": "inline", "behavior": config["behavior"], "payload": payload}
+
+    rules = []
+    for rule in remote["rules"]:
+        if not rule.startswith("GEOIP,"):
+            rules.append(rule)
+            continue
+        _, code, policy, *options = rule.split(",")
+        name = f"network-rules-nextin-geoip-{code.lower()}"
+        source = geoip_sources[code]
+        entries = yaml.safe_load(fetch(source, 1024 * 1024))["payload"]
+        if not isinstance(entries, list) or not entries:
+            raise ValueError(f"Empty or invalid MetaCubeX geoip: {source}")
+        payload = list(dict.fromkeys(str(ip_network(entry)) for entry in entries))
+        providers[name] = {"type": "inline", "behavior": "ipcidr", "payload": payload}
+        rules.append(",".join(["RULE-SET", name, policy, *options]))
+
+    return {**remote, "rule-providers": providers, "rules": rules}
+
+
+def nextin_hub_routing_template(inline, geosite):
+    template = {key: value for key, value in inline.items() if key != "rule-providers"}
+    providers = inline["rule-providers"]
+    ads = "network-rules-nextin-adblock-dns"
+    rules = []
+    for rule in inline["rules"]:
+        if rule.startswith("RULE-SET,"):
+            _, name, policy, *options = rule.split(",")
+            slug = name.removeprefix("network-rules-nextin-")
+            if slug in geosite:
+                rules.append(",".join(["GEOSITE", geosite[slug], policy, *options]))
+                continue
+            provider = providers[name]
+            for value in provider["payload"]:
+                if provider["behavior"] == "ipcidr":
+                    matcher = f"{'IP-CIDR6' if ':' in value else 'IP-CIDR'},{value}"
+                elif provider["behavior"] == "domain":
+                    matcher = (f"DOMAIN-SUFFIX,{value[2:]}" if value.startswith("+.")
+                               else f"DOMAIN,{value}")
+                else:
+                    kind, value, *extra = value.split(",")
+                    rules.append(",".join([kind, value, policy, *extra, *options]))
+                    continue
+                rules.append(",".join([matcher, policy, *options]))
+        elif f"(RULE-SET,{ads})" in rule:
+            allowed = providers[f"{ads}-exceptions"]["payload"]
+            allow_matchers = ",".join(f"(DOMAIN-SUFFIX,{entry[2:]})" for entry in allowed)
+            rule = rule.replace(f"(RULE-SET,{ads})", f"(GEOSITE,{geosite['adblock-dns']})")
+            rule = rule.replace(f"(RULE-SET,{ads}-exceptions)", f"(OR,({allow_matchers}))")
+            rules.append(rule)
+        else:
+            rules.append(rule)
+    return {**template, "rules": rules}
 
 
 def build(output, repo_slug, tag, mihomo="mihomo"):
@@ -629,8 +694,16 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
             **nextin_template, "rule-providers": nextin_providers,
             "rules": nextin_remote_rules + [f"MATCH,{fallback}"],
         })
-        write_yaml(version / "nextin" / "quanx-routing.yaml",
-                   nextin_routing_template(nextin_template, policy["nextin_routing"], results, base))
+        routing = policy["nextin_routing"]
+        remote_routing = nextin_routing_template(nextin_template, routing, results, base)
+        write_yaml(version / "nextin" / "quanx-routing.yaml", remote_routing)
+        geoip_sources = {code: f"{meta_base}/geo/geoip/{name}.yaml"
+                         for code, name in routing["inline_geoip"].items()}
+        inline_routing = nextin_inline_routing_template(remote_routing, version / "nextin", scratch, geoip_sources)
+        inline_path = "nextin/quanx-routing-inline.yaml"
+        write_yaml(version / inline_path, inline_routing)
+        hub_path = "nextin/quanx-routing-apple-tv.yaml"
+        write_yaml(version / hub_path, nextin_hub_routing_template(inline_routing, routing["hub_geosite"]))
         nextin_url = f"{base}/nextin/template.yaml"
         nextin_remote_url = f"{base}/nextin/template-remote.yaml"
         deep_link = "nextin://install?" + urlencode({"module": "subscription-template",
@@ -639,7 +712,9 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
               "| 分类 | OpenClash | QuanX | HomeProxy | Nextin |\n| --- | --- | --- | --- | --- |\n"
               + "\n".join(index) + f"\n\n[Nextin 自动拉取模板]({nextin_remote_url})"
               f" · [Nextin 内嵌模板]({nextin_url})\n\n"
-              f"[Nextin 个人分流模板]({base}/nextin/quanx-routing.yaml)\n\n"
+              f"[Nextin 个人分流模板]({base}/nextin/quanx-routing.yaml)"
+              f" · [Nextin 内嵌个人分流模板]({base}/{inline_path})"
+              f" · [Nextin Apple TV 模板]({base}/{hub_path})\n\n"
               f"Nextin 自动拉取模板导入链接\n\n`{deep_link}`\n\n"
               "QuanX 图标见 [icons.json](quanx/icons.json)。将 `img-url` 加到对应 `[policy]` 策略组。\n\n"
               "各端省略的规则见 [manifest.json](manifest.json) 中的 `omitted`。\n")
@@ -653,6 +728,7 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
         artifacts = {path.relative_to(stage).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
                      for path in sorted(version.rglob("*")) if path.is_file()}
         write_json(version / "manifest.json", {"release": release, "source_sha256": checksum,
+                                              "nextin_inline_geoip_sources": geoip_sources,
                                               "categories": results, "files": artifacts})
         stage.rename(output)
     print(f"DLC {release}: {len(results)} categories in {output}")

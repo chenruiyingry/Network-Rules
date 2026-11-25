@@ -18,6 +18,10 @@ Disney+ 文件已提供，独立策略的订阅条目默认关闭。应用净化
 
 两个 Nextin 远程模板都用 MRS 加载可等效转换的域名和 IP 网段。关键词等规则继续使用独立的 Classical YAML，同一分类的各文件按模板顺序加载。已有 YAML 规则集和内嵌模板仍可使用。
 
+Apple TV 可试用 [Hub 写法模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing-apple-tv.yaml)。大类使用 Nextin 内置 `GEOSITE`，个人网站、PT、Telegram IP、中国 IP 和广告白名单直接写进模板。这个版本使用 Hub 的内置广告分类。
+
+[完整版内嵌模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing-inline.yaml)将全部数据与原完整版广告、白名单写入同一份 YAML，文件较大。两版沿用个人分流策略，用 MetaCubeX 中国 IP 网段替代内核的 `GEOIP,CN` 匹配。GitHub Actions 会更新模板文件，已保存的模板需重新导入以更新内嵌规则。
+
 ## 本地预览
 
 构建 MRS 需要 Mihomo。将 `mihomo` 放在 `PATH` 中，或通过 `MIHOMO` 指定可执行文件的路径。GitHub Actions 使用固定版本并校验下载文件。

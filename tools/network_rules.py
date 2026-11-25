@@ -696,26 +696,29 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
         })
         routing = policy["nextin_routing"]
         remote_routing = nextin_routing_template(nextin_template, routing, results, base)
-        write_yaml(version / "nextin" / "quanx-routing.yaml", remote_routing)
         geoip_sources = {code: f"{meta_base}/geo/geoip/{name}.yaml"
                          for code, name in routing["inline_geoip"].items()}
         inline_routing = nextin_inline_routing_template(remote_routing, version / "nextin", scratch, geoip_sources)
         inline_path = "nextin/quanx-routing-inline.yaml"
         write_yaml(version / inline_path, inline_routing)
-        hub_path = "nextin/quanx-routing-apple-tv.yaml"
-        write_yaml(version / hub_path, nextin_hub_routing_template(inline_routing, routing["hub_geosite"]))
+        routing_path = "nextin/quanx-routing.yaml"
+        shared_routing = nextin_hub_routing_template(inline_routing, routing["hub_geosite"])
+        shared_routing["x-nextin"] = {**shared_routing["x-nextin"], "name": "个人分流"}
+        write_yaml(version / routing_path, shared_routing)
+        # Keep the former template URL usable for existing imports.
+        (version / "nextin" / "quanx-routing-apple-tv.yaml").write_bytes((version / routing_path).read_bytes())
         nextin_url = f"{base}/nextin/template.yaml"
         nextin_remote_url = f"{base}/nextin/template-remote.yaml"
         deep_link = "nextin://install?" + urlencode({"module": "subscription-template",
-                                                   "url": nextin_remote_url})
+                                                   "url": f"{base}/{routing_path}"})
         write(version / "README.md", "# Network-Rules 订阅目录\n\n"
               "| 分类 | OpenClash | QuanX | HomeProxy | Nextin |\n| --- | --- | --- | --- | --- |\n"
-              + "\n".join(index) + f"\n\n[Nextin 自动拉取模板]({nextin_remote_url})"
-              f" · [Nextin 内嵌模板]({nextin_url})\n\n"
-              f"[Nextin 个人分流模板]({base}/nextin/quanx-routing.yaml)"
-              f" · [Nextin 内嵌个人分流模板]({base}/{inline_path})"
-              f" · [Nextin Apple TV 模板]({base}/{hub_path})\n\n"
-              f"Nextin 自动拉取模板导入链接\n\n`{deep_link}`\n\n"
+              + "\n".join(index) + "\n\n"
+              f"[Nextin 个人分流模板（手机与电视共用）]({base}/{routing_path})"
+              f" · [Nextin 完整版内嵌个人分流模板]({base}/{inline_path})\n\n"
+              f"Nextin 个人分流模板导入链接\n\n`{deep_link}`\n\n"
+              f"[Nextin 通用远程模板]({nextin_remote_url})"
+              f" · [Nextin 通用内嵌模板]({nextin_url})\n\n"
               "QuanX 图标见 [icons.json](quanx/icons.json)。将 `img-url` 加到对应 `[policy]` 策略组。\n\n"
               "各端省略的规则见 [manifest.json](manifest.json) 中的 `omitted`。\n")
         license_text = fetch(f"https://raw.githubusercontent.com/{config['dlc']}/{release}/LICENSE", 64 * 1024)

@@ -12,15 +12,13 @@ Disney+ 文件已提供，独立策略的订阅条目默认关闭。应用净化
 
 ## Nextin 个人分流
 
-在「设置 → 分流规则覆写」手动导入 [个人分流模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing.yaml)，再应用到已有节点订阅。模板先匹配私网、PT 和个人网站，再匹配服务专用规则、GFW、国内域名和中国 IP，最后由「漏网之鱼」选择直连或通用分流。公共域名直接引用 MetaCubeX MRS，个人网站、PT、广告和白名单通过本仓库刷新。规则集刷新间隔为 24 小时。AppleTV 只从美国节点测速选用。OpenAI 只从名称带 AI 的美国和新加坡节点测速选用。通用分流排除名称带 `x1`、`x2`、`1.5x` 等倍率标记的节点。节点分组改动后需重新导入模板。
+在「设置 → 分流规则覆写」导入手机和电视共用的 [个人分流模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing.yaml)，再应用到已有节点订阅。GFW 等大类使用 Nextin 内置 `GEOSITE`，个人网站、PT、Telegram IP、中国 IP 和广告白名单直接写进模板。广告拦截使用 Hub 的内置分类。
 
-广告拦截取自 [217heidai/adblockfilters](https://github.com/217heidai/adblockfilters) 的完整版 MRS。模板在私网、PT、个人网站之后、服务规则之前匹配广告域名，并应用同一上游提交的公开白名单。例外仍按后续规则分流。旧模板使用的 Lite YAML 继续提供。共享模板未写入私网 DNS 或公网 DoH 地址。
+模板先匹配私网、PT 和个人网站，再匹配广告、服务专用规则、GFW、国内域名和中国 IP，最后由「漏网之鱼」选择直连或通用分流。AppleTV 只从美国节点测速选用。OpenAI 只从名称带 AI 的美国和新加坡节点测速选用。通用分流排除名称带 `x1`、`x2`、`1.5x` 等倍率标记的节点。
 
-两个 Nextin 远程模板都用 MRS 加载可等效转换的域名和 IP 网段。关键词等规则继续使用独立的 Classical YAML，同一分类的各文件按模板顺序加载。已有 YAML 规则集和内嵌模板仍可使用。
+两份模板都使用 [217heidai/adblockfilters](https://github.com/217heidai/adblockfilters) 的公开白名单。命中白名单的请求继续按后续规则分流。
 
-Apple TV 可试用 [Hub 写法模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing-apple-tv.yaml)。大类使用 Nextin 内置 `GEOSITE`，个人网站、PT、Telegram IP、中国 IP 和广告白名单直接写进模板。这个版本使用 Hub 的内置广告分类。
-
-[完整版内嵌模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing-inline.yaml)将全部数据与原完整版广告、白名单写入同一份 YAML，文件较大。两版沿用个人分流策略，用 MetaCubeX 中国 IP 网段替代内核的 `GEOIP,CN` 匹配。GitHub Actions 会更新模板文件，已保存的模板需重新导入以更新内嵌规则。
+[完整版内嵌模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing-inline.yaml)将全部数据与 217heidai 的完整版广告、白名单写入同一份 YAML，文件较大。两版都使用 MetaCubeX 中国 IP 网段。GitHub Actions 会更新模板文件，已保存的模板需重新导入以更新内嵌规则。
 
 ## 本地预览
 

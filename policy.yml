@@ -37,14 +37,6 @@ nextin_routing:
     - GEOIP,CN,DIRECT
     - MATCH,漏网之鱼
   inline_geoip: {CN: cn}
-  hub_geosite:
-    adblock-dns: category-ads-all
-    openai: openai
-    apple-tv: apple-tvplus
-    telegram: telegram
-    gfw: gfw
-    google: google
-    china-sites: cn
 categories:
   - id: application-cleanup
     dlc: []

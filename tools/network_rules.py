@@ -457,41 +457,6 @@ def nextin_inline_routing_template(remote, folder, scratch, geoip_sources):
     return {**remote, "rule-providers": providers, "rules": rules}
 
 
-def nextin_hub_routing_template(inline, geosite):
-    template = {key: value for key, value in inline.items() if key != "rule-providers"}
-    providers = inline["rule-providers"]
-    ads = "network-rules-nextin-adblock-dns"
-    rules = []
-    for rule in inline["rules"]:
-        if rule.startswith("RULE-SET,"):
-            _, name, policy, *options = rule.split(",")
-            slug = name.removeprefix("network-rules-nextin-")
-            if slug in geosite:
-                rules.append(",".join(["GEOSITE", geosite[slug], policy, *options]))
-                continue
-            provider = providers[name]
-            for value in provider["payload"]:
-                if provider["behavior"] == "ipcidr":
-                    matcher = f"{'IP-CIDR6' if ':' in value else 'IP-CIDR'},{value}"
-                elif provider["behavior"] == "domain":
-                    matcher = (f"DOMAIN-SUFFIX,{value[2:]}" if value.startswith("+.")
-                               else f"DOMAIN,{value}")
-                else:
-                    kind, value, *extra = value.split(",")
-                    rules.append(",".join([kind, value, policy, *extra, *options]))
-                    continue
-                rules.append(",".join([matcher, policy, *options]))
-        elif f"(RULE-SET,{ads})" in rule:
-            allowed = providers[f"{ads}-exceptions"]["payload"]
-            allow_matchers = ",".join(f"(DOMAIN-SUFFIX,{entry[2:]})" for entry in allowed)
-            rule = rule.replace(f"(RULE-SET,{ads})", f"(GEOSITE,{geosite['adblock-dns']})")
-            rule = rule.replace(f"(RULE-SET,{ads}-exceptions)", f"(OR,({allow_matchers}))")
-            rules.append(rule)
-        else:
-            rules.append(rule)
-    return {**template, "rules": rules}
-
-
 def build(output, repo_slug, tag, mihomo="mihomo"):
     config = read_yaml(ROOT / "sources.yml")
     policy = read_yaml(ROOT / "policy.yml")
@@ -698,15 +663,14 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
         remote_routing = nextin_routing_template(nextin_template, routing, results, base)
         geoip_sources = {code: f"{meta_base}/geo/geoip/{name}.yaml"
                          for code, name in routing["inline_geoip"].items()}
-        inline_routing = nextin_inline_routing_template(remote_routing, version / "nextin", scratch, geoip_sources)
-        inline_path = "nextin/quanx-routing-inline.yaml"
-        write_yaml(version / inline_path, inline_routing)
-        routing_path = "nextin/quanx-routing.yaml"
-        shared_routing = nextin_hub_routing_template(inline_routing, routing["hub_geosite"])
+        shared_routing = nextin_inline_routing_template(remote_routing, version / "nextin", scratch, geoip_sources)
         shared_routing["x-nextin"] = {**shared_routing["x-nextin"], "name": "个人分流"}
+        routing_path = "nextin/quanx-routing.yaml"
         write_yaml(version / routing_path, shared_routing)
-        # Keep the former template URL usable for existing imports.
-        (version / "nextin" / "quanx-routing-apple-tv.yaml").write_bytes((version / routing_path).read_bytes())
+        # Keep both former template URLs usable for existing imports.
+        content = (version / routing_path).read_bytes()
+        for alias in ("quanx-routing-inline.yaml", "quanx-routing-apple-tv.yaml"):
+            (version / "nextin" / alias).write_bytes(content)
         nextin_url = f"{base}/nextin/template.yaml"
         nextin_remote_url = f"{base}/nextin/template-remote.yaml"
         deep_link = "nextin://install?" + urlencode({"module": "subscription-template",
@@ -714,8 +678,7 @@ def build(output, repo_slug, tag, mihomo="mihomo"):
         write(version / "README.md", "# Network-Rules 订阅目录\n\n"
               "| 分类 | OpenClash | QuanX | HomeProxy | Nextin |\n| --- | --- | --- | --- | --- |\n"
               + "\n".join(index) + "\n\n"
-              f"[Nextin 个人分流模板（手机与电视共用）]({base}/{routing_path})"
-              f" · [Nextin 完整版内嵌个人分流模板]({base}/{inline_path})\n\n"
+              f"[Nextin 个人分流模板（手机与电视共用）]({base}/{routing_path})\n\n"
               f"Nextin 个人分流模板导入链接\n\n`{deep_link}`\n\n"
               f"[Nextin 通用远程模板]({nextin_remote_url})"
               f" · [Nextin 通用内嵌模板]({nextin_url})\n\n"

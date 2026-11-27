@@ -30,7 +30,7 @@ Telegram 的 IP 网段由 Telegram 官方提供。个人网站、合并后的 PT
 | OpenClash | `v1/openclash/<分类>.yaml`，另附覆写片段 | 首版发布 `classical` YAML。支持 YAML 覆写的版本用覆写模块加 `rule-providers` 和 `RULE-SET`，保留本地节点订阅。验收 OpenClash 最终生成的配置和策略顺序；客户端升级或订阅刷新后复查。 |
 | Quantumult X | `v1/quanx/<分类>.list`，另附 `[filter_remote]` 片段 | 将各分类分别添加到 `[filter_remote]`。纯单动作分类可用 `force-policy` 绑定已有策略组。迁移带多个动作的原生列表时保留策略语义，并在真机检查资源刷新和匹配顺序。 |
 | HomeProxy | `v1/homeproxy/<分类>.json` 或 `.srs` | 你当前使用自定义路由。通过 UI 添加远程规则集 URL、刷新间隔和下载出站，再绑定现有路由动作。首版使用匹配已装 sing-box 版本的 JSON，确认版本后可编译为 .srs。验证路由器重启和无缓存首次下载。 |
-| Nextin | `v1/nextin/template-remote.yaml` 和按分类发布的远程 YAML | 将 `x-nextin` 模板应用到已有节点订阅，模板用 `rule-providers` 对分类内容设置 24 小时刷新。公共域名由 MetaCubeX MRS 提供，个人规则由本仓库提供。自动拉取与冷启动仍需在实际 App 版本验证。现有内嵌模板 `template.yaml` 仍可用于单独导入和诊断。 |
+| Nextin | `v1/nextin/quanx-routing.yaml` | 将个人分流模板应用到已有节点订阅。域名、IP、广告与白名单都内嵌为同一份 YAML 的 `type: inline` 规则集，按期构建，重新导入即可更新。通用模板另提供 `template-remote.yaml`，供按需使用远程规则集。 |
 
 客户端依据：[OpenClash 覆写示例](https://github.com/vernesong/OpenClash/blob/master/luci-app-openclash/root/etc/openclash/overwrite/default) · [Mihomo 规则集合](https://wiki.metacubex.one/config/rule-providers/) · [QuanX 官方配置示例](https://github.com/crossutility/Quantumult-X/blob/master/sample.conf) · [HomeProxy 配置生成源码](https://github.com/immortalwrt/homeproxy/blob/master/root/etc/homeproxy/scripts/generate_client.uc) · [sing-box 规则集源格式](https://sing-box.sagernet.org/configuration/rule-set/source-format/) · [Nextin 自定义规则与覆写](https://wiki.nextinnet.com/guide/rules) · [Nextin 分流模板](https://wiki.nextinnet.com/guide/routing) · [Nextin Deep Link](https://wiki.nextinnet.com/guide/deeplink)
 

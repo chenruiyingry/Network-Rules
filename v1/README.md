@@ -21,7 +21,7 @@
 | china-sites | — | [规则列表](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/quanx/china-sites.list) | — | [MRS](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/china-sites.mrs) · [YAML](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/china-sites.yaml) |
 | overseas | [YAML](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/openclash/overseas.yaml) | [规则列表](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/quanx/overseas.list) | [JSON](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/homeproxy/overseas.json) | [MRS](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/overseas.mrs) · [YAML](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/overseas.yaml) |
 
-[Nextin 个人分流模板（手机与电视共用）](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing.yaml) · [Nextin 完整版内嵌个人分流模板](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing-inline.yaml)
+[Nextin 个人分流模板（手机与电视共用）](https://raw.githubusercontent.com/chenruiyingry/Network-Rules/publish/v1/nextin/quanx-routing.yaml)
 
 Nextin 个人分流模板导入链接
 

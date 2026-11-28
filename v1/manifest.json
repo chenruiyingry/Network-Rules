@@ -1,8 +1,8 @@
 {
-  "release": "20261127013500",
-  "source_sha256": "16be27152a8f14efb495376182a78fb8fc1df41cc20ae908f3203fab8438df95",
+  "release": "20261127135030",
+  "source_sha256": "f98508035eb4a8e86153f27c9ef6b032eeb5d1c6a0d3fd162fd08e6458dd8e60",
   "nextin_inline_geoip_sources": {
-    "CN": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geoip/cn.yaml"
+    "CN": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geoip/cn.yaml"
   },
   "categories": {
     "application-cleanup": {
@@ -87,11 +87,11 @@
       }
     },
     "adblock-dns": {
-      "source": "https://raw.githubusercontent.com/217heidai/adblockfilters/4c4fda524b0cb301064e260d68fe5a568345ae48/adblockmihomo.mrs",
-      "selected": 5819,
+      "source": "https://raw.githubusercontent.com/217heidai/adblockfilters/0dced6e72658d2b8c3bc10684c24a2ca301a64a2/adblockmihomo.mrs",
+      "selected": 5883,
       "targets": {
         "nextin": {
-          "count": 5819,
+          "count": 5883,
           "omitted": [
             "ad.ourgame.com",
             "doubleclick.net",
@@ -104,17 +104,17 @@
           "mrs": {
             "filename": "adblock-dns.mrs",
             "format": "mrs",
-            "count": 253854,
-            "source": "https://raw.githubusercontent.com/217heidai/adblockfilters/4c4fda524b0cb301064e260d68fe5a568345ae48/adblockmihomo.mrs",
-            "allow_source": "https://raw.githubusercontent.com/217heidai/adblockfilters/4c4fda524b0cb301064e260d68fe5a568345ae48/adblockdns.txt",
+            "count": 255140,
+            "source": "https://raw.githubusercontent.com/217heidai/adblockfilters/0dced6e72658d2b8c3bc10684c24a2ca301a64a2/adblockmihomo.mrs",
+            "allow_source": "https://raw.githubusercontent.com/217heidai/adblockfilters/0dced6e72658d2b8c3bc10684c24a2ca301a64a2/adblockdns.txt",
             "exceptions": "adblock-dns-exceptions.mrs",
-            "exception_count": 198
+            "exception_count": 197
           }
         }
       }
     },
     "tiktok": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/tiktok.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/tiktok.yaml",
       "selected": 40,
       "targets": {
         "openclash": {
@@ -145,7 +145,7 @@
       }
     },
     "binance": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/binance.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/binance.yaml",
       "selected": 45,
       "targets": {
         "openclash": {
@@ -176,7 +176,7 @@
       }
     },
     "openai": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/openai.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/openai.yaml",
       "selected": 24,
       "targets": {
         "openclash": {
@@ -207,7 +207,7 @@
       }
     },
     "github": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/github.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/github.yaml",
       "selected": 66,
       "targets": {
         "openclash": {
@@ -238,7 +238,7 @@
       }
     },
     "youtube": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/youtube.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/youtube.yaml",
       "selected": 178,
       "targets": {
         "openclash": {
@@ -269,7 +269,7 @@
       }
     },
     "disney-plus": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/disney.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/disney.yaml",
       "selected": 224,
       "targets": {
         "openclash": {
@@ -300,7 +300,7 @@
       }
     },
     "telegram": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/telegram.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/telegram.yaml",
       "selected": 35,
       "targets": {
         "openclash": {
@@ -339,7 +339,7 @@
       "cidr_count": 14
     },
     "foreign-media": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/category-media.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/category-media.yaml",
       "selected": 1598,
       "targets": {
         "openclash": {
@@ -370,7 +370,7 @@
       }
     },
     "google": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/google.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/google.yaml",
       "selected": 1079,
       "targets": {
         "openclash": {
@@ -401,7 +401,7 @@
       }
     },
     "apple": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/apple.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/apple.yaml",
       "selected": 1666,
       "targets": {
         "openclash": {
@@ -432,7 +432,7 @@
       }
     },
     "gfw": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/gfw.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/gfw.yaml",
       "selected": 4462,
       "targets": {
         "quanx": {
@@ -455,7 +455,7 @@
       }
     },
     "apple-tv": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/apple-tvplus.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/apple-tvplus.yaml",
       "selected": 8,
       "targets": {
         "quanx": {
@@ -478,7 +478,7 @@
       }
     },
     "china-sites": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/cn.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/cn.yaml",
       "selected": 110177,
       "targets": {
         "quanx": {
@@ -501,7 +501,7 @@
       }
     },
     "overseas": {
-      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/69f94483c308940c277035c66eb78ff529efd977/geo/geosite/geolocation-!cn.yaml",
+      "source": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/59032b3daac1d1a2643a77d6189c2a882900d54a/geo/geosite/geolocation-!cn.yaml",
       "selected": 27244,
       "targets": {
         "openclash": {
@@ -538,12 +538,12 @@
     "v1/LICENSE-MetaCubeX.txt": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
     "v1/LICENSE-QuanX-blackmatrix.txt": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
     "v1/README.md": "188502f472c0d59abc1c6325988056bf77a6d5a1f2fd804c80b68789ee4623e1",
-    "v1/homeproxy/apple.json": "27a96012721ed2806811668a331537322c5839ce77686ca34cace9de276b46ab",
+    "v1/homeproxy/apple.json": "b6d179f4fbbae7d2b128fea3d8fc1a40f1e8ba254542085cac563190b888b234",
     "v1/homeproxy/binance.json": "da9f57522b384392c0b074b227c39bd289751f584f80363c265c210efafdd7f9",
-    "v1/homeproxy/disney-plus.json": "5a128c920e8cd792fa179b820a1496698de52a5902684642edc7c408a8c4655b",
-    "v1/homeproxy/foreign-media.json": "709980b905e247539f797021cc3b7475b64a1e68817e7db819748f6fdcc1004e",
+    "v1/homeproxy/disney-plus.json": "8838f5627e75cba021a2c31749fb999e8ff1a9d4f6141f198b3dcafad94aed55",
+    "v1/homeproxy/foreign-media.json": "0091e41d4d85c480eaea854b8e6f9724ae81bf1c09419aa974102a83743eb79b",
     "v1/homeproxy/github.json": "0a1d45169bcb853140e70d0141861446af1b8c904b27e5d41f07c4e43c1ee548",
-    "v1/homeproxy/google.json": "19b1793bf0393e8bfeb3f4eb97fbe2c8694cf09e853d79273c34e47a77baf75f",
+    "v1/homeproxy/google.json": "fe3ca343559b04a92a1d3a1c8599d079b36a8d7306daef0a9df5c8b2fea10b58",
     "v1/homeproxy/openai.json": "9b64024b83c5edef830ffa7d1a37128a0d0543087e99591340cc79693b8175eb",
     "v1/homeproxy/overseas.json": "54b3952150657b1784335993d43effed3b60ae4321a5128e98ca5508076dab0d",
     "v1/homeproxy/pt.json": "3edd197f71741f943dd64714097853a3c35a6312241b8af32619a4b05ecf6e83",
@@ -551,28 +551,28 @@
     "v1/homeproxy/telegram.json": "f49718fc73c9b1b6627418870d9567eac88afd752d3a6f1c589a69295b3d22f9",
     "v1/homeproxy/tiktok.json": "c66f2d73153841fee93c24eb1f9f46e44a606b39b1d52e189f78e24755766bfc",
     "v1/homeproxy/youtube.json": "56c1c69ca151215bd7f605e06ac54c9df2f814ce8e400cd543f2ee713bd45308",
-    "v1/nextin/adblock-dns-exceptions.mrs": "6c2fe85c459749530a37dfd60a6b6becb4d37004c36ddabfde45b6fe36248adc",
-    "v1/nextin/adblock-dns-exceptions.yaml": "037ebfe982d304948fcaecb5de50fad9de74a86d7d2f8bd0781c48e1a93d2a3e",
-    "v1/nextin/adblock-dns.mrs": "4835590e8aa0c3ca06fea4b7e0fc526fefd004d2810470a6a23e89a8244d7954",
-    "v1/nextin/adblock-dns.yaml": "69ac7683023f73a309d4fd2e36165fdaaee7d69d75d09fab42fb06f3df243804",
+    "v1/nextin/adblock-dns-exceptions.mrs": "5af1ff9fb9db4898846485c7a3c78264972217dfdfa4fb62ea8a75eb265b8cf1",
+    "v1/nextin/adblock-dns-exceptions.yaml": "8c526676ba48aac08b27ed1d4c72f5a4679e24924c289594852b9d2af6c80e34",
+    "v1/nextin/adblock-dns.mrs": "ef3df11ac5c325ef9137f931c961c1dc1425698210b73fa472d4e390a74fb001",
+    "v1/nextin/adblock-dns.yaml": "3eb77a2bd2ddc5de20dd450c1e8a543c9f5b11db2a27d3f3e98e057dc946c4d3",
     "v1/nextin/apple-tv.mrs": "8cc9cead8cdbc4eeaa37bdbdd64ae8b61a84e4025bd3c7213bae054574217e49",
     "v1/nextin/apple-tv.yaml": "f8f959107dd05515fcaf59b4036991be8cfdd0c36d932fca37bacf85469fbcb4",
     "v1/nextin/apple.mrs": "a34b8c69e264fd518e56b614b91ee3018b9b9fc8d460e1421e08402a0cc74543",
-    "v1/nextin/apple.yaml": "c8d962a0a25695866be433e73a6c16483253f6ab96073d893d5c1b5593af6b4a",
+    "v1/nextin/apple.yaml": "2c323ee4612edf0d3331cefad670a8ae58067d14e400eca0edb667b4bd98953f",
     "v1/nextin/binance.mrs": "920afb436c16184faf3ef90b5a02a36bd67178d1a77a855013e36ebbe30dcd26",
     "v1/nextin/binance.yaml": "b9450c16723cb38994abd8c6b018c6728d508814bbc6e6244e4152fdd2e4fe25",
     "v1/nextin/china-sites.mrs": "0b8c7c4d9773471991dd65737fdb16f3bf1baf2512c8b764d4c235318f01b7c6",
     "v1/nextin/china-sites.yaml": "8efbe0ca4d78062b492943086da68c2bce0b804070e9f29a7ff2a724f833bc50",
     "v1/nextin/disney-plus.mrs": "6c6da49c66ab6f8d0c84a969828315199e258cf5316b91aeb8c6bd9259898577",
-    "v1/nextin/disney-plus.yaml": "1b19b5a85a73b57eebbeacc8589d41f4acb4ec71002aa3f2e3bf24000f164f96",
+    "v1/nextin/disney-plus.yaml": "75995bf0b365a16263af0c4291cc4f2f3142ec5855bcd81a5a1ee561d93509eb",
     "v1/nextin/foreign-media.mrs": "94e1f1d9b4560985273d71254c1deb615f423012e096219c22c6864645353ad6",
-    "v1/nextin/foreign-media.yaml": "4112260871eb462ee03e99320878e066b87435dbf36b475648295a3c840e40e5",
+    "v1/nextin/foreign-media.yaml": "22d34205ddae0e7d02ac1ab6eb12f0e270a17513186f714ded46034184660f2e",
     "v1/nextin/gfw.mrs": "84ef6af71dd987e3aa72991cb08935d0e6b3109b46086b1834bc67f6a784edfe",
     "v1/nextin/gfw.yaml": "93e584c06a64d9217b1d9f80ccb9c64e427e844ec06afd373d753083521c39f2",
     "v1/nextin/github.mrs": "a15bd2cdd84db2ebcdca1ae3041265f90172445ebd6c07a6eb3118e5929e5fac",
     "v1/nextin/github.yaml": "fc8a1e8f4e5ba7a2756636c8cd79227af309aca1b2f732a16bf85361be8c9803",
     "v1/nextin/google.mrs": "17f6b7046ff13ddf0ef3174deba102b1a1decc50c0d4fa1ef306da11d9756848",
-    "v1/nextin/google.yaml": "c1cbd7602c41ebb4abef6d80ae72d04a8116e3c115136ae2568ddbb6ce9045fa",
+    "v1/nextin/google.yaml": "ab6f264a93c9697c0f9e65acc849b1841b12887f4b2598ce3e8bba7748a88b85",
     "v1/nextin/openai.mrs": "842a11bfebd1078258407617ac14380529e1f3873e0e01a87d9dc64300a4ba63",
     "v1/nextin/openai.yaml": "2dbc7557f5436ee4f846918d9f0df31a2836610c42171517bd905faf105c5c3c",
     "v1/nextin/overseas.mrs": "079bea6891b2ea9229bfd38429ca8c1161948b5870a5806cc515b5983c0c9b3f",
@@ -583,25 +583,25 @@
     "v1/nextin/pt-ip.mrs": "3011973b7d5cdc3cc7830cee03d5c05d034bb0a29c633aee1f061f138abe6576",
     "v1/nextin/pt.mrs": "b5b124b82b8ada7728c33b6fc49dfa38a0c5065775286d81c632a57df2bc450f",
     "v1/nextin/pt.yaml": "702e6829350e38013542fb84263f36d87f246766bd54b42bcd4fd4655d6560d2",
-    "v1/nextin/quanx-routing-apple-tv.yaml": "d06eace782cfe29b69cb41de83d9cb884b5357a3c4400e4d0dffc0b845fa52d7",
-    "v1/nextin/quanx-routing-inline.yaml": "d06eace782cfe29b69cb41de83d9cb884b5357a3c4400e4d0dffc0b845fa52d7",
-    "v1/nextin/quanx-routing.yaml": "d06eace782cfe29b69cb41de83d9cb884b5357a3c4400e4d0dffc0b845fa52d7",
+    "v1/nextin/quanx-routing-apple-tv.yaml": "b5c6ed298eeaaf5cf6da7b9b574a79749b81889dfe06701fb0d4d8d50c3a2cad",
+    "v1/nextin/quanx-routing-inline.yaml": "b5c6ed298eeaaf5cf6da7b9b574a79749b81889dfe06701fb0d4d8d50c3a2cad",
+    "v1/nextin/quanx-routing.yaml": "b5c6ed298eeaaf5cf6da7b9b574a79749b81889dfe06701fb0d4d8d50c3a2cad",
     "v1/nextin/telegram-classical.yaml": "ce14ecf3886866b87b4fcdad602dd5b4c82eea6e49b83b6cc448731ac6eb9e38",
     "v1/nextin/telegram-ip.mrs": "7f1c8e4cdb66c579a56f9c6214ac98d4a6f527ca4aa788a51a172fef29ecffc1",
     "v1/nextin/telegram.mrs": "ffa4d1d3e8649965e529c1c570d8add75a0d6f70aa8503ece8add841ce48c0e7",
     "v1/nextin/telegram.yaml": "ce14ecf3886866b87b4fcdad602dd5b4c82eea6e49b83b6cc448731ac6eb9e38",
     "v1/nextin/template-remote.yaml": "e1c5179f960bf97ee3c08c536d09d0dca03541a3dda850b9bd2b21ba23a50f36",
-    "v1/nextin/template.yaml": "d44b672023a23e6597d5b5e467a2512b5a2131fe292c24eb254424d9aca7f95d",
+    "v1/nextin/template.yaml": "857fb1d758623b85eb42512f6792a58f994c0d4c1df08f320c7f60f17f7cb828",
     "v1/nextin/tiktok.mrs": "00db2983b3cb4365e56ae8bcdc7f6085caa12d9c4358dbcbb0c75f00ecf4f7bd",
     "v1/nextin/tiktok.yaml": "5aacd21b8fdae69e9ad557afc57050a9c73a307d258780487c9c1bc08ac910b9",
     "v1/nextin/youtube.mrs": "e212b2ce9f39b30f4e2ab57da9ed0937673606bc56bb46e5d55ad7dd9af00aef",
     "v1/nextin/youtube.yaml": "ca18fb4c41791a2165e0a265b73d8f6a354a46a55c842da8dc247991f0e1ce98",
-    "v1/openclash/apple.yaml": "c8d962a0a25695866be433e73a6c16483253f6ab96073d893d5c1b5593af6b4a",
+    "v1/openclash/apple.yaml": "2c323ee4612edf0d3331cefad670a8ae58067d14e400eca0edb667b4bd98953f",
     "v1/openclash/binance.yaml": "b9450c16723cb38994abd8c6b018c6728d508814bbc6e6244e4152fdd2e4fe25",
-    "v1/openclash/disney-plus.yaml": "1b19b5a85a73b57eebbeacc8589d41f4acb4ec71002aa3f2e3bf24000f164f96",
-    "v1/openclash/foreign-media.yaml": "4112260871eb462ee03e99320878e066b87435dbf36b475648295a3c840e40e5",
+    "v1/openclash/disney-plus.yaml": "75995bf0b365a16263af0c4291cc4f2f3142ec5855bcd81a5a1ee561d93509eb",
+    "v1/openclash/foreign-media.yaml": "22d34205ddae0e7d02ac1ab6eb12f0e270a17513186f714ded46034184660f2e",
     "v1/openclash/github.yaml": "fc8a1e8f4e5ba7a2756636c8cd79227af309aca1b2f732a16bf85361be8c9803",
-    "v1/openclash/google.yaml": "c1cbd7602c41ebb4abef6d80ae72d04a8116e3c115136ae2568ddbb6ce9045fa",
+    "v1/openclash/google.yaml": "ab6f264a93c9697c0f9e65acc849b1841b12887f4b2598ce3e8bba7748a88b85",
     "v1/openclash/openai.yaml": "2dbc7557f5436ee4f846918d9f0df31a2836610c42171517bd905faf105c5c3c",
     "v1/openclash/overseas.yaml": "a721163eb630be6ce67e087690ba5ba3210d1f5311d452bd80033e4479012ef5",
     "v1/openclash/overwrite.conf": "afe95faaa1c575554d7a1cd2d644574784e52a4acb2999a1c4e011276106b744",
@@ -609,26 +609,26 @@
     "v1/openclash/telegram.yaml": "ce14ecf3886866b87b4fcdad602dd5b4c82eea6e49b83b6cc448731ac6eb9e38",
     "v1/openclash/tiktok.yaml": "5aacd21b8fdae69e9ad557afc57050a9c73a307d258780487c9c1bc08ac910b9",
     "v1/openclash/youtube.yaml": "ca18fb4c41791a2165e0a265b73d8f6a354a46a55c842da8dc247991f0e1ce98",
-    "v1/quanx/apple-tv.list": "4592267539ef7461040857ea00b0a3a02a6de69ea313505991453dbae3788b77",
-    "v1/quanx/apple.list": "c81b0c8a2460fbc30ebce3cc5630caefe0871297036b290362bd96bff9743983",
+    "v1/quanx/apple-tv.list": "4c9a4a48921dfb77a185ebf3d0cc9f7086350778aa756c06464bb8eda5806b68",
+    "v1/quanx/apple.list": "fc940f0cd0c236341f91e3a22410703eb1e79193b0a836cfe953a7aa4d336928",
     "v1/quanx/application-cleanup.list": "3c0943ef48b0d1d9facf2199029de00fe277368423d990391cf3fd990afe41d5",
-    "v1/quanx/binance.list": "19f4e0865e78425914b4f91407f3654e3ff7ef9b3dcf69d7f780b542ebab35a0",
-    "v1/quanx/china-sites.list": "b6d5bdac744f153276710bc7a058c6084da847cd25146ed22b2501be22e24f55",
-    "v1/quanx/disney-plus.list": "9221f397fd62fbe8be56504c092ea73763117b56b4b8d52c0d9d4433306e4713",
+    "v1/quanx/binance.list": "5e39c3b7e86abf708d06e23c79879df9a381012d1777adbb2dcf2f2501e2b6da",
+    "v1/quanx/china-sites.list": "b437e7e75768eb103afe03206b73df9f2d5f1dc0532fe1539262db5c278b454e",
+    "v1/quanx/disney-plus.list": "be78199c45c302ae0b6d9cb542a018df18ceb7b3b7a6e87ca531e308fd8075e2",
     "v1/quanx/filter-remote.conf": "6a80ddbc54509eb2fa35a85b854d9c50c5cf28617596b9518bd7953a90a5b968",
-    "v1/quanx/foreign-media.list": "64eae245b2faa3c76b680a2ffd6814ce984c87337639ebaef70bd6e180c07c4c",
-    "v1/quanx/gfw.list": "f9f889dfbc4838920e045d750a7a89821e8146488eebb1f9d5d2a924b6c6d721",
-    "v1/quanx/github.list": "2ffdc6046ad26db8894a65eecd3a16f3842d808bf1e613d60147960c3ea78daf",
-    "v1/quanx/google.list": "512a00f670ed7ce0503cdc6cb4c8f410013618fe9c5a5f4b58b560a19c59c884",
+    "v1/quanx/foreign-media.list": "74bae4b78d250bb1819316e1a8f3f17f512714eacc283e798418ad0ef2a73533",
+    "v1/quanx/gfw.list": "c1fdde556d790ca10d825bfeb21940f57ea2118411c313ee1f5884d4949bb311",
+    "v1/quanx/github.list": "20f97cdd0d8974aee86c1247be798e36ecfd9bda3bb6ad9c900a43cc2ed49d7b",
+    "v1/quanx/google.list": "f40f11a1b6ad968401c7e274f312ab38c52c54b861d3ed051a71ed68db796e5f",
     "v1/quanx/icons.json": "2aaa2e76fd1a823125a1e5b89dee49d11f763ceb90b480e142c9e28dcd89ae97",
-    "v1/quanx/openai.list": "20572f3c608e86119255c691b71b56fe973826a6b3f32a81bfbc9777bc3e994c",
-    "v1/quanx/overseas.list": "9ac8b4d0c90a973a9141a6cb10b7c3ec0fd6a9b2614e920631efc14dd5de83f4",
+    "v1/quanx/openai.list": "81335bd825e61df40f36fe0cfac169987295d9cfc3f4daf7e2579ba5adec044b",
+    "v1/quanx/overseas.list": "68c388994c893bea04bb8a431f2795772f345f8b4329f23ad78fbb5d9537b15f",
     "v1/quanx/personal-sites.list": "f27f9b8caf2a5585f3b1318694aeb9c1dd515934b345a1f204f220db96e996f6",
     "v1/quanx/pt-compat.list": "431d1c2c061cd5110f6b335bc8bdfef8bf97188a5b2d9a721484b6d4fd1d72ad",
     "v1/quanx/pt.list": "b9187071b7af92a71a02baafd2b5ee8e71e64c0f7e7555ac391277d4f132d4e3",
-    "v1/quanx/telegram.list": "9664252ccf9ad7adc4213d4521f2d5a0e6bc390ef828dca7a39c4ff578f687e8",
-    "v1/quanx/tiktok-compat.list": "c9e159aa8bc05d540a689d87d758b19fe589a2f4f613e9f8107b82824c3a7aa3",
-    "v1/quanx/tiktok.list": "c9e159aa8bc05d540a689d87d758b19fe589a2f4f613e9f8107b82824c3a7aa3",
-    "v1/quanx/youtube.list": "96e49990ce2f0ac3c147ca707882044f64dc73e6c7c2581250c3154644af3161"
+    "v1/quanx/telegram.list": "56d40e99fa6040e655d9c72eecf997384a00fb29798101c40f47d7b9850941d7",
+    "v1/quanx/tiktok-compat.list": "f06880d58e8c4b4e01c073da29fda66693355ee83e8872051e4b9a3a159c3af6",
+    "v1/quanx/tiktok.list": "f06880d58e8c4b4e01c073da29fda66693355ee83e8872051e4b9a3a159c3af6",
+    "v1/quanx/youtube.list": "0761311a79e751181eb881a30fd86d52a80d3bc92ca07643cd59e1204e473b6f"
   }
 }
